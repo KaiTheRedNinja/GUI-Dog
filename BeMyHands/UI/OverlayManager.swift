@@ -11,6 +11,7 @@ import Element
 class OverlayManager {
     var windowController: OverlayWindowController!
     var framesController: FramesViewController!
+    var actionableElements: [ActionableElement]!
 
     init(windowController: OverlayWindowController! = nil, framesController: FramesViewController! = nil) {
         self.windowController = windowController
@@ -18,7 +19,7 @@ class OverlayManager {
     }
 
     @ElementActor
-    func setup(with windowElement: Element) {
+    func setup(with windowElement: Element, actionableElements: [ActionableElement]) {
         guard let frame = try? windowElement.getAttribute(.frame) as? NSRect else {
             fatalError("Focused window has no frame")
         }
@@ -30,11 +31,12 @@ class OverlayManager {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             self.windowController = .init()
-            self.framesController = .init(frame: frame)
+            self.framesController = .init(frame: .init(origin: .zero, size: screenSize), actionableElements: actionableElements)
+            self.actionableElements = actionableElements
 
             print("Screen size: \(screenSize), frame origin: \(frame.origin)")
 
-            windowController.window?.setFrameOrigin(NSPoint(x: frame.origin.x, y: screenSize.height - frame.maxY))
+            windowController.window?.setFrameOrigin(.init(x: 0, y: 0))
             windowController.window?.contentViewController = framesController
         }
     }

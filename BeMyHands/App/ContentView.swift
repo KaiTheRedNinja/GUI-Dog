@@ -19,16 +19,15 @@ struct ContentView: View {
                 .imageScale(.large)
                 .foregroundStyle(.tint)
             if access != nil {
-                Button("Test") {
+                Button("Scan focused window after 3 seconds") {
                     DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
                         Task {
-                            await accessInfo()
+                            do {
+                                try await overlayActionsOnCurrentWindow()
+                            } catch {
+                                print("Error making overlay actions: \(error)")
+                            }
                         }
-                    }
-                }
-                Button("Set up window") {
-                    Task {
-                        await setupWindow()
                     }
                 }
             }
@@ -52,74 +51,63 @@ struct ContentView: View {
         }
     }
 
-    func accessInfo() async {
+    func overlayActionsOnCurrentWindow() async throws {
         guard let access else { return }
-        do {
-            guard let elements = try await access.actionableElements() else {
-                print("No elements found")
-                return
-            }
 
-            // Filter out so that only AXPress remains
-//            elements = elements.filter {
-//                ($0["actions"] as? [String])?.contains("AXPress") ?? false
-//            }
-
-            // Only show the following data, if they exist:
-            let items = [
-                kAXRoleAttribute,
-                kAXSubroleAttribute,
-                kAXHelpAttribute,
-                kAXTitleAttribute,
-                kAXRoleDescriptionAttribute,
-                kAXIdentifierAttribute,
-                kAXDescriptionAttribute,
-                kAXValueAttribute,
-                kAXMinValueAttribute,
-                kAXMaxValueAttribute,
-                kAXValueIncrementAttribute,
-                kAXAllowedValuesAttribute,
-                kAXMenuItemCmdCharAttribute,
-                "AXAttributedDescription",
-                "AXFrame"
-            ]
-            let concise = elements.compactMap { element in
-                var attributes: [String: String] = [:]
-
-                for item in items {
-                    attributes[item] = element.attributes[item]
-                }
-
-                return ActionableElement(
-                    element: element.element,
-                    actions: element.actions,
-                    frame: element.frame,
-                    attributes: attributes
-                )
-            }
-
-            print(concise.map { $0.description }.joined(separator: "\n"))
-        } catch {
-            print("ERROR: \(error)")
+        // Get actionable elements
+        guard let elements = try await access.actionableElements() else {
+            print("No elements found")
+            return
         }
-    }
 
-    func setupWindow() async {
+        // Only show the following data, if they exist:
+        let items = [
+            kAXRoleAttribute,
+            kAXSubroleAttribute,
+            kAXHelpAttribute,
+            kAXTitleAttribute,
+            kAXRoleDescriptionAttribute,
+            kAXIdentifierAttribute,
+            kAXDescriptionAttribute,
+            kAXValueAttribute,
+            kAXMinValueAttribute,
+            kAXMaxValueAttribute,
+            kAXValueIncrementAttribute,
+            kAXAllowedValuesAttribute,
+            kAXMenuItemCmdCharAttribute,
+            "AXAttributedDescription",
+            "AXFrame"
+        ]
+
+        // Reduce the number of attributes they have, for pretty printing
+        let concise = elements.compactMap { element in
+            var attributes: [String: String] = [:]
+
+            for item in items {
+                attributes[item] = element.attributes[item]
+            }
+
+            return ActionableElement(
+                element: element.element,
+                actions: element.actions,
+                frame: element.frame,
+                attributes: attributes
+            )
+        }
+
+        // Remove the old window
         overlayManager?.hide()
 
-        do {
-            guard let focusedWindow = try await access?.focusedWindow() else { return }
+        // Get the focused window element
+        guard let focusedWindow = try await access.focusedWindow() else { return }
 
-            let manager = OverlayManager()
+        // Create a new manager, set it up, and display it
+        let manager = OverlayManager()
+        await manager.setup(with: focusedWindow, actionableElements: concise)
+        manager.show()
 
-            await manager.setup(with: focusedWindow)
-
-            manager.show()
-
-            self.overlayManager = manager
-        } catch {
-            print("Error setting up window: \(error)")
-        }
+        // Save it so that we keep a strong reference to it
+        self.overlayManager = manager
     }
 }
 
