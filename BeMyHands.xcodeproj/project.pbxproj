@@ -26,7 +26,7 @@
 		931B22C72C3B6393003A6436 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		931B22C92C3B6393003A6436 /* BeMyHands.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BeMyHands.entitlements; sourceTree = "<group>"; };
 		931B22CF2C3B63DA003A6436 /* BeMyHandsKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = BeMyHandsKit; sourceTree = "<group>"; };
-		931B22D02C3B64BE003A6436 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		931B22D02C3B64BE003A6436 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		931B22DC2C3B76A3003A6436 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -68,12 +68,7 @@
 		931B22BF2C3B6392003A6436 /* BeMyHands */ = {
 			isa = PBXGroup;
 			children = (
-				931B22D02C3B64BE003A6436 /* Info.plist */,
-				931B22C02C3B6392003A6436 /* BeMyHandsApp.swift */,
-				931B22C22C3B6392003A6436 /* ContentView.swift */,
-				931B22C42C3B6393003A6436 /* Assets.xcassets */,
-				931B22C92C3B6393003A6436 /* BeMyHands.entitlements */,
-				931B22C62C3B6393003A6436 /* Preview Content */,
+				931B22DD2C3B794D003A6436 /* App */,
 			);
 			path = BeMyHands;
 			sourceTree = "<group>";
@@ -91,6 +86,19 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		931B22DD2C3B794D003A6436 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				931B22C02C3B6392003A6436 /* BeMyHandsApp.swift */,
+				931B22C22C3B6392003A6436 /* ContentView.swift */,
+				931B22C42C3B6393003A6436 /* Assets.xcassets */,
+				931B22D02C3B64BE003A6436 /* Info.plist */,
+				931B22C92C3B6393003A6436 /* BeMyHands.entitlements */,
+				931B22C62C3B6393003A6436 /* Preview Content */,
+			);
+			path = App;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -301,16 +309,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = BeMyHands/BeMyHands.entitlements;
+				CODE_SIGN_ENTITLEMENTS = BeMyHands/App/BeMyHands.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"BeMyHands/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"BeMyHands/App/Preview Content\"";
 				DEVELOPMENT_TEAM = Z88Z98GRZQ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = BeMyHands/Info.plist;
+				INFOPLIST_FILE = BeMyHands/App/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -329,16 +337,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = BeMyHands/BeMyHands.entitlements;
+				CODE_SIGN_ENTITLEMENTS = BeMyHands/App/BeMyHands.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"BeMyHands/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"BeMyHands/App/Preview Content\"";
 				DEVELOPMENT_TEAM = Z88Z98GRZQ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = BeMyHands/Info.plist;
+				INFOPLIST_FILE = BeMyHands/App/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
