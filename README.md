@@ -42,8 +42,9 @@ Accessibility API capabilities:
 - [ ] Display all interactable UI elements using an overlay
     - [x] Display the window
     - [x] Move the window to the right position
-    - [ ] Prepare the interactable UI elements data
-    - [ ] Display the interactable UI elements
+    - [x] Prepare the interactable UI elements data
+    - [x] Display the interactable UI elements
+    - [ ] Make it pretty
 - [ ] LLM-Friendly descriptions of interactable elements
 - [ ] Easy-to-use API for executing actions
 

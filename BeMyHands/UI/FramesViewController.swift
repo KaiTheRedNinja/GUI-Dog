@@ -26,8 +26,6 @@ class FramesViewController: NSViewController {
     override func loadView() {
         let view = NSView()
         view.translatesAutoresizingMaskIntoConstraints = true
-        view.wantsLayer = true
-        view.layer?.backgroundColor = .init(gray: 0.5, alpha: 0.5)
         view.frame = frame
 
         // Add subviews at the locations of every actionable element
@@ -48,7 +46,9 @@ class FramesViewController: NSViewController {
             let elemView = NSView()
             elemView.translatesAutoresizingMaskIntoConstraints = true
             elemView.wantsLayer = true
-            elemView.layer?.backgroundColor = .init(red: 1, green: 0, blue: 0, alpha: 0.5)
+            elemView.layer?.borderWidth = 2
+            elemView.layer?.borderColor = .init(red: 1, green: 0, blue: 0, alpha: 0.5)
+            elemView.toolTip = element.actions.joined(separator: ", ")
             elemView.frame = convertedFrame
 
             view.addSubview(elemView)
