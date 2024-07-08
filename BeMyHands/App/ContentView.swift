@@ -56,9 +56,9 @@ struct ContentView: View {
             }
 
             // Filter out so that only AXPress remains
-            elements = elements.filter {
-                ($0["actions"] as? [String])?.contains("AXPress") ?? false
-            }
+//            elements = elements.filter {
+//                ($0["actions"] as? [String])?.contains("AXPress") ?? false
+//            }
 
             // Only show the following data, if they exist:
             let items = [
@@ -79,27 +79,21 @@ struct ContentView: View {
                 "AXFrame"
             ]
             let concise = elements.compactMap { element in
-                var data: [String: String] = [:]
-                let attributes = element["attributes"] as! [String: Any]
-                for item in items {
-                    guard let attribute = attributes[item] else { continue }
+                var attributes: [String: String] = [:]
 
-                    if let attribute = (attributes[item] as? String), attribute.count > 0 {
-                        data[item] = attribute
-                    } else {
-                        data[item] = "\(attribute)"
-                    }
+                for item in items {
+                    attributes[item] = element.attributes[item]
                 }
 
-                return data.count <= 1 ? nil : data
+                return ActionableElement(
+                    element: element.element,
+                    actions: element.actions,
+                    frame: element.frame,
+                    attributes: attributes
+                )
             }
 
-            let data = try JSONSerialization.data(withJSONObject: concise, options: .prettyPrinted)
-            guard let description = String(data: data, encoding: .utf8) else {
-                print("Data is corrupted")
-                return
-            }
-            print("Encoded: \(description)")
+            print(concise.map { $0.description }.joined(separator: "\n"))
         } catch {
             print("ERROR: \(error)")
         }

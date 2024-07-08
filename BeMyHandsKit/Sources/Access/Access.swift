@@ -176,7 +176,7 @@ import Output
     }
 
     /// Returns all actionable elements of the focused application
-    @MainActor public func actionableElements() async throws -> [[String: Any]]? {
+    @MainActor public func actionableElements() async throws -> [ActionableElement]? {
         guard let application = await application else {
             let content = [OutputSemantic.noFocus]
             Output.shared.convey(content)

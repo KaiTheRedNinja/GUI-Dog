@@ -66,6 +66,46 @@ import ApplicationServices
         }
     }
 
+    /// Converts this element into an ``ActionableElement``. Throws if any steps fail, returns nil if this element is not actionable.
+    public func createActionableElement() throws -> ActionableElement? {
+        let actions = try listActions()
+
+        // if this element is actionable, add it and its description
+        guard !actions.isEmpty else { return nil }
+        let attributes = try listAttributes()
+        var attributeValues = [String: Any]()
+        for attribute in attributes {
+            guard let value = try getAttribute(attribute) else {
+                continue
+            }
+            attributeValues[attribute] = encode(value: value)
+        }
+
+        var stringAttributes: [String: String] = [:]
+
+        for (key, value) in attributeValues {
+            stringAttributes[key] = value as? String
+        }
+
+        let frame: NSRect?
+        if let rawFrame = attributeValues["AXFrame"] as? [String: CGFloat],
+            let x = rawFrame["x"],
+            let y = rawFrame["y"],
+            let height = rawFrame["height"],
+            let width = rawFrame["width"] {
+            frame = NSRect(x: x, y: y, width: width, height: height)
+        } else {
+            frame = nil
+        }
+
+        return .init(
+            element: self,
+            actions: actions,
+            frame: frame,
+            attributes: stringAttributes
+        )
+    }
+
     /// Dumps this element to a data structure suitable to be encoded and serialized.
     /// - Parameters:
     ///   - recursiveParents: Whether to recursively dump this element's parents.
@@ -111,32 +151,17 @@ import ApplicationServices
     }
 
     /// Returns all actionable elements within this element, including both children and itself.
-    public func getActionableElements() async throws -> [[String: Any]]? {
+    public func getActionableElements() async throws -> [ActionableElement]? {
         do {
-            var elements: [[String: Any]] = []
+            var elements: [ActionableElement] = []
 
-            let actions = try listActions()
-
-            // if this element is actionable, add it and its description
-            if !actions.isEmpty {
-                let attributes = try listAttributes()
-                var attributeValues = [String: Any]()
-                for attribute in attributes {
-                    guard let value = try getAttribute(attribute) else {
-                        continue
-                    }
-                    attributeValues[attribute] = encode(value: value)
-                }
-
-                elements.append([
-                    "actions": actions,
-                    "attributes": attributeValues
-                ])
+            if let selfAction = try createActionableElement() {
+                elements.append(selfAction)
             }
 
             // get the children's actionable items
             if let children = try getAttribute("AXChildren") as? [Any?] {
-                var childrenActionableItems = [[String: Any]]()
+                var childrenActionableItems = [ActionableElement]()
                 for child in children.lazy.compactMap({$0 as? Element}) {
                     guard let childActionableItems = try await child.getActionableElements() else {
                         continue
