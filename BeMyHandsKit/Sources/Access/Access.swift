@@ -24,12 +24,9 @@ import Output
     /// Initializes the accessibility framework.
     public init?() async {
         guard await Element.confirmProcessTrustedStatus() else {
-            print("Process not trusted")
             return nil
         }
-        print("Awaiting element")
         system = await Element()
-        print("Creating event iterators")
         Task() {[weak self] in
             while let self = self {
                 var eventIterator = await self.observer?.eventStream.makeAsyncIterator()
@@ -39,19 +36,16 @@ import Output
                 try? await Task.sleep(nanoseconds: 100_000_000)
             }
         }
-        print("Refocusing")
         await refocus(processIdentifier: NSWorkspace.shared.frontmostApplication?.processIdentifier)
-        print("Setting up refocus trigger")
         refocusTrigger = NSWorkspace.shared.observe(\.frontmostApplication, options: .new) {[weak self] (_, value) in
-            guard let runningApplication = value.newValue else {
+            guard let runningApplication = value.newValue, let runningApplication else {
                 return
             }
-            let processIdentifier = runningApplication?.processIdentifier
-            Task {[self] in
+            let processIdentifier = runningApplication.processIdentifier
+            Task { [self] in
                 await self?.refocus(processIdentifier: processIdentifier)
             }
         }
-        print("Done")
     }
 
     /// Sets the response timeout of the accessibility framework.
@@ -244,8 +238,11 @@ import Output
                 try await observer.subscribe(to: .elementDidAppear)
                 content.append(.noFocus)
             }
-            await Output.shared.convey(content)
+            print("Content: \(content)")
+//            await Output.shared.convey(content)
+            print("Done")
         } catch {
+            print("Failed: \(error)")
             await handleError(error)
         }
     }
