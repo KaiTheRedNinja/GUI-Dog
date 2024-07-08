@@ -81,12 +81,15 @@ import ApplicationServices
             attributeValues[attribute] = encode(value: value)
         }
 
+        // convert the attributes to string representations
+        // NOTE: we may want to consider adding other primatives for flexibility
         var stringAttributes: [String: String] = [:]
 
         for (key, value) in attributeValues {
             stringAttributes[key] = value as? String
         }
 
+        // obtain the frame of the actionable element
         let frame: NSRect?
         if let rawFrame = attributeValues["AXFrame"] as? [String: CGFloat],
             let x = rawFrame["x"],
@@ -98,6 +101,7 @@ import ApplicationServices
             frame = nil
         }
 
+        // create the element
         return .init(
             element: self,
             actions: actions,

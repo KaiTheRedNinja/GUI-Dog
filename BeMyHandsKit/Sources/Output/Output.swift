@@ -21,15 +21,18 @@ import ApplicationServices
     /// Announces a high priority event.
     /// - Parameter announcement: Event to announce.
     public func announce(_ announcement: String) {
+        /*
         let announcement = AVSpeechUtterance(string: announcement)
         synthesizer.stopSpeaking(at: .immediate)
         isAnnouncing = true
         synthesizer.speak(announcement)
+         */
     }
 
     /// Conveys the semantic accessibility output to the user.
     /// - Parameter content: Content to output.
     public func convey(_ content: [OutputSemantic]) {
+        /*
         if isAnnouncing {
             queued = content
             return
@@ -136,6 +139,7 @@ import ApplicationServices
                 synthesizer.speak(utterance)
             }
         }
+         */
     }
 
     /// Interrupts speech.

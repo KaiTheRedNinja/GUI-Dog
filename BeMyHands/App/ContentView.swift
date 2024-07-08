@@ -11,6 +11,7 @@ import Element
 
 struct ContentView: View {
     @State var access: Access?
+    @State var overlayManager: OverlayManager?
 
     var body: some View {
         VStack {
@@ -24,6 +25,9 @@ struct ContentView: View {
                             await accessInfo()
                         }
                     }
+                }
+                Button("Set up window") {
+                    setupWindow()
                 }
             }
         }
@@ -97,6 +101,14 @@ struct ContentView: View {
         } catch {
             print("ERROR: \(error)")
         }
+    }
+
+    func setupWindow() {
+        let manager = OverlayManager()
+
+        manager.show()
+
+        self.overlayManager = manager
     }
 }
 
