@@ -27,9 +27,18 @@ struct ContentView: View {
         .padding()
         .task {
             print("Setting up access")
-            guard await Access() != nil else {
-                print("Could not create access: Exiting")
-                exit(0)
+            guard let access = await Access() else {
+                print("Could not create access")
+                try? await Task.sleep(nanoseconds: 3_000_000_000)
+                print("Exiting")
+                NSApplication.shared.terminate(nil)
+                return
+            }
+
+            await access.setTimeout(seconds: 5.0)
+
+            DispatchQueue.main.async {
+                self.access = access
             }
         }
     }

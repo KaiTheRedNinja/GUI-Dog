@@ -27,6 +27,7 @@
 		931B22C92C3B6393003A6436 /* BeMyHands.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BeMyHands.entitlements; sourceTree = "<group>"; };
 		931B22CF2C3B63DA003A6436 /* BeMyHandsKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = BeMyHandsKit; sourceTree = "<group>"; };
 		931B22D02C3B64BE003A6436 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		931B22DC2C3B76A3003A6436 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +49,7 @@
 		931B22B42C3B6391003A6436 = {
 			isa = PBXGroup;
 			children = (
+				931B22DC2C3B76A3003A6436 /* README.md */,
 				931B22CF2C3B63DA003A6436 /* BeMyHandsKit */,
 				931B22BF2C3B6392003A6436 /* BeMyHands */,
 				931B22BE2C3B6392003A6436 /* Products */,
