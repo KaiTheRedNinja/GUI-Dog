@@ -19,6 +19,7 @@
 		936F3EEC2C3BE541006FC333 /* OverlayWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EEB2C3BE53B006FC333 /* OverlayWindow.swift */; };
 		936F3EEE2C3BE5E9006FC333 /* OverlayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */; };
 		936F3EF02C3BE688006FC333 /* FramesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EEF2C3BE688006FC333 /* FramesViewController.swift */; };
+		936F3EF42C3CA4FE006FC333 /* AccessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EF32C3CA4F9006FC333 /* AccessManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		936F3EEB2C3BE53B006FC333 /* OverlayWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindow.swift; sourceTree = "<group>"; };
 		936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayManager.swift; sourceTree = "<group>"; };
 		936F3EEF2C3BE688006FC333 /* FramesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramesViewController.swift; sourceTree = "<group>"; };
+		936F3EF32C3CA4F9006FC333 /* AccessManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,8 +76,9 @@
 		931B22BF2C3B6392003A6436 /* BeMyHands */ = {
 			isa = PBXGroup;
 			children = (
-				936F3EEA2C3BE535006FC333 /* UI */,
 				931B22DD2C3B794D003A6436 /* App */,
+				936F3EEA2C3BE535006FC333 /* UI */,
+				936F3EF22C3CA4E9006FC333 /* Model */,
 			);
 			path = BeMyHands;
 			sourceTree = "<group>";
@@ -116,6 +119,14 @@
 				936F3EEF2C3BE688006FC333 /* FramesViewController.swift */,
 			);
 			path = UI;
+			sourceTree = "<group>";
+		};
+		936F3EF22C3CA4E9006FC333 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				936F3EF32C3CA4F9006FC333 /* AccessManager.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -198,6 +209,7 @@
 				936F3EEE2C3BE5E9006FC333 /* OverlayManager.swift in Sources */,
 				931B22C32C3B6392003A6436 /* ContentView.swift in Sources */,
 				936F3EEC2C3BE541006FC333 /* OverlayWindow.swift in Sources */,
+				936F3EF42C3CA4FE006FC333 /* AccessManager.swift in Sources */,
 				931B22C12C3B6392003A6436 /* BeMyHandsApp.swift in Sources */,
 				936F3EF02C3BE688006FC333 /* FramesViewController.swift in Sources */,
 			);

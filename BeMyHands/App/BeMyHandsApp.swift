@@ -6,12 +6,25 @@
 //
 
 import SwiftUI
+import Access
 
 @main
 struct BeMyHandsApp: App {
+    @State var accessManager: AccessManager!
+
     var body: some Scene {
-        WindowGroup {
-            ContentView()
+        MenuBarExtra {
+            if let accessManager {
+                ContentView(manager: accessManager)
+            } else {
+                Text("Something went wrong...")
+            }
+        } label: {
+            Image(systemName: "hand.wave.fill")
+                .task {
+                    accessManager = .init()
+                    await accessManager.setup()
+                }
         }
     }
 }
