@@ -181,6 +181,16 @@ import Output
         await dumpElement(focus.entity.element)
     }
 
+    /// Returns all actionable elements of the focused application
+    @MainActor public func actionableElements() async throws -> [[String: Any]]? {
+        guard let application = await application else {
+            let content = [OutputSemantic.noFocus]
+            Output.shared.convey(content)
+            return nil
+        }
+        return try await application.getActionableElements()
+    }
+
     /// Resets the user focus to the system keyboard focusor the first interesting child of the focused window.
     private func refocus(processIdentifier: pid_t?) async {
         do {

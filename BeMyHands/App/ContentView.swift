@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Access
+import Element
 
 struct ContentView: View {
     @State var access: Access?
@@ -18,8 +19,10 @@ struct ContentView: View {
                 .foregroundStyle(.tint)
             if access != nil {
                 Button("Test") {
-                    Task {
-                        await accessInfo()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
+                        Task {
+                            await accessInfo()
+                        }
                     }
                 }
             }
@@ -45,7 +48,44 @@ struct ContentView: View {
 
     func accessInfo() async {
         guard let access else { return }
-        await access.dumpApplication()
+        do {
+            let elements = try await access.actionableElements()
+            guard var elements else {
+                print("No elements found")
+                return
+            }
+
+            // Filter out so that only AXPress remains
+            elements = elements.filter {
+                ($0["actions"] as? [String])?.contains("AXPress") ?? false
+            }
+
+            // Only show the following data:
+            // - AXRole
+            // - AXSubrole (if exists)
+            // - AXHelp (if exists)
+            // - AXAttributedDescription (if exists)
+            // - AXFrame
+            // - AXRoleDescription
+            let items = ["AXRole", "AXSubrole", "AXHelp", "AXAttributedDescription", "AXFrame", "AXRoleDescription"]
+            let concise = elements.map { element in
+                var data: [String: String] = [:]
+                let attributes = element["attributes"] as! [String: Any]
+                for item in items {
+                    data[item] = (attributes[item] as? String)
+                }
+                return data
+            }
+
+            let data = try JSONSerialization.data(withJSONObject: concise, options: .prettyPrinted)
+            guard let description = String(data: data, encoding: .utf8) else {
+                print("Data is corrupted")
+                return
+            }
+            print("Encoded: \(description)")
+        } catch {
+            print("ERROR: \(error)")
+        }
     }
 }
 

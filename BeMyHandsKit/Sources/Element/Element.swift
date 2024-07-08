@@ -110,6 +110,50 @@ import ApplicationServices
         }
     }
 
+    /// Returns all actionable elements within this element, including both children and itself.
+    public func getActionableElements() async throws -> [[String: Any]]? {
+        do {
+            var elements: [[String: Any]] = []
+
+            let actions = try listActions()
+
+            // if this element is actionable, add it and its description
+            if !actions.isEmpty {
+                let attributes = try listAttributes()
+                var attributeValues = [String: Any]()
+                for attribute in attributes {
+                    guard let value = try getAttribute(attribute) else {
+                        continue
+                    }
+                    attributeValues[attribute] = encode(value: value)
+                }
+
+                elements.append([
+                    "actions": actions,
+                    "attributes": attributeValues
+                ])
+            }
+
+            // get the children's actionable items
+            if let children = try getAttribute("AXChildren") as? [Any?] {
+                var childrenActionableItems = [[String: Any]]()
+                for child in children.lazy.compactMap({$0 as? Element}) {
+                    guard let childActionableItems = try await child.getActionableElements() else {
+                        continue
+                    }
+                    childrenActionableItems.append(contentsOf: childActionableItems)
+                }
+                elements.append(contentsOf: childrenActionableItems)
+            }
+
+            return elements
+        } catch ElementError.invalidElement {
+            return nil
+        } catch {
+            throw error
+        }
+    }
+
     /// Retrieves the set of attributes supported by this element.
     /// - Returns: Set of attributes.
     public func getAttributeSet() throws -> Set<ElementAttribute> {
