@@ -21,6 +21,12 @@ class FramesViewController: NSViewController {
     }
     
     override func loadView() {
-        self.view = NSHostingView(rootView: Color.blue.opacity(0.5).frame(width: frame.width, height: frame.height))
+        let view = NSView()
+        view.translatesAutoresizingMaskIntoConstraints = true
+        view.wantsLayer = true
+        view.layer?.backgroundColor = .init(gray: 0.5, alpha: 0.5)
+        view.frame = frame
+
+        self.view = view
     }
 }

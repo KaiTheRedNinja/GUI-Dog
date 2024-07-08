@@ -105,6 +105,8 @@ struct ContentView: View {
     }
 
     func setupWindow() async {
+        overlayManager?.hide()
+
         do {
             guard let focusedWindow = try await access?.focusedWindow() else { return }
 

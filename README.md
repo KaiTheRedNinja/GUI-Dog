@@ -10,6 +10,8 @@ I'll eventually figure out a way to prompt the user to do this.
 
 Note that this app is *not sandboxed*, as it makes use of the accessibility API.
 
+It also acts really weirdly with multiple displays due to coordinate systems, so just use one.
+
 ## Architecture
 
 BeMyHands relies on three components: the Accessibility API, and the Gemini API.
@@ -35,9 +37,13 @@ This are the things that I need to implement, not nescessarily in order
 Accessibility API capabilities:
 - [x] Accessibility API (read-only)
 - [x] Obtain pressable UI elements
-- [ ] Obtain all interactable UI elements
+- [x] Obtain all interactable UI elements
 - [ ] Obtain contextual information of UI elements
 - [ ] Display all interactable UI elements using an overlay
+    - [x] Display the window
+    - [x] Move the window to the right position
+    - [ ] Prepare the interactable UI elements data
+    - [ ] Display the interactable UI elements
 - [ ] LLM-Friendly descriptions of interactable elements
 - [ ] Easy-to-use API for executing actions
 

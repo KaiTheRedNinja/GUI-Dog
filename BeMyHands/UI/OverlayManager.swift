@@ -23,10 +23,18 @@ class OverlayManager {
             fatalError("Focused window has no frame")
         }
 
-        Task { @MainActor in
+        guard let screenSize = NSScreen.main?.frame.size else {
+            fatalError("Could not get screen size")
+        }
+
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
             self.windowController = .init()
             self.framesController = .init(frame: frame)
 
+            print("Screen size: \(screenSize), frame origin: \(frame.origin)")
+
+            windowController.window?.setFrameOrigin(NSPoint(x: frame.origin.x, y: screenSize.height - frame.maxY))
             windowController.window?.contentViewController = framesController
         }
     }

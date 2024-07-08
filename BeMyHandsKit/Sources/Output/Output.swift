@@ -144,17 +144,17 @@ import ApplicationServices
 
     /// Interrupts speech.
     public func interrupt() {
-        isAnnouncing = false
-        queued = []
-        synthesizer.stopSpeaking(at: .immediate)
+//        isAnnouncing = false
+//        queued = []
+//        synthesizer.stopSpeaking(at: .immediate)
     }
 }
 
 extension Output: AVSpeechSynthesizerDelegate {
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish _: AVSpeechUtterance) {
-        if isAnnouncing {
-            isAnnouncing = false
-            convey(queued)
-        }
+//        if isAnnouncing {
+//            isAnnouncing = false
+//            convey(queued)
+//        }
     }
 }
