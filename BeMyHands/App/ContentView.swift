@@ -60,21 +60,38 @@ struct ContentView: View {
                 ($0["actions"] as? [String])?.contains("AXPress") ?? false
             }
 
-            // Only show the following data:
-            // - AXRole
-            // - AXSubrole (if exists)
-            // - AXHelp (if exists)
-            // - AXAttributedDescription (if exists)
-            // - AXFrame
-            // - AXRoleDescription
-            let items = ["AXRole", "AXSubrole", "AXHelp", "AXAttributedDescription", "AXFrame", "AXRoleDescription"]
-            let concise = elements.map { element in
+            // Only show the following data, if they exist:
+            let items = [
+                kAXRoleAttribute,
+                kAXSubroleAttribute,
+                kAXHelpAttribute,
+                kAXTitleAttribute,
+                kAXRoleDescriptionAttribute,
+                kAXIdentifierAttribute,
+                kAXDescriptionAttribute,
+                kAXValueAttribute,
+                kAXMinValueAttribute,
+                kAXMaxValueAttribute,
+                kAXValueIncrementAttribute,
+                kAXAllowedValuesAttribute,
+                kAXMenuItemCmdCharAttribute,
+                "AXAttributedDescription",
+                "AXFrame"
+            ]
+            let concise = elements.compactMap { element in
                 var data: [String: String] = [:]
                 let attributes = element["attributes"] as! [String: Any]
                 for item in items {
-                    data[item] = (attributes[item] as? String)
+                    guard let attribute = attributes[item] else { continue }
+
+                    if let attribute = (attributes[item] as? String), attribute.count > 0 {
+                        data[item] = attribute
+                    } else {
+                        data[item] = "\(attribute)"
+                    }
                 }
-                return data
+
+                return data.count <= 1 ? nil : data
             }
 
             let data = try JSONSerialization.data(withJSONObject: concise, options: .prettyPrinted)

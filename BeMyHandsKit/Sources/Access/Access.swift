@@ -238,7 +238,7 @@ import Output
                 try await observer.subscribe(to: .elementDidAppear)
                 content.append(.noFocus)
             }
-            print("Content: \(content)")
+//            print("Content: \(content)")
 //            await Output.shared.convey(content)
             print("Done")
         } catch {
