@@ -240,7 +240,6 @@ import Output
             }
 //            print("Content: \(content)")
 //            await Output.shared.convey(content)
-            print("Done")
         } catch {
             print("Failed: \(error)")
             await handleError(error)
