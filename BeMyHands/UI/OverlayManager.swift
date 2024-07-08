@@ -5,28 +5,39 @@
 //  Created by Kai Quan Tay on 8/7/24.
 //
 
-import Foundation
 import AppKit
+import Element
 
 class OverlayManager {
-    let windowController: OverlayWindowController
-    let framesController: FramesViewController
+    var windowController: OverlayWindowController!
+    var framesController: FramesViewController!
 
-    init() {
-        self.windowController = .init()
-        self.framesController = .init()
+    init(windowController: OverlayWindowController! = nil, framesController: FramesViewController! = nil) {
+        self.windowController = windowController
+        self.framesController = framesController
+    }
 
-//        guard let frame = NSScreen.main?.frame else {
-//            fatalError("No screen frame found")
-//        }
+    @ElementActor
+    func setup(with windowElement: Element) {
+        guard let frame = try? windowElement.getAttribute(.frame) as? NSRect else {
+            fatalError("Focused window has no frame")
+        }
 
-//        windowController.fitToFrame(frame)
-        windowController.fitToFrame(.init(x: 10, y: 10, width: 500, height: 500))
-        windowController.window?.contentViewController = framesController
+        Task { @MainActor in
+            self.windowController = .init()
+            self.framesController = .init(frame: frame)
+
+            windowController.window?.contentViewController = framesController
+        }
     }
 
     func show() {
         windowController.showWindow(nil)
         windowController.window?.makeKeyAndOrderFront(nil)
+        windowController.window?.orderFrontRegardless()
+    }
+
+    func hide() {
+        windowController.window?.close()
     }
 }

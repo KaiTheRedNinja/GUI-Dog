@@ -18,6 +18,7 @@ class OverlayWindow: NSPanel {
 
         self.level = .statusBar
         self.collectionBehavior = [.fullScreenAuxiliary]
+        self.isFloatingPanel = true
     }
 
     override var canBecomeKey: Bool {
@@ -37,9 +38,5 @@ class OverlayWindowController: NSWindowController {
 
     override func windowDidLoad() {
         super.windowDidLoad()
-    }
-
-    func fitToFrame(_ frame: NSRect) {
-        self.window?.setFrame(frame, display: true, animate: false)
     }
 }

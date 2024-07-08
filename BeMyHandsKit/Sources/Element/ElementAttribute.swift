@@ -27,6 +27,7 @@ public enum ElementAttribute: String {
     case isFocused = "AXFocused"
     case position = "AXPosition"
     case size = "AXSize"
+    case frame = "AXFrame"
 
     // Value attributes.
     case value = "AXValue"

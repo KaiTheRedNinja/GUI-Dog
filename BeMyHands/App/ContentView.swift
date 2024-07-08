@@ -27,7 +27,9 @@ struct ContentView: View {
                     }
                 }
                 Button("Set up window") {
-                    setupWindow()
+                    Task {
+                        await setupWindow()
+                    }
                 }
             }
         }
@@ -53,8 +55,7 @@ struct ContentView: View {
     func accessInfo() async {
         guard let access else { return }
         do {
-            let elements = try await access.actionableElements()
-            guard var elements else {
+            guard let elements = try await access.actionableElements() else {
                 print("No elements found")
                 return
             }
@@ -103,12 +104,20 @@ struct ContentView: View {
         }
     }
 
-    func setupWindow() {
-        let manager = OverlayManager()
+    func setupWindow() async {
+        do {
+            guard let focusedWindow = try await access?.focusedWindow() else { return }
 
-        manager.show()
+            let manager = OverlayManager()
 
-        self.overlayManager = manager
+            await manager.setup(with: focusedWindow)
+
+            manager.show()
+
+            self.overlayManager = manager
+        } catch {
+            print("Error setting up window: \(error)")
+        }
     }
 }
 

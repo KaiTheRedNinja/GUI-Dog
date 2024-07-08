@@ -185,6 +185,20 @@ import Output
         return try await application.getActionableElements()
     }
 
+    /// Returns the currently focused window
+    @MainActor public func focusedWindow() async throws -> Element? {
+        guard let application = await application else {
+            let content = [OutputSemantic.noFocus]
+            Output.shared.convey(content)
+            return nil
+        }
+        let focusedWindow = try await application.getAttribute(.focusedWindow)
+        if let focusedWindow {
+            return focusedWindow as? Element
+        }
+        return nil
+    }
+
     /// Resets the user focus to the system keyboard focusor the first interesting child of the focused window.
     private func refocus(processIdentifier: pid_t?) async {
         do {
