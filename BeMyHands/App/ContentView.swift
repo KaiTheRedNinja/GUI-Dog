@@ -11,7 +11,11 @@ import Element
 
 struct ContentView: View {
     @State var access: Access?
-    @State var overlayManager: OverlayManager?
+    @State var overlayManager: OverlayManager = OverlayManager()
+
+    @State var updatingView: Bool = false
+
+    var timer = Timer.publish(every: 2, on: .main, in: .default).autoconnect()
 
     var body: some View {
         VStack {
@@ -19,15 +23,12 @@ struct ContentView: View {
                 .imageScale(.large)
                 .foregroundStyle(.tint)
             if access != nil {
-                Button("Scan focused window after 3 seconds") {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
-                        Task {
-                            do {
-                                try await overlayActionsOnCurrentWindow()
-                            } catch {
-                                print("Error making overlay actions: \(error)")
-                            }
-                        }
+                Toggle(isOn: $updatingView) {
+                    Text("Update positions (currently every 2 seconds)")
+                }
+                .onReceive(timer) { _ in
+                    Task {
+                        try await overlayActionsOnCurrentWindow()
                     }
                 }
             }
@@ -48,6 +49,9 @@ struct ContentView: View {
             DispatchQueue.main.async {
                 self.access = access
             }
+
+            // Show the overlay
+            overlayManager.show()
         }
     }
 
@@ -95,19 +99,11 @@ struct ContentView: View {
             )
         }
 
-        // Remove the old window
-        overlayManager?.hide()
-
         // Get the focused window element
         guard let focusedWindow = try await access.focusedWindow() else { return }
 
-        // Create a new manager, set it up, and display it
-        let manager = OverlayManager()
-        await manager.setup(with: focusedWindow, actionableElements: concise)
-        manager.show()
-
-        // Save it so that we keep a strong reference to it
-        self.overlayManager = manager
+        // Update the manager
+        await overlayManager.update(with: focusedWindow, actionableElements: concise)
     }
 }
 

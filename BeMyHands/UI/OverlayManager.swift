@@ -8,37 +8,38 @@
 import AppKit
 import Element
 
+@MainActor
 class OverlayManager {
-    var windowController: OverlayWindowController!
-    var framesController: FramesViewController!
-    var actionableElements: [ActionableElement]!
+    private var windowController: OverlayWindowController
+    private var framesController: FramesViewController
 
-    init(windowController: OverlayWindowController! = nil, framesController: FramesViewController! = nil) {
-        self.windowController = windowController
-        self.framesController = framesController
+    init() {
+        self.windowController = .init()
+        self.framesController = .init()
+        windowController.window?.contentViewController = framesController
     }
 
-    @ElementActor
-    func setup(with windowElement: Element, actionableElements: [ActionableElement]) {
-        guard let frame = try? windowElement.getAttribute(.frame) as? NSRect else {
+    func update(with windowElement: Element, actionableElements: [ActionableElement]) async {
+        // Obtain the frame of the window element
+        let frameTask = Task { @ElementActor in
+            return try? windowElement.getAttribute(.frame) as? NSRect
+        }
+
+        guard let frame = await frameTask.value else {
             fatalError("Focused window has no frame")
         }
 
+        // Obtain the size of the screen
         guard let screenSize = NSScreen.main?.frame.size else {
             fatalError("Could not get screen size")
         }
 
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            self.windowController = .init()
-            self.framesController = .init(frame: .init(origin: .zero, size: screenSize), actionableElements: actionableElements)
-            self.actionableElements = actionableElements
-
-            print("Screen size: \(screenSize), frame origin: \(frame.origin)")
-
-            windowController.window?.setFrameOrigin(.init(x: 0, y: 0))
-            windowController.window?.contentViewController = framesController
-        }
+        // Set up the size and position of the frames controller
+        self.framesController.setupView(
+            with: .init(origin: .zero, size: screenSize),
+            actionableElements: actionableElements
+        )
+        windowController.window?.setFrameOrigin(.init(x: 0, y: 0))
     }
 
     func show() {

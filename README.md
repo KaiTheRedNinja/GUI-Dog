@@ -39,12 +39,12 @@ Accessibility API capabilities:
 - [x] Obtain pressable UI elements
 - [x] Obtain all interactable UI elements
 - [ ] Obtain contextual information of UI elements
-- [ ] Display all interactable UI elements using an overlay
+- [x] Display all interactable UI elements using an overlay
     - [x] Display the window
     - [x] Move the window to the right position
     - [x] Prepare the interactable UI elements data
     - [x] Display the interactable UI elements
-    - [ ] Make it pretty
+    - [x] Make it update when the focused window changes, or every few seconds
 - [ ] LLM-Friendly descriptions of interactable elements
 - [ ] Easy-to-use API for executing actions
 

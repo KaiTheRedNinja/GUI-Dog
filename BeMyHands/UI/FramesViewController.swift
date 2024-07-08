@@ -10,20 +10,16 @@ import SwiftUI
 import Element
 
 class FramesViewController: NSViewController {
-    var frame: NSRect
-    var actionableElements: [ActionableElement]
 
-    init(frame: NSRect, actionableElements: [ActionableElement]) {
-        self.frame = frame
-        self.actionableElements = actionableElements
+    init() {
         super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    override func loadView() {
+
+    func setupView(with frame: NSRect, actionableElements: [ActionableElement]) {
         let view = NSView()
         view.translatesAutoresizingMaskIntoConstraints = true
         view.frame = frame
