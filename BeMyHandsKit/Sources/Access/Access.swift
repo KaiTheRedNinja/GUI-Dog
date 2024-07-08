@@ -21,6 +21,9 @@ import Output
     /// System logging facility.
     private static let logger = Logger()
 
+    /// The delegate to inform about important events
+    public var delegate: (any AccessDelegate)?
+
     /// Initializes the accessibility framework.
     public init?() async {
         guard await Element.confirmProcessTrustedStatus() else {
@@ -254,9 +257,13 @@ import Output
             }
 //            print("Content: \(content)")
 //            await Output.shared.convey(content)
+
+            delegate?.accessDidRefocus(success: true)
         } catch {
             print("Failed: \(error)")
             await handleError(error)
+
+            delegate?.accessDidRefocus(success: false)
         }
     }
 

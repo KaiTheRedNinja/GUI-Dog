@@ -13,7 +13,7 @@ struct ContentView: View {
     @State var access: Access?
     @State var overlayManager: OverlayManager = OverlayManager()
 
-    @State var updatingView: Bool = false
+    @State var updatingView: Bool = true
 
     var timer = Timer.publish(every: 2, on: .main, in: .default).autoconnect()
 
@@ -27,6 +27,7 @@ struct ContentView: View {
                     Text("Update positions (currently every 2 seconds)")
                 }
                 .onReceive(timer) { _ in
+                    guard updatingView else { return }
                     Task {
                         try await overlayActionsOnCurrentWindow()
                     }
@@ -45,6 +46,9 @@ struct ContentView: View {
             }
 
             await access.setTimeout(seconds: 5.0)
+            Task { @AccessActor in
+                access.delegate = self
+            }
 
             DispatchQueue.main.async {
                 self.access = access
@@ -104,6 +108,14 @@ struct ContentView: View {
 
         // Update the manager
         await overlayManager.update(with: focusedWindow, actionableElements: concise)
+    }
+}
+
+extension ContentView: AccessDelegate {
+    func accessDidRefocus(success: Bool) {
+        Task {
+            try await overlayActionsOnCurrentWindow()
+        }
     }
 }
 

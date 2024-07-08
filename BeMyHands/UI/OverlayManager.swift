@@ -20,7 +20,8 @@ class OverlayManager {
     }
 
     func update(with windowElement: Element, actionableElements: [ActionableElement]) async {
-        // Obtain the frame of the window element
+        // Obtain the frame of the window element. Currently not used, since we cover the entire screen.
+        /*
         let frameTask = Task { @ElementActor in
             return try? windowElement.getAttribute(.frame) as? NSRect
         }
@@ -28,6 +29,7 @@ class OverlayManager {
         guard let frame = await frameTask.value else {
             fatalError("Focused window has no frame")
         }
+         */
 
         // Obtain the size of the screen
         guard let screenSize = NSScreen.main?.frame.size else {
