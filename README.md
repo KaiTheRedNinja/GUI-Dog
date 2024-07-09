@@ -38,7 +38,7 @@ Accessibility API capabilities:
 - [x] Accessibility API (read-only)
 - [x] Obtain pressable UI elements
 - [x] Obtain all interactable UI elements
-- [ ] Obtain contextual information of UI elements
+- [x] Obtain contextual information of UI elements
 - [x] Display all interactable UI elements using an overlay
     - [x] Display the window
     - [x] Move the window to the right position

@@ -91,11 +91,14 @@ class AccessManager {
                 attributes[item] = element.attributes[item]
             }
 
+            let conciseAncestors = element.ancestorDescriptions.filter { $0.contains(", ") }
+
             return ActionableElement(
                 element: element.element,
                 actions: element.actions,
                 frame: element.frame,
-                attributes: attributes
+                attributes: attributes,
+                ancestorDescriptions: conciseAncestors
             )
         }
 

@@ -18,14 +18,25 @@ public class ActionableElement {
     /// The frame of the element, if it has one
     public var frame: NSRect?
 
+    /// Descriptions of the element's ancestors, where the first item in the array is the ActionableElement's
+    /// immediate parent, and the last item is the Application element.
+    public var ancestorDescriptions: [String]
+
     /// The attributes of the element
     public var attributes: [String: String]
 
-    public init(element: Element, actions: [String], frame: NSRect?, attributes: [String : String]) {
+    public init(
+        element: Element,
+        actions: [String],
+        frame: NSRect?,
+        attributes: [String : String],
+        ancestorDescriptions: [String]
+    ) {
         self.element = element
         self.actions = actions
         self.frame = frame
         self.attributes = attributes
+        self.ancestorDescriptions = ancestorDescriptions
     }
 
     /// A description of this actionable element

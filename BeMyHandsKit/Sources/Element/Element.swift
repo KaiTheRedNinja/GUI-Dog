@@ -55,7 +55,7 @@ import ApplicationServices
     /// - The descriptions, identifier, or value of the item
     /// - The available actions, if any
     public func getDescription() throws -> String {
-        let roleString = try self.getAttribute(.roleDescription) as? String ?? "No Role"
+        let roleString = try self.getAttribute(.roleDescription) as? String
 
         let descriptions = try [
             ElementAttribute.help,
@@ -72,25 +72,27 @@ import ApplicationServices
             try self.getAttribute(item) as? String
         }
 
-        let descriptionString: String
+        let descriptionString: String?
 
         if descriptions.isEmpty {
-            descriptionString = "No Description"
+            descriptionString = nil
         } else {
             descriptionString = descriptions.joined(separator: " ")
         }
 
         let actions = try self.listActions()
 
-        let actionString: String
+        let actionString: String?
 
         if actions.isEmpty {
-            actionString = "No Action"
+            actionString = nil
         } else {
             actionString = actions.joined(separator: " ")
         }
 
-        return "\(roleString), \(descriptionString), \(actionString)"
+        let descriptionItems = [roleString, descriptionString, actionString].compactMap { $0 }
+
+        return descriptionItems.joined(separator: ", ")
     }
 
     /// Sets the timeout of requests made to this element.
@@ -149,7 +151,8 @@ import ApplicationServices
             element: self,
             actions: actions,
             frame: frame,
-            attributes: stringAttributes
+            attributes: stringAttributes,
+            ancestorDescriptions: []
         )
     }
 
@@ -206,6 +209,8 @@ import ApplicationServices
                 elements.append(selfAction)
             }
 
+            let description = try self.getDescription()
+
             // get the children's actionable items
             if let children = try getAttribute("AXChildren") as? [Any?] {
                 var childrenActionableItems = [ActionableElement]()
@@ -213,6 +218,12 @@ import ApplicationServices
                     guard let childActionableItems = try await child.getActionableElements() else {
                         continue
                     }
+
+                    // add self's description as the latest ancestor of the children
+                    for childActionableItem in childActionableItems {
+                        childActionableItem.ancestorDescriptions.append(description)
+                    }
+
                     childrenActionableItems.append(contentsOf: childActionableItems)
                 }
                 elements.append(contentsOf: childrenActionableItems)
