@@ -13,14 +13,19 @@ import Element
 class AccessManager {
     /// The ``Access`` instance, which manages accessing the accessibility API
     private var access: Access?
+
     /// The ``OverlayManager`` instance, which manages the overlay window. This is
     /// purely for the sake of the sighted, to understand a bit more what is going on.
     private var overlayManager: OverlayManager
+
+    /// The actionable items visible on screen. May not be up-to-date.
+    private var actionableItems: [ActionableElement]
 
     @MainActor
     init() {
         self.access = nil
         self.overlayManager = .init()
+        self.actionableItems = []
     }
 
     /// Whether access is defined. This is false when either access has not been granted, or ``setup()`` has not been called.
@@ -55,7 +60,8 @@ class AccessManager {
         await overlayManager.show()
     }
 
-    func overlayActionsOnCurrentWindow() async throws {
+    /// Refreshes the `actionableItems` by determining the actionable elements of the currently focused app
+    func refreshActionableItems() async throws {
         guard let access else { return }
 
         // Get actionable elements
@@ -102,20 +108,25 @@ class AccessManager {
             )
         }
 
-        // Get the focused window element
-        guard let focusedWindow = try await access.focusedWindow() else { return }
+        self.actionableItems = concise
 
-        // Update the manager
-        await overlayManager.update(with: focusedWindow, actionableElements: concise)
+        try await updateOverlay()
     }
 
+    func updateOverlay() async throws {
+        // Get the focused window element
+        guard let focusedWindow = try await access?.focusedWindow() else { return }
+
+        // Update the manager
+        await overlayManager.update(with: focusedWindow, actionableElements: actionableItems)
+    }
 }
 
 extension AccessManager: AccessDelegate {
     func accessDidRefocus(success: Bool) {
         print("Access refocused!")
         Task {
-            try await overlayActionsOnCurrentWindow()
+            try await refreshActionableItems()
         }
     }
 }

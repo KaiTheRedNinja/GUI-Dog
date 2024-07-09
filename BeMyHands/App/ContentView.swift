@@ -23,10 +23,10 @@ struct ContentView: View {
                     Text("Update positions (currently every 2 seconds)")
                 }
                 .onReceive(timer) { _ in
-                    //                    guard updatingView else { return }
-                    //                    Task {
-                    //                        try await manager.overlayActionsOnCurrentWindow()
-                    //                    }
+                    guard updatingView else { return }
+                    Task {
+                        try await manager.refreshActionableItems()
+                    }
                 }
             } else {
                 Text("Setting up...")
