@@ -16,6 +16,7 @@
 		931B22D72C3B64C5003A6436 /* Element in Frameworks */ = {isa = PBXBuildFile; productRef = 931B22D62C3B64C5003A6436 /* Element */; };
 		931B22D92C3B64C5003A6436 /* Input in Frameworks */ = {isa = PBXBuildFile; productRef = 931B22D82C3B64C5003A6436 /* Input */; };
 		931B22DB2C3B64C5003A6436 /* Output in Frameworks */ = {isa = PBXBuildFile; productRef = 931B22DA2C3B64C5003A6436 /* Output */; };
+		93521B6B2C3D0F8B00B6A2FC /* ElementsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93521B6A2C3D0F8B00B6A2FC /* ElementsListView.swift */; };
 		936F3EEC2C3BE541006FC333 /* OverlayWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EEB2C3BE53B006FC333 /* OverlayWindow.swift */; };
 		936F3EEE2C3BE5E9006FC333 /* OverlayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */; };
 		936F3EF02C3BE688006FC333 /* FramesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EEF2C3BE688006FC333 /* FramesViewController.swift */; };
@@ -32,6 +33,7 @@
 		931B22CF2C3B63DA003A6436 /* BeMyHandsKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = BeMyHandsKit; sourceTree = "<group>"; };
 		931B22D02C3B64BE003A6436 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		931B22DC2C3B76A3003A6436 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		93521B6A2C3D0F8B00B6A2FC /* ElementsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementsListView.swift; sourceTree = "<group>"; };
 		936F3EEB2C3BE53B006FC333 /* OverlayWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindow.swift; sourceTree = "<group>"; };
 		936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayManager.swift; sourceTree = "<group>"; };
 		936F3EEF2C3BE688006FC333 /* FramesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramesViewController.swift; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 				936F3EEB2C3BE53B006FC333 /* OverlayWindow.swift */,
 				936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */,
 				936F3EEF2C3BE688006FC333 /* FramesViewController.swift */,
+				93521B6A2C3D0F8B00B6A2FC /* ElementsListView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -208,6 +211,7 @@
 			files = (
 				936F3EEE2C3BE5E9006FC333 /* OverlayManager.swift in Sources */,
 				931B22C32C3B6392003A6436 /* ContentView.swift in Sources */,
+				93521B6B2C3D0F8B00B6A2FC /* ElementsListView.swift in Sources */,
 				936F3EEC2C3BE541006FC333 /* OverlayWindow.swift in Sources */,
 				936F3EF42C3CA4FE006FC333 /* AccessManager.swift in Sources */,
 				931B22C12C3B6392003A6436 /* BeMyHandsApp.swift in Sources */,

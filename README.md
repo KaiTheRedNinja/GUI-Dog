@@ -47,6 +47,8 @@ Accessibility API capabilities:
     - [x] Make it update when the focused window changes, or every few seconds
 - [ ] LLM-Friendly descriptions of interactable elements
 - [ ] Easy-to-use API for executing actions
+    - [x] Make it possible to execute actions
+    - [ ] Create a clean API
 
 Gemini API capabilities:
 - [ ] Trigger API calling (a shortcut probably)

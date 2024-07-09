@@ -50,6 +50,49 @@ import ApplicationServices
         return processIdentifier
     }
 
+    /// Obtains a description of this element. It groups them into three categories:
+    /// - The role and subrole of the item
+    /// - The descriptions, identifier, or value of the item
+    /// - The available actions, if any
+    public func getDescription() throws -> String {
+        let roleString = try self.getAttribute(.roleDescription) as? String ?? "No Role"
+
+        let descriptions = try [
+            ElementAttribute.help,
+            .title,
+            .description,
+            .value,
+            .minValue,
+            .maxValue,
+            .valueIncrement,
+            .allowedValues,
+            .menuItemCmdChar,
+            .valueDescription
+        ].compactMap { item in
+            try self.getAttribute(item) as? String
+        }
+
+        let descriptionString: String
+
+        if descriptions.isEmpty {
+            descriptionString = "No Description"
+        } else {
+            descriptionString = descriptions.joined(separator: " ")
+        }
+
+        let actions = try self.listActions()
+
+        let actionString: String
+
+        if actions.isEmpty {
+            actionString = "No Action"
+        } else {
+            actionString = actions.joined(separator: " ")
+        }
+
+        return "\(roleString), \(descriptionString), \(actionString)"
+    }
+
     /// Sets the timeout of requests made to this element.
     /// - Parameter seconds: Timeout in seconds.
     public func setTimeout(seconds: Float) throws {
