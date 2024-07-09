@@ -28,13 +28,13 @@ import Output
     /// - Returns: Semantic accessibility output.
     private func readSelectedChildren() async throws -> [OutputSemantic] {
         let children = if let children = try await element.getAttribute(.selectedChildrenElements) as? [Any?], !children.isEmpty {
-            children.compactMap({$0 as? Element})
+            children.compactMap({ $0 as? Element })
         } else if let children = try await element.getAttribute(.selectedCells) as? [Any?] {
-            children.compactMap({$0 as? Element})
+            children.compactMap({ $0 as? Element })
         } else if let children = try await element.getAttribute(.selectedRows) as? [Any?] {
-            children.compactMap({$0 as? Element})
+            children.compactMap({ $0 as? Element })
         } else if let children = try await element.getAttribute(.selectedColumns) as? [Any?] {
-            children.compactMap({$0 as? Element})
+            children.compactMap({ $0 as? Element })
         } else {
             [Element]()
         }

@@ -13,7 +13,7 @@ import ApplicationServices
     public static let shared = Output()
 
     /// Creates a new output.
-    private override init() {
+    override private init() {
         super.init()
         synthesizer.delegate = self
     }

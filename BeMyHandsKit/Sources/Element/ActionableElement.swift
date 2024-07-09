@@ -29,7 +29,7 @@ public class ActionableElement {
         element: Element,
         actions: [String],
         frame: NSRect?,
-        attributes: [String : String],
+        attributes: [String: String],
         ancestorDescriptions: [String]
     ) {
         self.element = element

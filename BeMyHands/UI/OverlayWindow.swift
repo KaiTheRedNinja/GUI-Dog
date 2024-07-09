@@ -9,7 +9,7 @@ import Cocoa
 
 class OverlayWindow: NSPanel {
     override init(contentRect: NSRect, styleMask style: NSWindow.StyleMask, backing backingStoreType: NSWindow.BackingStoreType, defer flag: Bool) {
-        super.init(contentRect: NSZeroRect, styleMask: .nonactivatingPanel, backing: backingStoreType, defer: flag)
+        super.init(contentRect: NSRect.zero, styleMask: .nonactivatingPanel, backing: backingStoreType, defer: flag)
         self.isOpaque = false
         self.backgroundColor = NSColor.clear
         self.ignoresMouseEvents = true
@@ -34,9 +34,5 @@ class OverlayWindowController: NSWindowController {
 
     required init?(coder: NSCoder) {
         fatalError()
-    }
-
-    override func windowDidLoad() {
-        super.windowDidLoad()
     }
 }

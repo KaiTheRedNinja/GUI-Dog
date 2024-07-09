@@ -14,7 +14,7 @@ import Output
             []
         }
         var content = [OutputSemantic]()
-        for child in children.lazy.compactMap({$0 as? Element}) {
+        for child in children.lazy.compactMap({ $0 as? Element }) {
             let reader = try await AccessReader(for: child)
             content.append(contentsOf: try await reader.readSummary())
         }

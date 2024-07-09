@@ -101,9 +101,9 @@ import Element
             return nil
         }
         let siblings: [Element]? = if let siblings = try await parent.getAttribute(.childElementsInNavigationOrder) as? [Any?] {
-            siblings.compactMap({$0 as? Element})
+            siblings.compactMap({ $0 as? Element })
         } else if let siblings = try await element.getAttribute(.childElements) as? [Any?] {
-            siblings.compactMap({$0 as? Element})
+            siblings.compactMap({ $0 as? Element })
         } else {
             nil
         }
@@ -114,7 +114,7 @@ import Element
         if backwards {
             orderedSiblings.reverse()
         }
-        for sibling in orderedSiblings.drop(while: {$0 != element}).dropFirst() {
+        for sibling in orderedSiblings.drop(while: { $0 != element }).dropFirst() {
             if try await isInteresting(element: sibling) {
                 return sibling
             }
@@ -138,9 +138,9 @@ import Element
             return nil
         }
         let children: [Element]? = if let children = try await element.getAttribute(.childElementsInNavigationOrder) as? [Any?] {
-            children.compactMap({$0 as? Element})
+            children.compactMap({ $0 as? Element })
         } else if let children = try await element.getAttribute(.childElements) as? [Any?] {
-            children.compactMap({$0 as? Element})
+            children.compactMap({ $0 as? Element })
         } else {
             nil
         }

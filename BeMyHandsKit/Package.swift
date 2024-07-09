@@ -28,7 +28,6 @@ let package = Package(
         .target(
             name: "BeMyHandsKit"),
 
-
         // CREDIT: João Santos, https://github.com/Xce-PT/Vosh/
         .target(
             name: "Access",
@@ -44,7 +43,6 @@ let package = Package(
         ),
         .target(name: "Output"),
         .target(name: "Element"),
-
 
         .testTarget(
             name: "BeMyHandsKitTests",

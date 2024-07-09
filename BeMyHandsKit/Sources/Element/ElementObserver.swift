@@ -38,7 +38,7 @@ import ApplicationServices
         }
         self.observer = observer
         (eventStream, eventContinuation) = AsyncStream<ElementEvent>.makeStream()
-        await MainActor.run() {
+        await MainActor.run {
             let runLoopSource = AXObserverGetRunLoopSource(observer)
             CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, .defaultMode)
         }

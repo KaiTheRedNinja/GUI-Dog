@@ -139,6 +139,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 931B22CC2C3B6393003A6436 /* Build configuration list for PBXNativeTarget "BeMyHands" */;
 			buildPhases = (
+				93BC3FAF2C3D3A4900EDC028 /* Run SwiftLint */,
 				931B22B92C3B6392003A6436 /* Sources */,
 				931B22BA2C3B6392003A6436 /* Frameworks */,
 				931B22BB2C3B6392003A6436 /* Resources */,
@@ -203,6 +204,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		93BC3FAF2C3D3A4900EDC028 /* Run SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run SwiftLint";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif [[ \"$(uname -m)\" == arm64 ]]\nthen\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif command -v swiftlint >/dev/null 2>&1\nthen\n    swiftlint --strict --fix\nelse\n    echo \"warning: `swiftlint` command not found - See https://github.com/realm/SwiftLint#installation for installation instructions.\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		931B22B92C3B6392003A6436 /* Sources */ = {
@@ -355,6 +378,7 @@
 				DEVELOPMENT_TEAM = Z88Z98GRZQ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BeMyHands/App/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -383,6 +407,7 @@
 				DEVELOPMENT_TEAM = Z88Z98GRZQ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BeMyHands/App/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";

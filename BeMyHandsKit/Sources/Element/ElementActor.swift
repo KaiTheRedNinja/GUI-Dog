@@ -34,7 +34,7 @@ import Foundation
         private init() {
             // Use an NSConditionLock as a poor man's barrier to prevent the initializer from returning before the thread starts and a run loop is assigned.
             let lock = NSConditionLock(condition: 0)
-            thread = Thread() {[self] in
+            thread = Thread {[self] in
                 lock.lock(whenCondition: 0)
                 runLoop = RunLoop.current
                 lock.unlock(withCondition: 1)
@@ -50,7 +50,7 @@ import Foundation
         public func enqueue(_ job: consuming ExecutorJob) {
             // I don't think this code is sound, but it is suggested in the custom actor executors Swift Evolution proposal.
             let job = UnownedJob(job)
-            runLoop.perform({[unowned self] in job.runSynchronously(on: asUnownedSerialExecutor())})
+            runLoop.perform({ [unowned self] in job.runSynchronously(on: asUnownedSerialExecutor()) })
         }
     }
 }

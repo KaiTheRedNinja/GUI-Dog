@@ -30,7 +30,7 @@ import Output
             return nil
         }
         system = await Element()
-        Task() {[weak self] in
+        Task {[weak self] in
             while let self = self {
                 var eventIterator = await self.observer?.eventStream.makeAsyncIterator()
                 while let event = await eventIterator?.next() {

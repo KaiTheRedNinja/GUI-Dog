@@ -84,9 +84,9 @@ import Output
         }
         let eventRunLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, eventTap, 0)
         CFRunLoopAddSource(CFRunLoopGetMain(), eventRunLoopSource, CFRunLoopMode.defaultMode)
-        capsLockTask = Task(operation: {[unowned self] in await handleCapsLockStream(capsLockStream)})
-        modifierTask = Task(operation: {[unowned self] in await handleModifierStream(modifierStream)})
-        keyboardTapTask = Task(operation: {[unowned self] in await handleKeyboardTapStream(keyboardTapStream)})
+        capsLockTask = Task(operation: { [unowned self] in await handleCapsLockStream(capsLockStream) })
+        modifierTask = Task(operation: { [unowned self] in await handleModifierStream(modifierStream) })
+        keyboardTapTask = Task(operation: { [unowned self] in await handleKeyboardTapStream(keyboardTapStream) })
     }
 
     deinit {

@@ -184,7 +184,7 @@ import ApplicationServices
             }
             if recursiveChildren, let children = try getAttribute("AXChildren") as? [Any?] {
                 var resultingChildren = [Any]()
-                for child in children.lazy.compactMap({$0 as? Element}) {
+                for child in children.lazy.compactMap({ $0 as? Element }) {
                     guard let child = try await child.dump(recursiveParents: false, recursiveChildren: true) else {
                         continue
                     }
@@ -214,7 +214,7 @@ import ApplicationServices
             // get the children's actionable items
             if let children = try getAttribute("AXChildren") as? [Any?] {
                 var childrenActionableItems = [ActionableElement]()
-                for child in children.lazy.compactMap({$0 as? Element}) {
+                for child in children.lazy.compactMap({ $0 as? Element }) {
                     guard let childActionableItems = try await child.getActionableElements() else {
                         continue
                     }
@@ -241,7 +241,7 @@ import ApplicationServices
     /// - Returns: Set of attributes.
     public func getAttributeSet() throws -> Set<ElementAttribute> {
         let attributes = try listAttributes()
-        return Set(attributes.lazy.compactMap({ElementAttribute(rawValue: $0)}))
+        return Set(attributes.lazy.compactMap({ ElementAttribute(rawValue: $0) }))
     }
 
     /// Reads the value associated with a given attribute of this element.
@@ -270,7 +270,7 @@ import ApplicationServices
     /// - Returns: Set of parameterized attributes.
     public func getParameterizedAttributeSet() throws -> Set<ElementParameterizedAttribute> {
         let attributes = try listParameterizedAttributes()
-        return Set(attributes.lazy.compactMap({ElementParameterizedAttribute(rawValue: $0)}))
+        return Set(attributes.lazy.compactMap({ ElementParameterizedAttribute(rawValue: $0) }))
     }
 
     /// Queries the specified parameterized attribute of this element.
@@ -302,7 +302,7 @@ import ApplicationServices
         guard let actions = [Any?](legacyValue: actions as CFTypeRef) else {
             return []
         }
-        return actions.compactMap({$0 as? String})
+        return actions.compactMap({ $0 as? String })
     }
 
     /// Queries for a localized description of the specified action.
@@ -363,7 +363,7 @@ import ApplicationServices
         guard let attributes = [Any?](legacyValue: attributes as CFTypeRef) else {
             return []
         }
-        return attributes.compactMap({$0 as? String})
+        return attributes.compactMap({ $0 as? String })
     }
 
     /// Reads the value associated with a given attribute of this element.
@@ -429,7 +429,7 @@ import ApplicationServices
         guard let parameterizedAttributes = [Any?](legacyValue: parameterizedAttributes as CFTypeRef) else {
             return []
         }
-        return parameterizedAttributes.compactMap({$0 as? String})
+        return parameterizedAttributes.compactMap({ $0 as? String })
     }
 
     /// Queries the specified parameterized attribute of this element.
