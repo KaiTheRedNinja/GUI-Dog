@@ -4,7 +4,6 @@ disabled_rules:
   - nesting
   - cyclomatic_complexity
   - type_body_length
-  - file_length
   - function_body_length
   - force_cast
 
@@ -43,3 +42,5 @@ custom_rules:
     regex: "\t"
     message: "Prefer spaces for indents over tabs. See Xcode setting: 'Text Editing' -> 'Indentation'"
     severity: warning
+
+line_limit: 200
