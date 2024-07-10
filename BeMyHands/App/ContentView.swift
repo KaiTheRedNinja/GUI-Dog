@@ -22,12 +22,6 @@ struct ContentView: View {
                 Toggle(isOn: $updatingView) {
                     Text("Update positions (currently every 2 seconds)")
                 }
-                .onReceive(timer) { _ in
-                    guard updatingView else { return }
-                    Task {
-                        try await manager.refreshActionableItems()
-                    }
-                }
             } else {
                 Text("Setting up...")
             }

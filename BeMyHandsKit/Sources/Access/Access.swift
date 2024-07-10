@@ -188,6 +188,63 @@ import Output
         return try await application.getActionableElements()
     }
 
+    /// Returns a snapshot of the current accessibility state
+    @MainActor public func takeAccessSnapshot() async throws -> AccessSnapshot? {
+        // Get actionable elements
+        guard let elements = try await actionableElements() else {
+            print("No elements found")
+            return nil
+        }
+
+        // Only show the following data, if they exist:
+        let items = [
+            kAXRoleAttribute,
+            kAXSubroleAttribute,
+            kAXHelpAttribute,
+            kAXTitleAttribute,
+            kAXRoleDescriptionAttribute,
+            kAXIdentifierAttribute,
+            kAXDescriptionAttribute,
+            kAXValueAttribute,
+            kAXMinValueAttribute,
+            kAXMaxValueAttribute,
+            kAXValueIncrementAttribute,
+            kAXAllowedValuesAttribute,
+            kAXMenuItemCmdCharAttribute,
+            "AXAttributedDescription",
+            "AXFrame"
+        ]
+
+        // Reduce the number of attributes they have, for pretty printing
+        let concise = elements.compactMap { element in
+            var attributes: [String: String] = [:]
+
+            for item in items {
+                attributes[item] = element.attributes[item]
+            }
+
+            let conciseAncestors = element.ancestorDescriptions.filter { $0.contains(", ") }
+
+            return ActionableElement(
+                element: element.element,
+                actions: element.actions,
+                frame: element.frame,
+                attributes: attributes,
+                ancestorDescriptions: conciseAncestors
+            )
+        }
+
+        // Get the app name and focused element
+        let appName = try await application?.getAttribute(.title) as? String
+        let focusElement = await focus?.entity.element
+
+        return AccessSnapshot(
+            focusedAppName: appName,
+            focus: focusElement,
+            actionableItems: concise
+        )
+    }
+
     /// Returns the currently focused window
     @MainActor public func focusedWindow() async throws -> Element? {
         guard let application = await application else {

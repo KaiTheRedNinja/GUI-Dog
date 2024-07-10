@@ -341,7 +341,7 @@ import ApplicationServices
         case .actionUnsupported, .apiDisabled, .invalidElement, .notImplemented, .timeout:
             throw error
         default:
-            fatalError("Unexpected error performing accessibility element action \(action): \(error.localizedDescription)")
+            print("Unexpected error performing accessibility element action \(action): \(error.localizedDescription)")
         }
     }
 

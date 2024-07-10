@@ -18,14 +18,14 @@ class AccessManager {
     /// purely for the sake of the sighted, to understand a bit more what is going on.
     private var overlayManager: OverlayManager
 
-    /// The actionable items visible on screen. May not be up-to-date.
-    private var actionableItems: [ActionableElement]
+    /// A snapshot of the accessibility items, plus some contextual information. May not be up-to-date.
+    private var accessSnapshot: AccessSnapshot?
 
     @MainActor
     init() {
         self.access = nil
         self.overlayManager = .init()
-        self.actionableItems = []
+        self.accessSnapshot = nil
     }
 
     /// Whether access is defined. This is false when either access has not been granted, or ``setup()`` has not been called.
@@ -60,65 +60,26 @@ class AccessManager {
         await overlayManager.show()
     }
 
-    /// Refreshes the `actionableItems` by determining the actionable elements of the currently focused app
-    func refreshActionableItems() async throws {
+    /// Takes an access snapshot, and updates the overlay
+    func takeAccessSnapshot() async throws {
         guard let access else { return }
 
-        // Get actionable elements
-        guard let elements = try await access.actionableElements() else {
-            print("No elements found")
-            return
-        }
+        let snapshot = try await access.takeAccessSnapshot()
 
-        // Only show the following data, if they exist:
-        let items = [
-            kAXRoleAttribute,
-            kAXSubroleAttribute,
-            kAXHelpAttribute,
-            kAXTitleAttribute,
-            kAXRoleDescriptionAttribute,
-            kAXIdentifierAttribute,
-            kAXDescriptionAttribute,
-            kAXValueAttribute,
-            kAXMinValueAttribute,
-            kAXMaxValueAttribute,
-            kAXValueIncrementAttribute,
-            kAXAllowedValuesAttribute,
-            kAXMenuItemCmdCharAttribute,
-            "AXAttributedDescription",
-            "AXFrame"
-        ]
-
-        // Reduce the number of attributes they have, for pretty printing
-        let concise = elements.compactMap { element in
-            var attributes: [String: String] = [:]
-
-            for item in items {
-                attributes[item] = element.attributes[item]
-            }
-
-            let conciseAncestors = element.ancestorDescriptions.filter { $0.contains(", ") }
-
-            return ActionableElement(
-                element: element.element,
-                actions: element.actions,
-                frame: element.frame,
-                attributes: attributes,
-                ancestorDescriptions: conciseAncestors
-            )
-        }
-
-        self.actionableItems = concise
+        self.accessSnapshot = snapshot
 
         try await updateOverlay()
     }
 
     func updateOverlay() async throws {
         // Get the focused window element
-        guard let focusedWindow = try await access?.focusedWindow() else { return }
+        guard
+            let focusedWindow = try await access?.focusedWindow(),
+            let accessSnapshot
+        else { return }
 
         // Update the manager
-        await overlayManager.update(with: focusedWindow, actionableElements: actionableItems)
+        await overlayManager.update(with: focusedWindow, actionableElements: accessSnapshot.actionableItems)
     }
 }
 
@@ -126,7 +87,7 @@ extension AccessManager: AccessDelegate {
     func accessDidRefocus(success: Bool) {
         print("Access refocused!")
         Task {
-            try await refreshActionableItems()
+            try await takeAccessSnapshot()
         }
     }
 }
