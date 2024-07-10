@@ -5,7 +5,8 @@ import Element
 import Output
 
 /// Accessibility context.
-@AccessActor public final class Access {
+@AccessActor
+public final class Access {
     /// System-wide element.
     private let system: Element
     /// Active application.
@@ -22,7 +23,7 @@ import Output
     private static let logger = Logger()
 
     /// The delegate to inform about important events
-    public var delegate: (any AccessDelegate)?
+    public weak var delegate: (any AccessDelegate)?
 
     /// Initializes the accessibility framework.
     public init?() async {
@@ -154,12 +155,14 @@ import Output
     }
 
     /// Dumps the system wide element to a property list file chosen by the user.
-    @MainActor public func dumpSystemWide() async {
+    @MainActor
+    public func dumpSystemWide() async {
         await dumpElement(system)
     }
 
     /// Dumps all accessibility elements of the currently active application to a property list file chosen by the user.
-    @MainActor public func dumpApplication() async {
+    @MainActor
+    public func dumpApplication() async {
         guard let application = await application else {
             let content = [OutputSemantic.noFocus]
             Output.shared.convey(content)
@@ -168,8 +171,10 @@ import Output
         await dumpElement(application)
     }
 
-    /// Dumps all descendant accessibility elements of the currently focused element to a property list file chosen by the user.
-    @MainActor public func dumpFocus() async {
+    /// Dumps all descendant accessibility elements of the currently focused element to a property list file chosen by 
+    /// the user.
+    @MainActor
+    public func dumpFocus() async {
         guard let focus = await focus else {
             let content = [OutputSemantic.noFocus]
             Output.shared.convey(content)
@@ -179,7 +184,8 @@ import Output
     }
 
     /// Returns all actionable elements of the focused application
-    @MainActor public func actionableElements() async throws -> [ActionableElement]? {
+    @MainActor
+    public func actionableElements() async throws -> [ActionableElement]? {
         guard let application = await application else {
             let content = [OutputSemantic.noFocus]
             Output.shared.convey(content)
@@ -189,7 +195,10 @@ import Output
     }
 
     /// Returns a snapshot of the current accessibility state
-    @MainActor public func takeAccessSnapshot() async throws -> AccessSnapshot? {
+    @MainActor
+    public func takeAccessSnapshot() async throws -> AccessSnapshot? {
+        // TODO: consider using AccessGenericReader to get extra context for elements
+
         // Get actionable elements
         guard let elements = try await actionableElements() else {
             print("No elements found")
@@ -246,7 +255,8 @@ import Output
     }
 
     /// Returns the currently focused window
-    @MainActor public func focusedWindow() async throws -> Element? {
+    @MainActor
+    public func focusedWindow() async throws -> Element? {
         guard let application = await application else {
             let content = [OutputSemantic.noFocus]
             Output.shared.convey(content)
@@ -259,7 +269,8 @@ import Output
         return nil
     }
 
-    /// Resets the user focus to the system keyboard focusor the first interesting child of the focused window.
+    /// Resets the user focus to the system keyboard focusor the first interesting child of the 
+    /// focused window.
     private func refocus(processIdentifier: pid_t?) async {
         do {
             guard let processIdentifier = processIdentifier else {
@@ -298,7 +309,8 @@ import Output
                 let focus = try await AccessFocus(on: keyboardFocus)
                 self.focus = focus
                 content.append(contentsOf: try await focus.reader.read())
-            } else if let window = try await application.getAttribute(.focusedWindow) as? Element, let child = try await AccessEntity(for: window).getFirstChild() {
+            } else if let window = try await application.getAttribute(.focusedWindow) as? Element,
+                      let child = try await AccessEntity(for: window).getFirstChild() {
                 if let windowLabel = try await window.getAttribute(.title) as? String, !windowLabel.isEmpty {
                     content.append(.window(windowLabel))
                 } else {
@@ -347,7 +359,8 @@ import Output
                     break
                 }
                 let entity = try await AccessEntity(for: event.subject)
-                guard let isFocusableAncestor = try await focus?.entity.isInFocusGroup(of: entity), !isFocusableAncestor else {
+                guard let isFocusableAncestor = try await focus?.entity.isInFocusGroup(of: entity),
+                      !isFocusableAncestor else {
                     break
                 }
                 focus = nil
@@ -370,11 +383,14 @@ import Output
         }
     }
 
-    /// Dumps the entire hierarchy of elements rooted at the specified element to a property list file chosen by the user.
+    /// Dumps the entire hierarchy of elements rooted at the specified element to a property list file chosen 
+    /// by the user.
     /// - Parameter element: Root element.
-    @MainActor private func dumpElement(_ element: Element) async {
+    @MainActor
+    private func dumpElement(_ element: Element) async {
         do {
-            guard let label = try await application?.getAttribute(.title) as? String, let dump = try await element.dump() else {
+            guard let label = try await application?.getAttribute(.title) as? String,
+                  let dump = try await element.dump() else {
                 let content = [OutputSemantic.noFocus]
                 Output.shared.convey(content)
                 return

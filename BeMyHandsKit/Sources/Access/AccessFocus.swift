@@ -2,7 +2,8 @@ import Element
 import Output
 
 /// User focus state.
-@AccessActor struct AccessFocus {
+@AccessActor
+struct AccessFocus {
     /// Focused entity.
     let entity: AccessEntity
     /// Reader for the focused entity.

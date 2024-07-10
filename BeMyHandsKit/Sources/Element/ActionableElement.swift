@@ -25,6 +25,7 @@ public class ActionableElement {
     /// The attributes of the element
     public var attributes: [String: String]
 
+    /// Creates an actionable element from its base attributes
     public init(
         element: Element,
         actions: [String],

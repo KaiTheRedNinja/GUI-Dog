@@ -28,7 +28,8 @@ class AccessManager {
         self.accessSnapshot = nil
     }
 
-    /// Whether access is defined. This is false when either access has not been granted, or ``setup()`` has not been called.
+    /// Whether access is defined. This is false when either access has not been granted, or ``setup()`` has not 
+    /// been called.
     var accessAvailable: Bool {
         access != nil
     }

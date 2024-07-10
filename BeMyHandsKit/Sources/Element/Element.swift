@@ -1,7 +1,8 @@
 import ApplicationServices
 
 /// Swift wrapper for a legacy ``AXUIElement``.
-@ElementActor public struct Element {
+@ElementActor
+public struct Element {
     /// Legacy value.
     let legacyValue: CFTypeRef
 
@@ -111,7 +112,8 @@ import ApplicationServices
         }
     }
 
-    /// Converts this element into an ``ActionableElement``. Throws if any steps fail, returns nil if this element is not actionable.
+    /// Converts this element into an ``ActionableElement``. Throws if any steps fail, returns nil if this 
+    /// element is not actionable.
     public func createActionableElement() throws -> ActionableElement? {
         let actions = try listActions()
 
@@ -209,9 +211,10 @@ import ApplicationServices
     }
 
     /// Returns all actionable elements within this element, including both children and itself.
-    /// - Parameter maxChildren: The maximum number of children to explore. Generally, they are explored left-to-right, top-to-bottom
+    /// - Parameter maxChildren: The maximum number of children to explore. Generally, they are explored left-to-right, 
+    /// top-to-bottom, though this is not guarenteed.
     /// - Returns: An array of actionable elements, if it worked
-    public func getActionableElements(maxChildren: Int = 100) async throws -> [ActionableElement]? {
+    public func getActionableElements(maxChildren: Int = 60) async throws -> [ActionableElement]? {
         do {
             var elements: [ActionableElement] = []
 
@@ -222,26 +225,29 @@ import ApplicationServices
             let description = try self.getDescription()
 
             // get the children's actionable items
-            if let children = try getAttribute("AXChildren") as? [Any?] {
-                var childrenActionableItems = [ActionableElement]()
-                for (index, child) in children.lazy.compactMap({ $0 as? Element }).enumerated() {
-                    guard index < maxChildren else {
-                        break
-                    }
-
-                    guard let childActionableItems = try await child.getActionableElements(maxChildren: maxChildren) else {
-                        continue
-                    }
-
-                    // add self's description as the latest ancestor of the children
-                    for childActionableItem in childActionableItems {
-                        childActionableItem.ancestorDescriptions.append(description)
-                    }
-
-                    childrenActionableItems.append(contentsOf: childActionableItems)
-                }
-                elements.append(contentsOf: childrenActionableItems)
+            guard let children = try getAttribute("AXChildren") as? [Any?] else {
+                return elements
             }
+
+            var childrenActionableItems = [ActionableElement]()
+            for (index, child) in children.lazy.compactMap({ $0 as? Element }).enumerated() {
+                guard index < maxChildren else {
+                    print("Hit children limit")
+                    break
+                }
+
+                guard let childActionableItems = try await child.getActionableElements(maxChildren: maxChildren) else {
+                    continue
+                }
+
+                // add self's description as the latest ancestor of the children
+                for childActionableItem in childActionableItems {
+                    childActionableItem.ancestorDescriptions.append(description)
+                }
+
+                childrenActionableItems.append(contentsOf: childActionableItems)
+            }
+            elements.append(contentsOf: childrenActionableItems)
 
             return elements
         } catch ElementError.invalidElement {
@@ -457,7 +463,12 @@ import ApplicationServices
             throw ElementError.illegalArgument
         }
         var output: CFTypeRef?
-        let result = AXUIElementCopyParameterizedAttributeValue(legacyValue, attribute as CFString, input.legacyValue as CFTypeRef, &output)
+        let result = AXUIElementCopyParameterizedAttributeValue(
+            legacyValue,
+            attribute as CFString,
+            input.legacyValue as CFTypeRef,
+            &output
+        )
         let error = ElementError(from: result)
         switch error {
         case .success:
@@ -467,7 +478,9 @@ import ApplicationServices
         case .apiDisabled, .invalidElement, .notEnoughPrecision, .notImplemented, .timeout:
             throw error
         default:
-            fatalError("Unrecognized error querying parameterized accessibility element attribute \(attribute): \(error)")
+            fatalError("""
+Unrecognized error querying parameterized accessibility element attribute \(attribute): \(error)
+""")
         }
         return fromLegacy(value: output)
     }
@@ -520,8 +533,11 @@ import ApplicationServices
 
     /// Checks whether this process is trusted and prompts the user to grant it accessibility privileges if it isn't.
     /// - Returns: Whether this process has accessibility privileges.
-    @MainActor public static func confirmProcessTrustedStatus() -> Bool {
-        return AXIsProcessTrustedWithOptions([kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary)
+    @MainActor
+    public static func confirmProcessTrustedStatus() -> Bool {
+        return AXIsProcessTrustedWithOptions(
+            [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
+        )
     }
 }
 
@@ -530,7 +546,7 @@ extension Element: Hashable {
         hasher.combine(legacyValue as! AXUIElement)
     }
 
-    public static nonisolated func ==(_ lhs: Element, _ rhs: Element) -> Bool {
+    public static nonisolated func == (_ lhs: Element, _ rhs: Element) -> Bool {
         let lhs = lhs.legacyValue as! AXUIElement
         let rhs = rhs.legacyValue as! AXUIElement
         return lhs == rhs

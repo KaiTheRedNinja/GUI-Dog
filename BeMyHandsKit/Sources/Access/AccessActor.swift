@@ -11,7 +11,10 @@
     ///   - resultType: Return type of the scheduled function.
     ///   - run: Function to run.
     /// - Returns: Whatever the function returns.
-    public static func run<T: Sendable>(resultType _: T.Type = T.self, body run: @AccessActor () throws -> T) async rethrows -> T {
+    public static func run<T: Sendable>(
+        resultType _: T.Type = T.self,
+        body run: @AccessActor () throws -> T
+    ) async rethrows -> T {
         return try await run()
     }
 }

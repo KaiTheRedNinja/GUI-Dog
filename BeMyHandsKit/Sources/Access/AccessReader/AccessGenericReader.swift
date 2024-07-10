@@ -5,7 +5,8 @@ import Element
 import Output
 
 /// Unspecialized accessibility reader.
-@AccessActor class AccessGenericReader {
+@AccessActor
+class AccessGenericReader {
     /// Element to read.
     let element: Element
     /// System logging facility.
@@ -42,7 +43,9 @@ import Output
         if let title = try await element.getAttribute(.title) as? String, !title.isEmpty {
             return [.label(title)]
         }
-        if let element = try await element.getAttribute(.titleElement) as? Element, let title = try await element.getAttribute(.title) as? String, !title.isEmpty {
+        if let element = try await element.getAttribute(.titleElement) as? Element,
+           let title = try await element.getAttribute(.title) as? String,
+           !title.isEmpty {
             return [.label(title)]
         }
         if let description = try await element.getAttribute(.description) as? String, !description.isEmpty {
@@ -62,9 +65,11 @@ import Output
         } else {
             nil
         }
+
         guard let value = value else {
             return []
         }
+
         switch value {
         case let bool as Bool:
             content.append(.boolValue(bool))
@@ -88,9 +93,11 @@ import Output
         default:
             Self.logger.warning("Unexpected value type: \(type(of: value), privacy: .public)")
         }
+
         if let edited = try await element.getAttribute(.edited) as? Bool, edited {
             content.append(.edited)
         }
+
         if let placeholder = try await element.getAttribute(.placeholderValue) as? String, !placeholder.isEmpty {
             content.append(.placeholderValue(placeholder))
         }

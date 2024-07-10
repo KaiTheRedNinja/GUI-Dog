@@ -2,6 +2,11 @@ disabled_rules:
   - todo
   - trailing_comma
   - nesting
+  - cyclomatic_complexity
+  - type_body_length
+  - file_length
+  - function_body_length
+  - force_cast
 
 type_name:
   excluded:
@@ -11,10 +16,11 @@ identifier_name:
   excluded:
     - id
     - vc
+    - x
+    - y
 
 # paths to ignore during linting.
 excluded:
-  - CodeEditModules/.build # Where Swift Package Manager checks out dependency sources
   - DerivedData  
 
 opt_in_rules:

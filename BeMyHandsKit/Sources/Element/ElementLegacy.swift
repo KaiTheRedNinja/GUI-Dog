@@ -125,7 +125,8 @@ extension [String: Any]: ElementLegacy {
         self = Self()
         self.reserveCapacity(dictionary.count)
         for pair in dictionary {
-            guard let key = fromLegacy(value: pair.key as CFTypeRef) as? String, let value = fromLegacy(value: pair.value as CFTypeRef) else {
+            guard let key = fromLegacy(value: pair.key as CFTypeRef) as? String,
+                  let value = fromLegacy(value: pair.value as CFTypeRef) else {
                 continue
             }
             self[key] = value

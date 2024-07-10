@@ -2,7 +2,8 @@ import Element
 import Output
 
 /// Accessibility reader for containers like outlines and tables.
-@AccessActor class AccessContainerReader: AccessGenericReader {
+@AccessActor
+class AccessContainerReader: AccessGenericReader {
     /// Specializes the reader to also read the selected children of the wrapped container element.
     /// - Returns: Semantic accessibility output.
     override func read() async throws -> [OutputSemantic] {
@@ -11,7 +12,8 @@ import Output
         return content
     }
 
-    /// Specializes the summary reader to also read the number of rows and columns when available for the wrapped container element.
+    /// Specializes the summary reader to also read the number of rows and columns when available for 
+    /// the wrapped container element.
     /// - Returns: Semantic accessibility output.
     override func readSummary() async throws -> [OutputSemantic] {
         var content = try await super.readSummary()
@@ -27,7 +29,8 @@ import Output
     /// Reads the selected children of the wrapped container element.
     /// - Returns: Semantic accessibility output.
     private func readSelectedChildren() async throws -> [OutputSemantic] {
-        let children = if let children = try await element.getAttribute(.selectedChildrenElements) as? [Any?], !children.isEmpty {
+        let children = if let children = try await element.getAttribute(.selectedChildrenElements) as? [Any?],
+            !children.isEmpty {
             children.compactMap({ $0 as? Element })
         } else if let children = try await element.getAttribute(.selectedCells) as? [Any?] {
             children.compactMap({ $0 as? Element })

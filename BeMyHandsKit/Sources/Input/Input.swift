@@ -5,7 +5,8 @@ import IOKit
 import Output
 
 /// Input handler.
-@MainActor public final class Input {
+@MainActor
+public final class Input {
     /// Keys currently being pressed.
     public private(set) var regularKeys = Set<InputKeyCode>()
     /// Modifiers currently being pressed.
@@ -45,7 +46,10 @@ import Output
         self.modifierContinuation = modifierContinuation
         self.keyboardTapContinuation = keyboardTapContinuation
         hidManager = IOHIDManagerCreate(kCFAllocatorDefault, IOOptionBits(kIOHIDOptionsTypeNone))
-        let matches = [[kIOHIDDeviceUsagePageKey: kHIDPage_GenericDesktop, kIOHIDDeviceUsageKey: kHIDUsage_GD_Keyboard], [kIOHIDDeviceUsagePageKey: kHIDPage_GenericDesktop, kIOHIDDeviceUsageKey: kHIDUsage_GD_Keypad]]
+        let matches = [
+            [kIOHIDDeviceUsagePageKey: kHIDPage_GenericDesktop, kIOHIDDeviceUsageKey: kHIDUsage_GD_Keyboard],
+            [kIOHIDDeviceUsagePageKey: kHIDPage_GenericDesktop, kIOHIDDeviceUsageKey: kHIDUsage_GD_Keypad]
+        ]
         IOHIDManagerSetDeviceMatchingMultiple(hidManager, matches as CFArray)
         let capsLockCallback: IOHIDValueCallback = {(this, _, _, value) in
             let this = Unmanaged<Input>.fromOpaque(this!).takeUnretainedValue()
@@ -79,9 +83,22 @@ import Output
             }
             return nil
         }
-        guard let eventTap = CGEvent.tapCreate(tap: .cghidEventTap, place: .tailAppendEventTap, options: .defaultTap, eventsOfInterest: 1 << CGEventType.keyDown.rawValue | 1 << CGEventType.keyUp.rawValue | 1 << CGEventType.flagsChanged.rawValue, callback: keyboardTapCallback, userInfo: Unmanaged.passUnretained(self).toOpaque()) else {
+
+        let eventOfInterest: CGEventMask = (
+            1 << CGEventType.keyDown.rawValue | 1 << CGEventType.keyUp.rawValue | 1 << CGEventType.flagsChanged.rawValue
+        )
+
+        guard let eventTap = CGEvent.tapCreate(
+            tap: .cghidEventTap,
+            place: .tailAppendEventTap,
+            options: .defaultTap,
+            eventsOfInterest: eventOfInterest,
+            callback: keyboardTapCallback,
+            userInfo: Unmanaged.passUnretained(self).toOpaque()
+        ) else {
             fatalError("Failed to create a keyboard event tap")
         }
+
         let eventRunLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, eventTap, 0)
         CFRunLoopAddSource(CFRunLoopGetMain(), eventRunLoopSource, CFRunLoopMode.defaultMode)
         capsLockTask = Task(operation: { [unowned self] in await handleCapsLockStream(capsLockStream) })
@@ -105,8 +122,23 @@ import Output
     ///   - shiftModifier: Requires the Shift modifier key to be pressed.
     ///   - key: Key to bind.
     ///   - action: Action to perform when the key combination is pressed.
-    public func bindKey(browseMode: Bool = false, controlModifier: Bool = false, optionModifier: Bool = false, commandModifier: Bool = false, shiftModifier: Bool = false, key: InputKeyCode, action: @escaping () async -> Void) {
-        let keyBinding = KeyBinding(browseMode: browseMode, controlModifier: controlModifier, optionModifier: optionModifier, commandModifier: commandModifier, shiftModifier: shiftModifier, key: key)
+    public func bindKey(
+        browseMode: Bool = false,
+        controlModifier: Bool = false,
+        optionModifier: Bool = false,
+        commandModifier: Bool = false,
+        shiftModifier: Bool = false,
+        key: InputKeyCode,
+        action: @escaping () async -> Void
+    ) {
+        let keyBinding = KeyBinding(
+            browseMode: browseMode,
+            controlModifier: controlModifier,
+            optionModifier: optionModifier,
+            commandModifier: commandModifier,
+            shiftModifier: shiftModifier,
+            key: key
+        )
         guard state.keyBindings.updateValue(action, forKey: keyBinding) == nil else {
             fatalError("Attempted to bind the same key combination twice")
         }
@@ -141,7 +173,11 @@ import Output
     private func handleModifierStream(_ modifierStream: AsyncStream<(key: InputModifierKeyCode, isDown: Bool)>) async {
         for await event in modifierStream {
             if event.isDown {
-                state.shouldInterrupt = regularKeys.isEmpty && modifierKeys.isEmpty && (event.key == .leftControl || event.key == .rightControl)
+                state.shouldInterrupt = (
+                    regularKeys.isEmpty &&
+                    modifierKeys.isEmpty &&
+                    (event.key == .leftControl || event.key == .rightControl)
+                )
                 modifierKeys.insert(event.key)
                 continue
             }
@@ -175,7 +211,14 @@ import Output
             let optionModifier = event.flags.contains(.maskAlternate)
             let commandModifier = event.flags.contains(.maskCommand)
             let shiftModifier = event.flags.contains(.maskShift)
-            let keyBinding = KeyBinding(browseMode: browseMode, controlModifier: controlModifier, optionModifier: optionModifier, commandModifier: commandModifier, shiftModifier: shiftModifier, key: keyCode)
+            let keyBinding = KeyBinding(
+                browseMode: browseMode,
+                controlModifier: controlModifier,
+                optionModifier: optionModifier,
+                commandModifier: commandModifier,
+                shiftModifier: shiftModifier,
+                key: keyCode
+            )
             guard let action = state.keyBindings[keyBinding] else {
                 continue
             }

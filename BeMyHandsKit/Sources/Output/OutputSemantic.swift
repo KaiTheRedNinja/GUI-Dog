@@ -1,3 +1,5 @@
+// swiftlint:disable missing_docs
+
 /// Semantic Accessibility descriptions.
 public enum OutputSemantic {
     case application(String)
@@ -34,3 +36,5 @@ public enum OutputSemantic {
     case notAccessible
     case timeout
 }
+
+// swiftlint:enable missing_docs

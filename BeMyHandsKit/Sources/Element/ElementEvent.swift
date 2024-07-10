@@ -7,7 +7,8 @@ public struct ElementEvent {
     /// Event payload.
     public let payload: [PayloadKey: Any]?
 
-    /// Creates an event for the specified notification, related to the specified subject, and with the specified payload.
+    /// Creates an event for the specified notification, related to the specified subject, and with the specified 
+    /// payload.
     /// - Parameters:
     ///   - notification: Notification that triggered this event.
     ///   - subject: Element to which this notification belongs.

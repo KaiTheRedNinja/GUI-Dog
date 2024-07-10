@@ -1,7 +1,8 @@
 import ApplicationServices
 
 /// Observes an application's accessibility element for events, passing them down to their respective subscribers.
-@ElementActor public final class ElementObserver {
+@ElementActor
+public final class ElementObserver {
     /// Event stream.
     public let eventStream: AsyncStream<ElementEvent>
     /// Legacy accessibility observer.
@@ -47,7 +48,12 @@ import ApplicationServices
     /// Subscribes to be notified of specific state changes of the observed element.
     /// - Parameter notification: Notification to subscribe.
     public func subscribe(to notification: ElementNotification) throws {
-        let result = AXObserverAddNotification(observer, element, notification.rawValue as CFString, Unmanaged.passUnretained(self).toOpaque())
+        let result = AXObserverAddNotification(
+            observer,
+            element,
+            notification.rawValue as CFString,
+            Unmanaged.passUnretained(self).toOpaque()
+        )
         let error = ElementError(from: result)
         switch error {
         case .success, .notificationAlreadyRegistered:
@@ -55,7 +61,9 @@ import ApplicationServices
         case .apiDisabled, .invalidElement, .notificationUnsupported, .timeout:
             throw error
         default:
-            fatalError("Unexpected error registering accessibility element notification \(notification.rawValue): \(error)")
+            fatalError("""
+Unexpected error registering accessibility element notification \(notification.rawValue): \(error)
+""")
         }
     }
 
@@ -70,7 +78,9 @@ import ApplicationServices
         case .apiDisabled, .invalidElement, .notificationUnsupported, .timeout:
             throw error
         default:
-            fatalError("Unexpected error unregistering accessibility element notification \(notification.rawValue): \(error)")
+            fatalError("""
+Unexpected error unregistering accessibility element notification \(notification.rawValue): \(error)
+""")
         }
     }
 

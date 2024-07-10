@@ -8,7 +8,8 @@
 import Foundation
 import Element
 
-/// A "snapshot" of the accessibility elements currently on screen, plus some contextual data about the currently focused app and element.
+/// A "snapshot" of the accessibility elements currently on screen, plus some contextual data about the currently 
+/// focused app and element.
 ///
 /// **Not guarenteed** to be up-to-date at any point in time, **including directly after creation**.
 public class AccessSnapshot {
@@ -21,6 +22,7 @@ public class AccessSnapshot {
     /// The actionable items visible on screen
     public var actionableItems: [ActionableElement]
 
+    /// Creates an AccessSnapshot from its base attributes
     public init(focusedAppName: String?, focus: Element? = nil, actionableItems: [ActionableElement]) {
         self.focusedAppName = focusedAppName
         self.focus = focus

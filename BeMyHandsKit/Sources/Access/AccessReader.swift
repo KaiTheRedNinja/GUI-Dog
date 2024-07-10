@@ -2,7 +2,8 @@ import Element
 import Output
 
 /// Accessibility reader context.
-@AccessActor final class AccessReader {
+@AccessActor
+final class AccessReader {
     /// Specialized reader strategy.
     let strategy: AccessGenericReader
 

@@ -2,7 +2,8 @@ import AVFoundation
 import ApplicationServices
 
 /// Output conveyer.
-@MainActor public final class Output: NSObject {
+@MainActor
+public final class Output: NSObject {
     /// Speech synthesizer.
     private let synthesizer = AVSpeechSynthesizer()
     /// Queued output.

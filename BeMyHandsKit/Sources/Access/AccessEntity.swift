@@ -1,7 +1,8 @@
 import Element
 
 /// Convenience wrapper around an accessibility element.
-@AccessActor final class AccessEntity {
+@AccessActor
+final class AccessEntity {
     /// Wrapped accessibility element.
     let element: Element
 
@@ -82,7 +83,8 @@ import Element
     /// - Parameter element: Element whose parent is to be searched.
     /// - Returns: Interesting parent.
     private static func findParent(of element: Element) async throws -> Element? {
-        guard let parent = try await element.getAttribute(.parentElement) as? Element, try await !isRoot(element: parent) else {
+        guard let parent = try await element.getAttribute(.parentElement) as? Element,
+              try await !isRoot(element: parent) else {
             return nil
         }
         guard try await isInteresting(element: parent) else {
@@ -100,7 +102,9 @@ import Element
         guard let parent = try await element.getAttribute(.parentElement) as? Element else {
             return nil
         }
-        let siblings: [Element]? = if let siblings = try await parent.getAttribute(.childElementsInNavigationOrder) as? [Any?] {
+        let siblings: [Element]? = if let siblings = try await parent.getAttribute(
+            .childElementsInNavigationOrder
+        ) as? [Any?] {
             siblings.compactMap({ $0 as? Element })
         } else if let siblings = try await element.getAttribute(.childElements) as? [Any?] {
             siblings.compactMap({ $0 as? Element })
@@ -137,7 +141,9 @@ import Element
         if try await isLeaf(element: element) {
             return nil
         }
-        let children: [Element]? = if let children = try await element.getAttribute(.childElementsInNavigationOrder) as? [Any?] {
+        let children: [Element]? = if let children = try await element.getAttribute(
+            .childElementsInNavigationOrder
+        ) as? [Any?] {
             children.compactMap({ $0 as? Element })
         } else if let children = try await element.getAttribute(.childElements) as? [Any?] {
             children.compactMap({ $0 as? Element })

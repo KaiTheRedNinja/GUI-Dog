@@ -7,7 +7,9 @@
 
 import Foundation
 
-public protocol AccessDelegate {
-    /// Called when the ``Access`` instance refocuses after a change in application focus. Blocks the exiting of the refocus function.
+/// A delegate which gets updates from an ``Access`` instance
+public protocol AccessDelegate: AnyObject {
+    /// Called when the ``Access`` instance refocuses after a change in application focus. Blocks the exiting of the 
+    /// refocus function.
     func accessDidRefocus(success: Bool)
 }
