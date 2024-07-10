@@ -209,7 +209,9 @@ import ApplicationServices
     }
 
     /// Returns all actionable elements within this element, including both children and itself.
-    public func getActionableElements() async throws -> [ActionableElement]? {
+    /// - Parameter maxChildren: The maximum number of children to explore. Generally, they are explored left-to-right, top-to-bottom
+    /// - Returns: An array of actionable elements, if it worked
+    public func getActionableElements(maxChildren: Int = 100) async throws -> [ActionableElement]? {
         do {
             var elements: [ActionableElement] = []
 
@@ -222,8 +224,12 @@ import ApplicationServices
             // get the children's actionable items
             if let children = try getAttribute("AXChildren") as? [Any?] {
                 var childrenActionableItems = [ActionableElement]()
-                for child in children.lazy.compactMap({ $0 as? Element }) {
-                    guard let childActionableItems = try await child.getActionableElements() else {
+                for (index, child) in children.lazy.compactMap({ $0 as? Element }).enumerated() {
+                    guard index < maxChildren else {
+                        break
+                    }
+
+                    guard let childActionableItems = try await child.getActionableElements(maxChildren: maxChildren) else {
                         continue
                     }
 
