@@ -19,8 +19,15 @@ struct ContentView: View {
     var body: some View {
         Group {
             if manager.accessAvailable {
-                Toggle(isOn: $updatingView) {
-                    Text("Update positions (currently every 2 seconds)")
+//                Toggle(isOn: $updatingView) {
+//                    Text("Update positions (currently every 2 seconds)")
+//                }
+                Button("Force Update") {
+                    Task {
+                        print("Forcing update...")
+                        try await manager.takeAccessSnapshot()
+                        print("Forced update")
+                    }
                 }
             } else {
                 Text("Setting up...")

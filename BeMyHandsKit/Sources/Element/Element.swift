@@ -126,6 +126,14 @@ import ApplicationServices
             attributeValues[attribute] = encode(value: value)
         }
 
+        // if this item has a titleElement attribute, get the title from it
+        if attributes.contains(ElementAttribute.titleElement.rawValue),
+           let titleElement = try getAttribute(.titleElement) as? Element,
+           let title = try titleElement.getAttribute(.value) as? String {
+
+            attributeValues[ElementAttribute.title.rawValue] = title
+        }
+
         // convert the attributes to string representations
         // NOTE: we may want to consider adding other primatives for flexibility
         var stringAttributes: [String: String] = [:]
