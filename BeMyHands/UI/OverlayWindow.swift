@@ -21,8 +21,8 @@ class OverlayWindow: NSPanel {
 
         self.hasShadow = false
 
-        self.level = .statusBar
-        self.collectionBehavior = [.fullScreenAuxiliary]
+        self.level = .screenSaver
+        self.collectionBehavior =  [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary]
         self.isFloatingPanel = true
     }
 
