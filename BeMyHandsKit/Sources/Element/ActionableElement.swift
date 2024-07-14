@@ -8,7 +8,7 @@
 import Foundation
 
 /// Defines the data of an element with actions
-public class ActionableElement {
+public struct ActionableElement {
     /// The element that this contains
     public var element: Element
 

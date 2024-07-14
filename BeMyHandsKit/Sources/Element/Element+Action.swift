@@ -74,10 +74,27 @@ public extension Element {
     /// Converts this element into an ``ActionableElement``. Throws if any steps fail, returns nil if this
     /// element is not actionable.
     func createActionableElement() throws -> ActionableElement? {
-        let actions = try listActions()
+        var actions = try listActions()
 
-        // if this element is actionable, add it and its description
+        // filter so that only the following actions are permitted
+        let permittedActions = [
+            kAXCancelAction,    // as if the cancel button were pressed
+            kAXConfirmAction,   // as if the return button was pressed
+            kAXPressAction,     // a button press
+            kAXRaiseAction,     // bring window to front
+            "AXOpen",           // open something, eg a file
+            // kAXDecrementAction, // increment something, eg a slider
+            // kAXIncrementAction, // decrement something, eg a slider
+            // kAXShowMenuAction,  // right click ???
+            // kAXPickAction       // no clue what this is, google aint helping either
+        ]
+
+        actions = actions.filter { permittedActions.contains($0) }
+
+        // if this element is non-actionable, return
         guard !actions.isEmpty else { return nil }
+
+        // if it is valid actionable, add it and its description
         let attributes = try listAttributes()
         var attributeValues = [String: Any]()
         for attribute in attributes {
@@ -156,11 +173,13 @@ public extension Element {
                 }
 
                 // add self's description as the latest ancestor of the children
-                for childActionableItem in childActionableItems {
-                    childActionableItem.ancestorDescriptions.append(description)
+                let newChildActionableItems = childActionableItems.map {
+                    var newItem = $0
+                    newItem.ancestorDescriptions.append(description)
+                    return newItem
                 }
 
-                childrenActionableItems.append(contentsOf: childActionableItems)
+                childrenActionableItems.append(contentsOf: newChildActionableItems)
             }
             elements.append(contentsOf: childrenActionableItems)
 

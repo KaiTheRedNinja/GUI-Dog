@@ -49,6 +49,9 @@ Accessibility API capabilities:
 - [ ] Easy-to-use API for executing actions
     - [x] Make it possible to execute actions
     - [ ] Create a clean API
+- [ ] Other capabilities
+    - [ ] Focusing apps
+    - [ ] Clicking menu bar items
 
 Gemini API capabilities:
 - [ ] Trigger API calling (a shortcut probably)

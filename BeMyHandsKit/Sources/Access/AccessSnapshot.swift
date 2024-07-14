@@ -12,7 +12,7 @@ import Element
 /// focused app and element.
 ///
 /// **Not guarenteed** to be up-to-date at any point in time, **including directly after creation**.
-public class AccessSnapshot {
+public struct AccessSnapshot {
     /// The name of the currently focused app
     public var focusedAppName: String?
 

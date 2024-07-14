@@ -17,9 +17,13 @@ struct ContentView: View {
             if manager.accessAvailable {
                 Button("Force Update") {
                     Task {
-                        print("Forcing update...")
                         try await manager.takeAccessSnapshot()
-                        print("Forced update")
+                    }
+                }
+                Button("Request LLM") {
+                    Task {
+                        try await manager.takeAccessSnapshot()
+                        try await manager.requestLLMAction()
                     }
                 }
             } else {

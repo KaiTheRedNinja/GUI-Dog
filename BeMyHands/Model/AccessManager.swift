@@ -72,6 +72,7 @@ class AccessManager {
         try await updateOverlay()
     }
 
+    /// Updates the overlay ui
     func updateOverlay() async throws {
         // Get the focused window element
         guard
@@ -81,6 +82,36 @@ class AccessManager {
 
         // Update the manager
         await overlayManager.update(with: focusedWindow, actionableElements: accessSnapshot.actionableItems)
+    }
+
+    /// Requests actions from the Gemini API based on a request and the current `accessSnapshot`
+    func requestLLMAction() async throws {
+        guard let accessSnapshot else { return }
+
+        let prompt = try await String.build {
+            if let focusedAppName = accessSnapshot.focusedAppName {
+                "The focused app is \(focusedAppName)"
+            } else {
+                "There is no focused app"
+            }
+
+            "\n"
+
+            if let focus = accessSnapshot.focus {
+                "The focused element is \(try await focus.getDescription())"
+            } else {
+                "There is no focused element"
+            }
+
+            "\n"
+
+            "The actionable elements are:"
+            for actionableItem in accessSnapshot.actionableItems {
+                "\(actionableItem.description)"
+            }
+        }
+
+        print("Prompt: \n\(prompt)")
     }
 }
 

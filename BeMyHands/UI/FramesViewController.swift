@@ -52,6 +52,7 @@ class FramesViewController: NSViewController {
             view.addSubview(elemView)
         }
 
+        /*
         // put the scroll view at the trailing quarter of the screen
         let scrollView = NSHostingView(
             rootView: ElementsListView(actionableElements: actionableElements)
@@ -61,7 +62,8 @@ class FramesViewController: NSViewController {
 
         view.addSubview(scrollView)
 
-        self.view = view
         self.elementsScrollView = scrollView
+        */
+        self.view = view
     }
 }
