@@ -148,7 +148,7 @@ public extension Element {
                 elements.append(selfAction)
             }
 
-            let description = try self.getDescription()
+            let description = try self.getComprehensiveDescription()
 
             // get the children's actionable items
             guard let children = try getAttribute("AXChildren") as? [Any?] else {

@@ -42,7 +42,15 @@ public struct ActionableElement {
         self.attributes = attributes
         self.ancestorDescriptions = ancestorDescriptions
 
-        self.isMenuBarItem = attributes["AXRole"] == "AXMenuItem"
+        self.isMenuBarItem = [
+            ElementRole.menu,
+            .menuBar,
+            .menuItem,
+            .menuButton,
+            .menuBarItem
+        ]
+        .map { $0.rawValue }
+        .contains(attributes["AXRole"])
     }
 
     /// A description of this actionable element

@@ -45,7 +45,7 @@ Accessibility API capabilities:
     - [x] Prepare the interactable UI elements data
     - [x] Display the interactable UI elements
     - [x] Make it update when the focused window changes, or every few seconds
-- [ ] LLM-Friendly descriptions of interactable elements
+- [x] LLM-Friendly descriptions of interactable elements
 - [ ] Easy-to-use API for executing actions
     - [x] Make it possible to execute actions
     - [ ] Create a clean API

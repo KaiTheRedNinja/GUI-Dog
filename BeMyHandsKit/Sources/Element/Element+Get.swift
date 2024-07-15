@@ -44,13 +44,13 @@ public extension Element {
         return nil
     }
 
-    /// Obtains a description of this element. It groups them into three categories:
-    /// - The role and subrole of the item
-    /// - The descriptions, identifier, or value of the item
-    /// - The available actions, if any
-    func getDescription() throws -> String {
-        let roleString = try self.getAttribute(.roleDescription) as? String
+    /// Returns the role of the element
+    func getRole() throws -> ElementRole? {
+        try self.getAttribute(.roleDescription) as? ElementRole
+    }
 
+    /// Returns the description of the element
+    func getDescription() throws -> String? {
         var descriptions = try [
             ElementAttribute.help,
             .title,
@@ -73,23 +73,38 @@ public extension Element {
 
         let descriptionString: String?
 
-        if descriptions.isEmpty {
-            descriptionString = nil
-        } else {
+        if descriptions.contains(where: { $0 != "" }) {
             descriptionString = descriptions.joined(separator: " ")
-        }
-
-        let actions = try self.listActions()
-
-        let actionString: String?
-
-        if actions.isEmpty {
-            actionString = nil
         } else {
-            actionString = actions.joined(separator: " ")
+            descriptionString = nil
         }
 
-        let descriptionItems = [roleString, descriptionString, actionString].compactMap { $0 }
+        return descriptionString
+    }
+
+    /// Returns the descriptions of the actions that this element supports
+    func getActionDescriptions() throws -> [String] {
+        let actions = try self.listActions()
+        return try actions.compactMap {
+            try self.describeAction($0)
+        }
+    }
+
+    /// Obtains a comprehensive description of this element. It groups them into three categories:
+    /// - The role and subrole of the item
+    /// - The descriptions, identifier, or value of the item
+    /// - The available actions, if any
+    func getComprehensiveDescription() throws -> String {
+        let roleString = try getRole()?.rawValue
+        let descriptionString = try getDescription()
+        let actionsString = try self.getActionDescriptions().joined(separator: " ")
+
+        let descriptionItems = [
+            roleString,
+            descriptionString,
+            actionsString.isEmpty ? nil : actionsString
+        ]
+        .compactMap { $0 }
 
         return descriptionItems.joined(separator: ", ")
     }

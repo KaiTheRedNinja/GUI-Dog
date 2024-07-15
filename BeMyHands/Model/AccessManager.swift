@@ -89,7 +89,36 @@ class AccessManager {
         guard let accessSnapshot else { return }
 
         let screenElements = accessSnapshot.actionableItems.filter { !$0.isMenuBarItem }
-        let menuBarItems = accessSnapshot.actionableItems.filter { $0.isMenuBarItem }
+        var menuBarItems: [ActionableElement] = []
+
+        for item in accessSnapshot.actionableItems {
+            guard item.isMenuBarItem else { continue }
+            guard try await item.element.roleMatches(oneOf: [
+                .menuItem,
+                .menuBarItem
+            ]) else { continue }
+
+            menuBarItems.append(item)
+        }
+
+        @StringBuilder
+        func descriptionFor(element: ActionableElement) async throws -> String {
+            let role = try await element.element.getAttribute(.roleDescription) as? String
+            let description = try await element.element.getDescription()
+            let actions = element.actions
+
+            if let role, let description {
+                " - " + role + ": " + description
+                for action in actions {
+                    let description = try await element.element.describeAction(action)
+                    "    - " + action + (
+                        description == nil
+                        ? ""
+                        : ": " + description!
+                    )
+                }
+            }
+        }
 
         let prompt = try await String.build {
             if let focusedAppName = accessSnapshot.focusedAppName {
@@ -101,7 +130,7 @@ class AccessManager {
             "\n"
 
             if let focus = accessSnapshot.focus {
-                "The focused element is \(try await focus.getDescription())"
+                "The focused element is \(try await focus.getComprehensiveDescription())"
             } else {
                 "There is no focused element"
             }
@@ -110,14 +139,15 @@ class AccessManager {
 
             "The actionable elements are:"
             for actionableItem in screenElements {
-                " - " + (try await actionableItem.element.getDescription())
+                try await descriptionFor(element: actionableItem)
             }
 
             "\n"
 
             "The menu bar items are:"
+            // only menu item and menu bar item should be shown here
             for menuBarItem in menuBarItems {
-                try await menuBarItem.element.getDescription()
+                try await descriptionFor(element: menuBarItem)
             }
         }
 

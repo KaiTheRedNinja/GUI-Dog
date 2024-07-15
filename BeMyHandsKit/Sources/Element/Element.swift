@@ -86,6 +86,17 @@ public struct Element {
         }
     }
 
+    /// Returns if the element's role is one of a set of roles
+    /// - Parameter group: A set of roles to check against
+    /// - Returns: If the role is one of the elements in the group
+    public func roleMatches(oneOf group: Set<ElementRole>) throws -> Bool {
+        guard let role = try getAttribute(.role) as? ElementRole else {
+            return false
+        }
+
+        return group.contains(role)
+    }
+
     /// Encodes a value into a format suitable to be serialized.
     /// - Parameter value: Value to encode.
     /// - Returns: Data structure suitable to be serialized.
