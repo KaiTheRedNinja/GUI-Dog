@@ -62,3 +62,15 @@ Gemini API capabilities:
 - [ ] Second stage: Obtain interactable and contextual elements on screen
 - [ ] Second stage: Prompt engineering
 - [ ] Second stage: Response parsing and iterative process
+
+## Secrets
+This project requires a `Secrets` object, which is gitignored by default. The file is meant to be at
+`BeMyHands/App/Secrets.swift`, and only needs to provide a `Secrets.geminiKey` value. If you are building
+from source, feel free to copy this template code into your own `Secrets.swift` file:
+
+```swift
+enum Secrets {
+    /// API key for the Gemini Large Language Model
+    static var geminiKey: String = "MY_API_KEY_HERE"
+}
+``` 

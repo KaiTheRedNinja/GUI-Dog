@@ -109,7 +109,7 @@ class AccessManager {
 
             if let role, let description {
                 " - " + role + ": " + description
-                for action in actions {
+                for action in actions where action != "AXCancel" {
                     let description = try await element.element.describeAction(action)
                     "    - " + action + (
                         description == nil
@@ -152,6 +152,8 @@ class AccessManager {
         }
 
         print("Prompt: \n\(prompt)")
+
+        print("Key: \(Secrets.geminiKey)")
     }
 }
 
