@@ -88,6 +88,9 @@ class AccessManager {
     func requestLLMAction() async throws {
         guard let accessSnapshot else { return }
 
+        let screenElements = accessSnapshot.actionableItems.filter { !$0.isMenuBarItem }
+        let menuBarItems = accessSnapshot.actionableItems.filter { $0.isMenuBarItem }
+
         let prompt = try await String.build {
             if let focusedAppName = accessSnapshot.focusedAppName {
                 "The focused app is \(focusedAppName)"
@@ -106,8 +109,15 @@ class AccessManager {
             "\n"
 
             "The actionable elements are:"
-            for actionableItem in accessSnapshot.actionableItems {
-                "\(actionableItem.description)"
+            for actionableItem in screenElements {
+                " - " + (try await actionableItem.element.getDescription())
+            }
+
+            "\n"
+
+            "The menu bar items are:"
+            for menuBarItem in menuBarItems {
+                try await menuBarItem.element.getDescription()
             }
         }
 

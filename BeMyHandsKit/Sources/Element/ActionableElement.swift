@@ -25,6 +25,9 @@ public struct ActionableElement {
     /// The attributes of the element
     public var attributes: [String: String]
 
+    /// If this element was determined to be a menu bar item
+    public var isMenuBarItem: Bool
+
     /// Creates an actionable element from its base attributes
     public init(
         element: Element,
@@ -38,6 +41,8 @@ public struct ActionableElement {
         self.frame = frame
         self.attributes = attributes
         self.ancestorDescriptions = ancestorDescriptions
+
+        self.isMenuBarItem = attributes["AXRole"] == "AXMenuItem"
     }
 
     /// A description of this actionable element

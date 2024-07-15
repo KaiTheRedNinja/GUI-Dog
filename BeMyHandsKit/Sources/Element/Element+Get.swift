@@ -33,6 +33,17 @@ public extension Element {
         return processIdentifier
     }
 
+    /// Returns the title of the `titleElement`, if it exists
+    func getTitleElementTitle() throws -> String? {
+        // if this item has a titleElement attribute, get the title from it
+        if let titleElement = try getAttribute(.titleElement) as? Element,
+           let title = try titleElement.getAttribute(.value) as? String {
+            return title
+        }
+
+        return nil
+    }
+
     /// Obtains a description of this element. It groups them into three categories:
     /// - The role and subrole of the item
     /// - The descriptions, identifier, or value of the item
@@ -40,7 +51,7 @@ public extension Element {
     func getDescription() throws -> String {
         let roleString = try self.getAttribute(.roleDescription) as? String
 
-        let descriptions = try [
+        var descriptions = try [
             ElementAttribute.help,
             .title,
             .description,
@@ -53,6 +64,11 @@ public extension Element {
             .valueDescription
         ].compactMap { item in
             try self.getAttribute(item) as? String
+        }
+
+        // if this item has a titleElement attribute, get the title from it
+        if let title = try getTitleElementTitle() {
+            descriptions.append(title)
         }
 
         let descriptionString: String?

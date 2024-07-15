@@ -10,7 +10,19 @@ import ApplicationServices
 public extension Element {
     /// Creates a list of all the actions supported by this element.
     /// - Returns: List of actions.
-    func listActions() throws -> [String] {
+    func listActions(
+        filterOnly: [String]? = [ // filter so that only the following actions are permitted
+            kAXCancelAction,    // as if the cancel button were pressed
+            kAXConfirmAction,   // as if the return button was pressed
+            kAXPressAction,     // a button press
+            "AXOpen",           // open something, eg a file
+            // kAXRaiseAction,     // bring window to front
+            // kAXDecrementAction, // increment something, eg a slider
+            // kAXIncrementAction, // decrement something, eg a slider
+            // kAXShowMenuAction,  // right click ???
+            // kAXPickAction       // no clue what this is, google aint helping either
+        ]
+    ) throws -> [String] {
         let legacyValue = legacyValue as! AXUIElement
         var actions: CFArray?
         let result = AXUIElementCopyActionNames(legacyValue, &actions)
@@ -28,7 +40,7 @@ public extension Element {
         guard let actions = [Any?](legacyValue: actions as CFTypeRef) else {
             return []
         }
-        return actions.compactMap({ $0 as? String })
+        return actions.compactMap({ $0 as? String }).filter { filterOnly?.contains($0) ?? true }
     }
 
     /// Queries for a localized description of the specified action.
@@ -74,22 +86,7 @@ public extension Element {
     /// Converts this element into an ``ActionableElement``. Throws if any steps fail, returns nil if this
     /// element is not actionable.
     func createActionableElement() throws -> ActionableElement? {
-        var actions = try listActions()
-
-        // filter so that only the following actions are permitted
-        let permittedActions = [
-            kAXCancelAction,    // as if the cancel button were pressed
-            kAXConfirmAction,   // as if the return button was pressed
-            kAXPressAction,     // a button press
-            kAXRaiseAction,     // bring window to front
-            "AXOpen",           // open something, eg a file
-            // kAXDecrementAction, // increment something, eg a slider
-            // kAXIncrementAction, // decrement something, eg a slider
-            // kAXShowMenuAction,  // right click ???
-            // kAXPickAction       // no clue what this is, google aint helping either
-        ]
-
-        actions = actions.filter { permittedActions.contains($0) }
+        let actions = try listActions()
 
         // if this element is non-actionable, return
         guard !actions.isEmpty else { return nil }
@@ -105,10 +102,7 @@ public extension Element {
         }
 
         // if this item has a titleElement attribute, get the title from it
-        if attributes.contains(ElementAttribute.titleElement.rawValue),
-           let titleElement = try getAttribute(.titleElement) as? Element,
-           let title = try titleElement.getAttribute(.value) as? String {
-
+        if let title = try getTitleElementTitle() {
             attributeValues[ElementAttribute.title.rawValue] = title
         }
 
