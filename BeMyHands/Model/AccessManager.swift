@@ -19,7 +19,11 @@ class AccessManager {
     private var overlayManager: OverlayManager
 
     /// A snapshot of the accessibility items, plus some contextual information. May not be up-to-date.
-    private var accessSnapshot: AccessSnapshot?
+    internal var accessSnapshot: AccessSnapshot?
+
+    /// The object responsible for allowing an LLM to take actions on objects. Should be purged when no LLM 
+    /// communications are occuring.
+    internal var communication: LLMCommunication?
 
     @MainActor
     init() {
@@ -82,78 +86,6 @@ class AccessManager {
 
         // Update the manager
         await overlayManager.update(with: focusedWindow, actionableElements: accessSnapshot.actionableItems)
-    }
-
-    /// Requests actions from the Gemini API based on a request and the current `accessSnapshot`
-    func requestLLMAction() async throws {
-        guard let accessSnapshot else { return }
-
-        let screenElements = accessSnapshot.actionableItems.filter { !$0.isMenuBarItem }
-        var menuBarItems: [ActionableElement] = []
-
-        for item in accessSnapshot.actionableItems {
-            guard item.isMenuBarItem else { continue }
-            guard try await item.element.roleMatches(oneOf: [
-                .menuItem,
-                .menuBarItem
-            ]) else { continue }
-
-            menuBarItems.append(item)
-        }
-
-        @StringBuilder
-        func descriptionFor(element: ActionableElement) async throws -> String {
-            let role = try await element.element.getAttribute(.roleDescription) as? String
-            let description = try await element.element.getDescription()
-            let actions = element.actions
-
-            if let role, let description {
-                " - " + role + ": " + description
-                for action in actions where action != "AXCancel" {
-                    let description = try await element.element.describeAction(action)
-                    "    - " + action + (
-                        description == nil
-                        ? ""
-                        : ": " + description!
-                    )
-                }
-            }
-        }
-
-        let prompt = try await String.build {
-            if let focusedAppName = accessSnapshot.focusedAppName {
-                "The focused app is \(focusedAppName)"
-            } else {
-                "There is no focused app"
-            }
-
-            "\n"
-
-            if let focus = accessSnapshot.focus {
-                "The focused element is \(try await focus.getComprehensiveDescription())"
-            } else {
-                "There is no focused element"
-            }
-
-            "\n"
-
-            "The actionable elements are:"
-            for actionableItem in screenElements {
-                try await descriptionFor(element: actionableItem)
-            }
-
-            "\n"
-
-            "The menu bar items are:"
-            // only menu item and menu bar item should be shown here
-            for menuBarItem in menuBarItems {
-                try await descriptionFor(element: menuBarItem)
-            }
-        }
-
-        print("Prompt: \n\(prompt)")
-
-        print("Key: \(Secrets.geminiKey)")
     }
 }
 

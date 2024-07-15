@@ -16,13 +16,14 @@
 		931B22D72C3B64C5003A6436 /* Element in Frameworks */ = {isa = PBXBuildFile; productRef = 931B22D62C3B64C5003A6436 /* Element */; };
 		931B22D92C3B64C5003A6436 /* Input in Frameworks */ = {isa = PBXBuildFile; productRef = 931B22D82C3B64C5003A6436 /* Input */; };
 		931B22DB2C3B64C5003A6436 /* Output in Frameworks */ = {isa = PBXBuildFile; productRef = 931B22DA2C3B64C5003A6436 /* Output */; };
-		93521B6B2C3D0F8B00B6A2FC /* ElementsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93521B6A2C3D0F8B00B6A2FC /* ElementsListView.swift */; };
 		936F3EEC2C3BE541006FC333 /* OverlayWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EEB2C3BE53B006FC333 /* OverlayWindow.swift */; };
 		936F3EEE2C3BE5E9006FC333 /* OverlayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */; };
 		936F3EF02C3BE688006FC333 /* FramesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EEF2C3BE688006FC333 /* FramesViewController.swift */; };
 		936F3EF42C3CA4FE006FC333 /* AccessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EF32C3CA4F9006FC333 /* AccessManager.swift */; };
 		938D3EBC2C3FC765007EDE9A /* StringBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938D3EBB2C3FC763007EDE9A /* StringBuilder.swift */; };
 		93D7A4502C450F7B0065186B /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7A44F2C450F770065186B /* Secrets.swift */; };
+		93D7A4532C45131B0065186B /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 93D7A4522C45131B0065186B /* GoogleGenerativeAI */; };
+		93D7A4552C45140E0065186B /* AccessManager+LLM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7A4542C4514090065186B /* AccessManager+LLM.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,13 +36,13 @@
 		931B22CF2C3B63DA003A6436 /* BeMyHandsKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = BeMyHandsKit; sourceTree = "<group>"; };
 		931B22D02C3B64BE003A6436 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		931B22DC2C3B76A3003A6436 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		93521B6A2C3D0F8B00B6A2FC /* ElementsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementsListView.swift; sourceTree = "<group>"; };
 		936F3EEB2C3BE53B006FC333 /* OverlayWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindow.swift; sourceTree = "<group>"; };
 		936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayManager.swift; sourceTree = "<group>"; };
 		936F3EEF2C3BE688006FC333 /* FramesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramesViewController.swift; sourceTree = "<group>"; };
 		936F3EF32C3CA4F9006FC333 /* AccessManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessManager.swift; sourceTree = "<group>"; };
 		938D3EBB2C3FC763007EDE9A /* StringBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringBuilder.swift; sourceTree = "<group>"; };
 		93D7A44F2C450F770065186B /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
+		93D7A4542C4514090065186B /* AccessManager+LLM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AccessManager+LLM.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +53,7 @@
 				931B22DB2C3B64C5003A6436 /* Output in Frameworks */,
 				931B22D72C3B64C5003A6436 /* Element in Frameworks */,
 				931B22D92C3B64C5003A6436 /* Input in Frameworks */,
+				93D7A4532C45131B0065186B /* GoogleGenerativeAI in Frameworks */,
 				931B22D32C3B64C5003A6436 /* Access in Frameworks */,
 				931B22D52C3B64C5003A6436 /* BeMyHandsKit in Frameworks */,
 			);
@@ -124,7 +126,6 @@
 				936F3EEB2C3BE53B006FC333 /* OverlayWindow.swift */,
 				936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */,
 				936F3EEF2C3BE688006FC333 /* FramesViewController.swift */,
-				93521B6A2C3D0F8B00B6A2FC /* ElementsListView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -134,6 +135,7 @@
 			children = (
 				938D3EBB2C3FC763007EDE9A /* StringBuilder.swift */,
 				936F3EF32C3CA4F9006FC333 /* AccessManager.swift */,
+				93D7A4542C4514090065186B /* AccessManager+LLM.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -161,6 +163,7 @@
 				931B22D62C3B64C5003A6436 /* Element */,
 				931B22D82C3B64C5003A6436 /* Input */,
 				931B22DA2C3B64C5003A6436 /* Output */,
+				93D7A4522C45131B0065186B /* GoogleGenerativeAI */,
 			);
 			productName = BeMyHands;
 			productReference = 931B22BD2C3B6392003A6436 /* BeMyHands.app */;
@@ -190,6 +193,9 @@
 				Base,
 			);
 			mainGroup = 931B22B42C3B6391003A6436;
+			packageReferences = (
+				93D7A4512C45131B0065186B /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
+			);
 			productRefGroup = 931B22BE2C3B6392003A6436 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -241,12 +247,12 @@
 				936F3EEE2C3BE5E9006FC333 /* OverlayManager.swift in Sources */,
 				93D7A4502C450F7B0065186B /* Secrets.swift in Sources */,
 				931B22C32C3B6392003A6436 /* ContentView.swift in Sources */,
-				93521B6B2C3D0F8B00B6A2FC /* ElementsListView.swift in Sources */,
 				936F3EEC2C3BE541006FC333 /* OverlayWindow.swift in Sources */,
 				938D3EBC2C3FC765007EDE9A /* StringBuilder.swift in Sources */,
 				936F3EF42C3CA4FE006FC333 /* AccessManager.swift in Sources */,
 				931B22C12C3B6392003A6436 /* BeMyHandsApp.swift in Sources */,
 				936F3EF02C3BE688006FC333 /* FramesViewController.swift in Sources */,
+				93D7A4552C45140E0065186B /* AccessManager+LLM.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -454,6 +460,17 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		93D7A4512C45131B0065186B /* XCRemoteSwiftPackageReference "generative-ai-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/generative-ai-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		931B22D22C3B64C5003A6436 /* Access */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -474,6 +491,11 @@
 		931B22DA2C3B64C5003A6436 /* Output */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Output;
+		};
+		93D7A4522C45131B0065186B /* GoogleGenerativeAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 93D7A4512C45131B0065186B /* XCRemoteSwiftPackageReference "generative-ai-swift" */;
+			productName = GoogleGenerativeAI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

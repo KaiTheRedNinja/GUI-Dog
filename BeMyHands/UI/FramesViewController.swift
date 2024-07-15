@@ -11,8 +11,6 @@ import Element
 
 class FramesViewController: NSViewController {
 
-    var elementsScrollView: NSView!
-
     init() {
         super.init(nibName: nil, bundle: nil)
     }
@@ -52,18 +50,6 @@ class FramesViewController: NSViewController {
             view.addSubview(elemView)
         }
 
-        /*
-        // put the scroll view at the trailing quarter of the screen
-        let scrollView = NSHostingView(
-            rootView: ElementsListView(actionableElements: actionableElements)
-                .frame(width: frame.width*0.25, height: frame.height)
-        )
-        scrollView.frame = .init(x: frame.width*0.75, y: 0, width: frame.width*0.25, height: frame.height)
-
-        view.addSubview(scrollView)
-
-        self.elementsScrollView = scrollView
-        */
         self.view = view
     }
 }
