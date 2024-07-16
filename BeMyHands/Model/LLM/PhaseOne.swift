@@ -9,7 +9,7 @@ import Foundation
 import GoogleGenerativeAI
 
 extension AccessManager {
-    func getStepsFromLLM(goal: String, communication: LLMCommunication) async throws -> [String] {
+    func getStepsFromLLM(goal: String) async throws -> [String] {
         guard let accessSnapshot else {
             print("Could not access snapshot")
             return []
@@ -42,7 +42,8 @@ reading contents of text fields, respond with "insufficient information"
         print("Prompt: \(prompt)")
 
         // TODO: prompt the AI
-        let response = try await communication.model.generateContent(prompt)
+        let model = GenerativeModel(name: "gemini-1.5-flash", apiKey: Secrets.geminiKey)
+        let response = try await model.generateContent(prompt)
         if let text = response.text {
             return text.split(separator: "\n").map { String($0) }
         }

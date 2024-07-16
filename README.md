@@ -58,10 +58,12 @@ Gemini API capabilities:
 - [x] First stage: Obtain user instruction, focused application, window title
 - [x] First stage: Prompt engineering 
 - [x] First stage: Parse response into list of steps
+- [ ] First stage: Fail graciously if the action is too complex
 - [ ] Second stage: Function calling definitions
 - [ ] Second stage: Obtain interactable and contextual elements on screen
 - [ ] Second stage: Prompt engineering
 - [ ] Second stage: Response parsing and iterative process
+- [ ] Second stage: Fail graciously if the action cannot be completed
 
 ## Secrets
 This project requires a `Secrets` object, which is gitignored by default. The file is meant to be at

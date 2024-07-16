@@ -15,8 +15,11 @@ extension AccessManager {
             return nil
         }
 
+        // Update the elements in the communication instance
+        communication?.updateCurrentElements(to: elementMap)
+
         // 2. Prepare the prompt
-        let prompt = try String.build {
+        let prompt = String.build {
             """
 You are my hands. I want to \(context.goal). You will be given the following:
 - a goal
@@ -36,11 +39,10 @@ Actionable and menu bar items are in the format of:
     - [action name]: [action description]
 
 When you call the function to execute an action on the element, refer to the element by \
-its `description` and the action by its `action name`.
+its `description` and the action by its `action name`. Call the function exactly ONCE.
 
 If the step has been completed after these actions, put `true` in the function \
 call's isComplete parameter, else put `false`
-
 """
             "Goal: \(context.goal)"
             ""
@@ -77,11 +79,71 @@ call's isComplete parameter, else put `false`
             description
         }
 
-        // 3. Request the AI
-        print("Requesting ai: \(prompt)")
-        // 4. Execute the actions
-        // 5. If the AI says that the step has not been completed, then recurse
+        // prepare the declaration
+        let executeActionDecl = FunctionDeclaration(
+            name: "executeAction",
+            description: "Executes a single action, such as a press or open, on an actionable item",
+            parameters: [
+                "itemDescription": Schema(
+                    type: .string,
+                    description: "The given description of the item"
+                ),
+                "actionName": Schema(
+                    type: .string,
+                    description: "The given name of the action, usually prefixed with AX"
+                ),
+                "isComplete": Schema(
+                    type: .boolean,
+                    description: "If the current step can be considered as complete after this action is executed"
+                )
+            ],
+            requiredParameters: ["brightness", "colorTemperature"]
+        )
 
-        fatalError("Not yet implemented")
+        // 3. Request the AI
+        let model = GenerativeModel(
+            name: "gemini-1.5-flash",
+            apiKey: Secrets.geminiKey,
+            // Specify the function declaration.
+            tools: [Tool(functionDeclarations: [executeActionDecl])]
+        )
+
+        let response = try await model.generateContent(prompt)
+
+        // validate the function call. TODO: allow multiple function calls
+        guard let functionCall = response.functionCalls.first, functionCall.name == "executeAction" else {
+            print("Model did not respond with a valid function call.")
+            return nil
+        }
+
+        // 4. Execute the actions
+
+        // validate that the parameters are present
+        guard
+            case let .string(itemDesc) = functionCall.args["itemDescription"],
+            case let .string(actionName) = functionCall.args["actionName"],
+            case let .bool(isComplete) = functionCall.args["isComplete"]
+        else {
+            print("Model responded with a missing parameter.")
+            return nil
+        }
+
+        try await communication?.execute(action: actionName, onElementWithDescription: itemDesc)
+
+        // 5. If the AI says that the step has not been completed, then recurse
+        if isComplete {
+            return ActionStepContext(
+                goal: context.goal,
+                allSteps: context.allSteps,
+                currentStep: context.currentStep+1
+            )
+        } else {
+            return ActionStepContext(
+                goal: context.goal,
+                allSteps: context.allSteps,
+                currentStep: context.currentStep,
+                pastActions: (context.pastActions ?? []) + ["\(itemDesc): \(actionName)"]
+            )
+        }
     }
 }
