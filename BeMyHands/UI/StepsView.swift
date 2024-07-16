@@ -38,8 +38,12 @@ struct StepsView: View {
                         }
                     }
                 }
+                .frame(height: size.width)
+                .cornerRadius(10)
+                .padding(10)
             }
         }
         .frame(width: size.width, height: size.height)
+        .animation(.default, value: stepContext)
     }
 }

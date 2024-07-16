@@ -49,6 +49,8 @@ extension AccessManager {
 
         print("Success: \(success)")
 
+        await overlayManager.update(with: nil)
+
         // Done!
         // TODO: somehow notify the user that the action has been completed
     }

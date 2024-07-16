@@ -37,8 +37,9 @@ Actionable and menu bar items are in the format of:
  - [description]
     - [action name]: [action description]
 
-When you call the function to execute an action on the element, refer to the element by \
-its `description` and the action by its `action name`. Call the function exactly ONCE.
+Use the `executeAction` function call. When you call the function to execute an action \
+on the element, refer to the element by its `description` and the action by its `action \
+name`. Call the function exactly ONCE.
 """
             "Goal: \(context.goal)"
             ""

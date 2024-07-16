@@ -71,7 +71,7 @@ enum LLMCommunicationError: Error {
 }
 
 /// A structure that holds the context of a single "step" in Phase 2
-struct ActionStepContext {
+struct ActionStepContext: Hashable {
     /// The goal
     var goal: String
     /// The full list of steps

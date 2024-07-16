@@ -10,6 +10,7 @@ import Element
 
 class FramesView: NSView {
     func setupView(with frame: NSRect, actionableElements: [ActionableElement]) {
+        self.subviews = []
         self.translatesAutoresizingMaskIntoConstraints = true
         self.frame = frame
 

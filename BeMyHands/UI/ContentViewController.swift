@@ -38,8 +38,6 @@ class ContentViewController: NSViewController {
     }
 
     func setupSteps(with context: ActionStepContext?) {
-        print("SET UP STEPS")
-
         let frame = self.view.frame
 
         let stepsFrame: NSRect = .init(
