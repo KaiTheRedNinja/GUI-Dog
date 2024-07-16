@@ -6,6 +6,7 @@
 //
 
 import Element
+import GoogleGenerativeAI
 
 /// Holds and manages the data associated with the communication between BeMyHands and the LLM.
 ///
@@ -18,9 +19,13 @@ class LLMCommunication {
     /// The current step's context. Nil if no steps have been taken.
     private(set) var stepContext: ActionStepContext!
 
+    /// The generative AI model
+    private(set) var model: GenerativeModel
+
     init() {
         self.elementMap = [:]
         self.stepContext = nil
+        model = .init(name: "gemini-1.5-flash", apiKey: Secrets.geminiKey)
     }
 
     /// Creates a `stepContext` starting at step zero for steps. Should only be called ONCE, and will

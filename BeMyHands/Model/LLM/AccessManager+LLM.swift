@@ -17,19 +17,28 @@ extension AccessManager {
         self.communication = communication
 
         // Phase 1: Ask for list of steps
-        let steps = try await getStepsFromLLM(goal: goal)
+        let steps = try await getStepsFromLLM(goal: goal, communication: communication)
         let stepCount = steps.count
         communication.setup(withGoal: goal, steps: steps)
 
+        /*
         // Phase 2: Satisfy the steps one by one
         var success: Bool = true
         while communication.stepContext.currentStep < stepCount {
+            // note that this MAY result in infinite loops. The new context may still be
+            // targeting the same step, because a single step may require multiple `executeStep`
+            // calls
             let newContext = try await executeStep(context: communication.stepContext)
+
+            // if the new context is nil, that means something went wrong and some data turned
+            // up empty. TODO: throw instead of optionals
             guard let newContext else {
                 print("Failed due to unknown reasons")
                 success = false
                 break
             }
+
+            // update the steps
             communication.updateStepContext(to: newContext)
         }
 
@@ -37,6 +46,7 @@ extension AccessManager {
 
         // Done!
         // TODO: somehow notify the user that the action has been completed
+         */
     }
 
     /// Creates a description of the element

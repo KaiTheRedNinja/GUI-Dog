@@ -46,18 +46,18 @@ Accessibility API capabilities:
     - [x] Display the interactable UI elements
     - [x] Make it update when the focused window changes, or every few seconds
 - [x] LLM-Friendly descriptions of interactable elements
-- [ ] Easy-to-use API for executing actions
+- [x] Easy-to-use API for executing actions
     - [x] Make it possible to execute actions
-    - [ ] Create a clean API
+    - [x] Create a clean API
 - [ ] Other capabilities
     - [ ] Focusing apps
     - [ ] Clicking menu bar items
 
 Gemini API capabilities:
 - [ ] Trigger API calling (a shortcut probably)
-- [ ] First stage: Obtain user instruction, focused application, window title
-- [ ] First stage: Prompt engineering 
-- [ ] First stage: Parse response into list of steps
+- [x] First stage: Obtain user instruction, focused application, window title
+- [x] First stage: Prompt engineering 
+- [x] First stage: Parse response into list of steps
 - [ ] Second stage: Function calling definitions
 - [ ] Second stage: Obtain interactable and contextual elements on screen
 - [ ] Second stage: Prompt engineering
