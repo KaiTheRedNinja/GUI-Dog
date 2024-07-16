@@ -12,9 +12,23 @@ import GoogleGenerativeAI
 extension AccessManager {
     /// Requests actions from the Gemini API based on a request and the current `accessSnapshot`
     func requestLLMAction(goal: String) async throws {
+        // Create the object
+        let communication = LLMCommunication()
+        self.communication = communication
+
         // Phase 1: Ask for list of steps
+        let steps = try await getStepsFromLLM(goal: goal)
+        let stepCount = steps.count
+        communication.setup(withGoal: goal, steps: steps)
 
         // Phase 2: Satisfy the steps one by one
+        while communication.stepContext.currentStep < stepCount {
+            let newContext = try await executeStep(context: communication.stepContext)
+            communication.updateStepContext(to: newContext)
+        }
+
+        // Done!
+        // TODO: somehow notify the user that the action has been completed
     }
 
     // MARK: Phase 1
@@ -61,17 +75,19 @@ reading contents of text fields, respond with "insufficient information"
 
     // MARK: Phase 2
 
-    func executeStep(number: Int, steps: [String]) async throws {
+    func executeStep(context: ActionStepContext) async throws -> ActionStepContext {
         // 1. Gather context
         // 2. Request the AI
         // 3. Execute the actions
         // 4. If the AI says that the step has not been completed, then recurse
+
+        fatalError("Not yet implemented")
     }
 
     // MARK: Utilities
 
     /// Creates a description of the element
-    func prepareInteractableDescriptions() async throws -> (String, LLMCommunication)? {
+    func prepareInteractableDescriptions() async throws -> (String, [String: ActionableElement])? {
         guard let accessSnapshot else { return nil }
 
         let screenElements = accessSnapshot.actionableItems.filter { !$0.isMenuBarItem }
@@ -144,6 +160,6 @@ reading contents of text fields, respond with "insufficient information"
             }
         }
 
-        return (prompt, LLMCommunication(elementMap: elementMap))
+        return (prompt, elementMap)
     }
 }

@@ -9,24 +9,30 @@ import Element
 
 /// Holds and manages the data associated with the communication between BeMyHands and the LLM.
 ///
-/// Acts as the interface for LLMs to take actions.
+/// Acts as the interface for LLMs to take actions. Note that this manages data and the interface; it DOES NOT
+/// manage the communication or parsing of LLM responses.
 class LLMCommunication {
     /// The current map of elements
     private(set) var elementMap: [String: ActionableElement]
 
     /// The current step's context. Nil if no steps have been taken.
-    private(set) var stepContext: ActionStepContext?
+    private(set) var stepContext: ActionStepContext!
 
-    init(elementMap: [String: ActionableElement]) {
-        self.elementMap = elementMap
+    init() {
+        self.elementMap = [:]
         self.stepContext = nil
     }
 
     /// Creates a `stepContext` starting at step zero for steps. Should only be called ONCE, and will
     /// fatal error if called multiple times on the same instance.
-    func setup(withSteps steps: [String]) {
+    func setup(withGoal goal: String, steps: [String]) {
         assert(stepContext == nil, "Step context must not exist during setup stage")
-        stepContext = .init(allSteps: steps, currentStep: 0)
+        stepContext = .init(goal: goal, allSteps: steps, currentStep: 0)
+    }
+
+    /// Updates the step
+    func updateStepContext(to newStepContext: ActionStepContext) {
+        self.stepContext = newStepContext
     }
 
     /// Updates the elementMap
@@ -66,6 +72,8 @@ enum LLMCommunicationError: Error {
 
 /// A structure that holds the context of a single "step" in Phase 2
 struct ActionStepContext {
+    /// The goal
+    var goal: String
     /// The full list of steps
     var allSteps: [String]
     /// The current step
