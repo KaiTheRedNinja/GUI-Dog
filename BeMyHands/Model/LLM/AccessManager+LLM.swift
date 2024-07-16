@@ -22,69 +22,22 @@ extension AccessManager {
         communication.setup(withGoal: goal, steps: steps)
 
         // Phase 2: Satisfy the steps one by one
+        var success: Bool = true
         while communication.stepContext.currentStep < stepCount {
             let newContext = try await executeStep(context: communication.stepContext)
+            guard let newContext else {
+                print("Failed due to unknown reasons")
+                success = false
+                break
+            }
             communication.updateStepContext(to: newContext)
         }
+
+        print("Success: \(success)")
 
         // Done!
         // TODO: somehow notify the user that the action has been completed
     }
-
-    // MARK: Phase 1
-    func getStepsFromLLM(goal: String) async throws -> [String] {
-        guard let accessSnapshot else {
-            print("Could not access snapshot")
-            return []
-        }
-
-        let prompt = try await String.build {
-            """
-You are my hands. I want to \(goal). You will be given some context, and I want you to write a high-level list of \
-actions to take, as numbered bullet points such as "1. Open new tab". Try and use as few steps as possible. If the \
-goal requires data that you cannot feasibly obtain from the names and descriptions of clickable buttons, such as \
-reading contents of text fields, respond with "insufficient information"
-
-"""
-
-            if let focusedAppName = accessSnapshot.focusedAppName {
-                "The focused app is \(focusedAppName)"
-            } else {
-                "There is no focused app"
-            }
-
-            "\n"
-
-            if let focus = accessSnapshot.focus {
-                "The focused element is \(try await focus.getComprehensiveDescription())"
-            } else {
-                "There is no focused element"
-            }
-        }
-
-        print("Prompt: \(prompt)")
-
-        // TODO: prompt the AI
-        let response: String = """
-1. do something
-2. do something else
-"""
-
-        return response.split(separator: "\n").map { String($0) }
-    }
-
-    // MARK: Phase 2
-
-    func executeStep(context: ActionStepContext) async throws -> ActionStepContext {
-        // 1. Gather context
-        // 2. Request the AI
-        // 3. Execute the actions
-        // 4. If the AI says that the step has not been completed, then recurse
-
-        fatalError("Not yet implemented")
-    }
-
-    // MARK: Utilities
 
     /// Creates a description of the element
     func prepareInteractableDescriptions() async throws -> (String, [String: ActionableElement])? {
