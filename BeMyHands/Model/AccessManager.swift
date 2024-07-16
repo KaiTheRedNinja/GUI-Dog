@@ -87,6 +87,13 @@ class AccessManager {
         // Update the manager
         await overlayManager.update(with: focusedWindow, actionableElements: accessSnapshot.actionableItems)
     }
+
+    /// Toggles the outlines
+    func toggleOutlines() {
+        DispatchQueue.main.async { @MainActor [weak self] in
+            self?.overlayManager.toggleOutlines()
+        }
+    }
 }
 
 extension AccessManager: AccessDelegate {
