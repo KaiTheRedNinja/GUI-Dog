@@ -39,9 +39,6 @@ Actionable and menu bar items are in the format of:
 
 When you call the function to execute an action on the element, refer to the element by \
 its `description` and the action by its `action name`. Call the function exactly ONCE.
-
-If the current step has been completed after this action, put `true` in the function \
-call's isComplete parameter, else put `false`
 """
             "Goal: \(context.goal)"
             ""
@@ -92,13 +89,9 @@ call's isComplete parameter, else put `false`
                 "actionName": Schema(
                     type: .string,
                     description: "The given name of the action, usually prefixed with AX"
-                ),
-                "isComplete": Schema(
-                    type: .boolean,
-                    description: "If the current step can be considered as complete after this action is executed"
                 )
             ],
-            requiredParameters: ["itemDescription", "actionName", "isComplete"]
+            requiredParameters: ["itemDescription", "actionName"]
         )
 
         // 3. Request the AI
@@ -126,8 +119,7 @@ call's isComplete parameter, else put `false`
         // validate that the parameters are present
         guard
             case let .string(itemDesc) = functionCall.args["itemDescription"],
-            case let .string(actionName) = functionCall.args["actionName"],
-            case let .bool(isComplete) = functionCall.args["isComplete"]
+            case let .string(actionName) = functionCall.args["actionName"]
         else {
             print("Model responded with a missing parameter.")
             return nil
@@ -136,19 +128,11 @@ call's isComplete parameter, else put `false`
         try await communication?.execute(action: actionName, onElementWithDescription: itemDesc)
 
         // 5. If the AI says that the step has not been completed, then recurse
-        if isComplete {
-            return ActionStepContext(
-                goal: context.goal,
-                allSteps: context.allSteps,
-                currentStep: context.currentStep+1
-            )
-        } else {
-            return ActionStepContext(
-                goal: context.goal,
-                allSteps: context.allSteps,
-                currentStep: context.currentStep,
-                pastActions: (context.pastActions ?? []) + ["\(itemDesc): \(actionName)"]
-            )
-        }
+        // TODO: get recursing working again. I currently assume every action completes its step.
+        return ActionStepContext(
+            goal: context.goal,
+            allSteps: context.allSteps,
+            currentStep: context.currentStep+1
+        )
     }
 }
