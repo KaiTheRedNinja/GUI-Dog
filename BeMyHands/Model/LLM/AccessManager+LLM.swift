@@ -12,9 +12,24 @@ import GoogleGenerativeAI
 extension AccessManager {
     /// Requests actions from the Gemini API based on a request and the current `accessSnapshot`
     func requestLLMAction(goal: String) async throws {
+        guard communication == nil else {
+            print("Could not request LLM: LLM already running")
+            // TODO: fail elegantly
+            return
+        }
+
         // Create the object
         let communication = LLMCommunication()
         self.communication = communication
+
+        await overlayManager.show()
+
+        defer {
+            self.communication = nil
+            Task {
+                await self.overlayManager.hide()
+            }
+        }
 
         // Phase 1: Ask for list of steps
         let steps = try await getStepsFromLLM(goal: goal)

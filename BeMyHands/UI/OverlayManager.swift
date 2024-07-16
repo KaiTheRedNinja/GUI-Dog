@@ -13,8 +13,6 @@ class OverlayManager {
     private var windowController: OverlayWindowController
     private var contentController: ContentViewController
 
-    private var outlinesVisible: Bool = true
-
     init() {
         self.windowController = .init()
         self.contentController = .init()
@@ -47,10 +45,5 @@ class OverlayManager {
 
     func hide() {
         windowController.window?.close()
-    }
-
-    func toggleOutlines() {
-        outlinesVisible.toggle()
-        contentController.view.isHidden = !outlinesVisible
     }
 }

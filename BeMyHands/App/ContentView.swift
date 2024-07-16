@@ -30,10 +30,6 @@ struct ContentView: View {
                 Text("Setting up...")
             }
 
-            Button("Toggle Outlines") {
-                manager.toggleOutlines()
-            }
-
             Button("Quit") {
                 NSApplication.shared.terminate(nil)
             }
