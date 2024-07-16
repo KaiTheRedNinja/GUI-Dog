@@ -16,7 +16,7 @@ class AccessManager {
 
     /// The ``OverlayManager`` instance, which manages the overlay window. This is
     /// purely for the sake of the sighted, to understand a bit more what is going on.
-    private var overlayManager: OverlayManager
+    internal var overlayManager: OverlayManager
 
     /// A snapshot of the accessibility items, plus some contextual information. May not be up-to-date.
     internal var accessSnapshot: AccessSnapshot?
@@ -36,6 +36,11 @@ class AccessManager {
     /// been called.
     var accessAvailable: Bool {
         access != nil
+    }
+
+    /// The current step context, for display purposes, if it exists
+    var stepContext: ActionStepContext? {
+        communication?.stepContext
     }
 
     /// Sets up the `access` and `overlayManager`

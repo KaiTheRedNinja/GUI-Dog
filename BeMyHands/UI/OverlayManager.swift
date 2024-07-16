@@ -11,39 +11,32 @@ import Element
 @MainActor
 class OverlayManager {
     private var windowController: OverlayWindowController
-    private var framesController: FramesViewController
+    private var contentController: ContentViewController
 
     private var outlinesVisible: Bool = true
 
     init() {
         self.windowController = .init()
-        self.framesController = .init()
-        windowController.window?.contentViewController = framesController
+        self.contentController = .init()
+        windowController.window?.contentViewController = contentController
     }
 
     func update(with windowElement: Element, actionableElements: [ActionableElement]) async {
-        // Obtain the frame of the window element. Currently not used, since we cover the entire screen.
-        /*
-        let frameTask = Task { @ElementActor in
-            return try? windowElement.getAttribute(.frame) as? NSRect
-        }
-
-        guard let frame = await frameTask.value else {
-            fatalError("Focused window has no frame")
-        }
-         */
-
         // Obtain the size of the screen
         guard let screenSize = NSScreen.main?.frame.size else {
             fatalError("Could not get screen size")
         }
 
         // Set up the size and position of the frames controller
-        self.framesController.setupView(
+        self.contentController.setupFrames(
             with: .init(origin: .zero, size: screenSize),
             actionableElements: actionableElements
         )
         windowController.window?.setFrameOrigin(.init(x: 0, y: 0))
+    }
+
+    func update(with stepContext: ActionStepContext) {
+        self.contentController.setupSteps(with: stepContext)
     }
 
     func show() {
@@ -58,6 +51,6 @@ class OverlayManager {
 
     func toggleOutlines() {
         outlinesVisible.toggle()
-        framesController.view.isHidden = !outlinesVisible
+        contentController.view.isHidden = !outlinesVisible
     }
 }

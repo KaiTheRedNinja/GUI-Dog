@@ -1,28 +1,17 @@
 //
-//  FramesViewController.swift
+//  FramesView.swift
 //  BeMyHands
 //
-//  Created by Kai Quan Tay on 8/7/24.
+//  Created by Kai Quan Tay on 16/7/24.
 //
 
-import AppKit
-import SwiftUI
+import Cocoa
 import Element
 
-class FramesViewController: NSViewController {
-
-    init() {
-        super.init(nibName: nil, bundle: nil)
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
+class FramesView: NSView {
     func setupView(with frame: NSRect, actionableElements: [ActionableElement]) {
-        let view = NSView()
-        view.translatesAutoresizingMaskIntoConstraints = true
-        view.frame = frame
+        self.translatesAutoresizingMaskIntoConstraints = true
+        self.frame = frame
 
         // Add subviews at the locations of every actionable element
         // Filter out items without frames, or with a frame of size zero
@@ -47,9 +36,7 @@ class FramesViewController: NSViewController {
             elemView.toolTip = element.actions.joined(separator: ", ")
             elemView.frame = convertedFrame
 
-            view.addSubview(elemView)
+            self.addSubview(elemView)
         }
-
-        self.view = view
     }
 }

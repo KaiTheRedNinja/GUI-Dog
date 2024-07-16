@@ -21,6 +21,8 @@ extension AccessManager {
         let stepCount = steps.count
         communication.setup(withGoal: goal, steps: steps.filter { !$0.isEmpty })
 
+        await overlayManager.update(with: communication.stepContext)
+
         // Phase 2: Satisfy the steps one by one
         var success: Bool = true
         while communication.stepContext.currentStep < stepCount {
@@ -42,6 +44,7 @@ extension AccessManager {
 
             // update the steps
             communication.updateStepContext(to: newContext)
+            await overlayManager.update(with: communication.stepContext)
         }
 
         print("Success: \(success)")
