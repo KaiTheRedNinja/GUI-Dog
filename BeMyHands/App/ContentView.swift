@@ -23,7 +23,7 @@ struct ContentView: View {
                 Button("Request LLM") {
                     Task {
                         try await manager.takeAccessSnapshot()
-                        try await manager.requestLLMAction(goal: "Open my applications folder")
+                        try await manager.requestLLMAction(goal: "Open my xcode folder in the documents directory")
                     }
                 }
             } else {

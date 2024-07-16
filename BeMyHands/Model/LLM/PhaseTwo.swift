@@ -26,7 +26,6 @@ You are my hands. I want to \(context.goal). You will be given the following:
 - a list of steps to achieve the goal that have already been completed, if any
 - the step that I want you to execute
 - actions to achieve said step that have already been executed
-- steps that are yet to be done, if any
 
 You will also be given some context, namely:
 - The focused app
@@ -41,7 +40,7 @@ Actionable and menu bar items are in the format of:
 When you call the function to execute an action on the element, refer to the element by \
 its `description` and the action by its `action name`. Call the function exactly ONCE.
 
-If the step has been completed after these actions, put `true` in the function \
+If the current step has been completed after this action, put `true` in the function \
 call's isComplete parameter, else put `false`
 """
             "Goal: \(context.goal)"
@@ -66,6 +65,7 @@ call's isComplete parameter, else put `false`
                 ""
             }
 
+            /*
             if context.currentStep < context.allSteps.count-1 {
                 "Steps to do in the future:"
                 for step in context.allSteps[(context.currentStep+1)...] {
@@ -75,6 +75,7 @@ call's isComplete parameter, else put `false`
                 "This is the last step"
             }
             ""
+             */
 
             description
         }
@@ -97,7 +98,7 @@ call's isComplete parameter, else put `false`
                     description: "If the current step can be considered as complete after this action is executed"
                 )
             ],
-            requiredParameters: ["brightness", "colorTemperature"]
+            requiredParameters: ["itemDescription", "actionName", "isComplete"]
         )
 
         // 3. Request the AI
@@ -108,7 +109,11 @@ call's isComplete parameter, else put `false`
             tools: [Tool(functionDeclarations: [executeActionDecl])]
         )
 
+        print("Prompt to step \(context.currentStep): \(prompt)")
+
         let response = try await model.generateContent(prompt)
+
+        print("Step response: \(response)")
 
         // validate the function call. TODO: allow multiple function calls
         guard let functionCall = response.functionCalls.first, functionCall.name == "executeAction" else {

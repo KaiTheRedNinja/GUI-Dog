@@ -18,9 +18,10 @@ extension AccessManager {
         let prompt = try await String.build {
             """
 You are my hands. I want to \(goal). You will be given some context, and I want you to write a high-level list of \
-actions to take, as numbered bullet points such as "1. Open new tab". Try and use as few steps as possible. If the \
-goal requires data that you cannot feasibly obtain from the names and descriptions of clickable buttons, such as \
-reading contents of text fields, respond with "insufficient information"
+actions to take, as numbered bullet points such as "1. Open new tab". Try and use as few steps as possible, and rely \
+more on buttons on the screen than in the menu bar. If the goal requires data that you cannot feasibly obtain from \
+the names and descriptions of clickable buttons, such as reading contents of text fields, respond with "insufficient \
+information"
 
 """
 
@@ -45,6 +46,7 @@ reading contents of text fields, respond with "insufficient information"
         let model = GenerativeModel(name: "gemini-1.5-flash", apiKey: Secrets.geminiKey)
         let response = try await model.generateContent(prompt)
         if let text = response.text {
+            print("Response text: \(text)")
             return text.split(separator: "\n").map { String($0) }
         }
 

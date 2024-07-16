@@ -59,10 +59,10 @@ Gemini API capabilities:
 - [x] First stage: Prompt engineering 
 - [x] First stage: Parse response into list of steps
 - [ ] First stage: Fail graciously if the action is too complex
-- [ ] Second stage: Function calling definitions
-- [ ] Second stage: Obtain interactable and contextual elements on screen
-- [ ] Second stage: Prompt engineering
-- [ ] Second stage: Response parsing and iterative process
+- [x] Second stage: Function calling definitions
+- [x] Second stage: Obtain interactable and contextual elements on screen
+- [x] Second stage: Prompt engineering
+- [x] Second stage: Response parsing and iterative process
 - [ ] Second stage: Fail graciously if the action cannot be completed
 
 ## Secrets

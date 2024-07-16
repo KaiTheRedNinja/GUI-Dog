@@ -9,7 +9,7 @@
 enum StringBuilder {
     /// Builds a string from many strings.
     public static func buildBlock(_ components: String...) -> String {
-        components.filter { !$0.isEmpty }.joined(separator: "\n")
+        components.joined(separator: "\n")
     }
 
     /// Builds a string from an optional string
@@ -29,7 +29,7 @@ enum StringBuilder {
 
     /// Builds a string from an array, like for in.
     public static func buildArray(_ components: [String]) -> String {
-        components.filter { !$0.isEmpty }.joined(separator: "\n")
+        components.joined(separator: "\n")
     }
 }
 
