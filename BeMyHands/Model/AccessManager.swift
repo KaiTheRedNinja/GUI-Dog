@@ -104,8 +104,7 @@ class AccessManager {
 extension AccessManager: AccessDelegate {
     func accessDidRefocus(success: Bool) {
         print("Access refocused!")
-        Task {
-            try await takeAccessSnapshot()
-        }
+        // Note: we do not call update anymore, because we wait for the
+        // LLM calling to do it itself.
     }
 }
