@@ -17,13 +17,14 @@ extension AccessManager {
         // Phase 2: Satisfy the steps one by one
     }
 
+    // MARK: Phase 1
     func getStepsFromLLM(goal: String) async throws -> [String] {
-        guard let (description, communication) = try await prepareInteractableDescriptions() else {
-            print("Could not create description")
+        guard let accessSnapshot else {
+            print("Could not access snapshot")
             return []
         }
 
-        let prompt = String.build {
+        let prompt = try await String.build {
             """
 You are my hands. I want to \(goal). You will be given some context, and I want you to write a high-level list of \
 actions to take, as numbered bullet points such as "1. Open new tab". Try and use as few steps as possible. If the \
@@ -31,8 +32,23 @@ goal requires data that you cannot feasibly obtain from the names and descriptio
 reading contents of text fields, respond with "insufficient information"
 
 """
-            description
+
+            if let focusedAppName = accessSnapshot.focusedAppName {
+                "The focused app is \(focusedAppName)"
+            } else {
+                "There is no focused app"
+            }
+
+            "\n"
+
+            if let focus = accessSnapshot.focus {
+                "The focused element is \(try await focus.getComprehensiveDescription())"
+            } else {
+                "There is no focused element"
+            }
         }
+
+        print("Prompt: \(prompt)")
 
         // TODO: prompt the AI
         let response: String = """
@@ -42,6 +58,17 @@ reading contents of text fields, respond with "insufficient information"
 
         return response.split(separator: "\n").map { String($0) }
     }
+
+    // MARK: Phase 2
+
+    func executeStep(number: Int, steps: [String]) async throws {
+        // 1. Gather context
+        // 2. Request the AI
+        // 3. Execute the actions
+        // 4. If the AI says that the step has not been completed, then recurse
+    }
+
+    // MARK: Utilities
 
     /// Creates a description of the element
     func prepareInteractableDescriptions() async throws -> (String, LLMCommunication)? {
