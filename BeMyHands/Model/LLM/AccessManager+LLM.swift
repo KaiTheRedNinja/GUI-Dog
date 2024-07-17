@@ -23,12 +23,25 @@ extension AccessManager {
         self.communication = communication
 
         await overlayManager.show()
+        await overlayManager.update(with: communication.state)
 
         defer {
             self.communication = nil
+            DispatchQueue.main.async { @MainActor in
+                self.overlayManager.update(with: communication.state)
+            }
             DispatchQueue.main.asyncAfter(deadline: .now() + 5) { @MainActor in
                 self.overlayManager.hide()
             }
+        }
+
+        // retake snapshot
+        do {
+            try await takeAccessSnapshot()
+        } catch {
+            print("Could not get access snapshot")
+            communication.updateState(toError: .init(error))
+            return
         }
 
         // Phase 1: Ask for list of steps

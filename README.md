@@ -55,6 +55,7 @@ Accessibility API capabilities:
 
 Gemini API capabilities:
 - [x] Trigger API calling (a shortcut probably)
+- [ ] Obtain goal from user
 - [x] First stage
     - [x] Obtain user instruction, focused application, window title
     - [x] Prompt engineering 
@@ -66,7 +67,15 @@ Gemini API capabilities:
     - [x] Prompt engineering
     - [x] Response parsing and iterative process
     - [x] Fail graciously if the action cannot be completed
-- [ ] Interrupt AI
+- [ ] Interrupt AI midway through
+
+App Capabilities:
+- [ ] Announce when the AI is doing things
+- [ ] Clean up steps UI
+- [ ] Add animations (for sighted people's sake. Make sure it stays accessibility friendly.)
+- [ ] Onboarding
+    - [ ] Obtain accessibility permissions easily
+    - [ ] Customise trigger shortcut
 
 ## Secrets
 This project requires a `Secrets` object, which is gitignored by default. The file is meant to be at

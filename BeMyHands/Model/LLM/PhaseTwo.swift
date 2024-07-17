@@ -38,7 +38,7 @@ Actionable and menu bar items are in the format of:
 Use the `executeAction` function call. When you call the function to execute an action \
 on the element, refer to the element by its `description` AND `UUID` EXACTLY as it is \
 given in [description]: [UUID] and the action by its `action name`. Call the function \
-exactly ONCE.
+exactly ONCE. Respond with a FUNCTION CALL, NOT a code block.
 """
             "Goal: \(goal)"
             ""
@@ -99,7 +99,13 @@ exactly ONCE.
             name: "gemini-1.5-flash",
             apiKey: Secrets.geminiKey,
             // Specify the function declaration.
-            tools: [Tool(functionDeclarations: [executeActionDecl])]
+            tools: [Tool(functionDeclarations: [executeActionDecl])],
+            toolConfig: .init(
+                functionCallingConfig: .init(
+                    mode: .any,
+                    allowedFunctionNames: ["executeAction"]
+                )
+            )
         )
 
         print("Prompt to step \(context.currentStep): \(prompt)")
