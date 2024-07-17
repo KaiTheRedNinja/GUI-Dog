@@ -15,24 +15,35 @@ class LLMCommunication {
     /// The current map of elements
     private(set) var elementMap: [String: ActionableElement]
 
-    /// The current step's context. Nil if no steps have been taken.
-    private(set) var stepContext: ActionStepContext!
+    /// The current state
+    private(set) var state: LLMState = .init(goal: "No Goal", commState: .loading)
 
     init() {
         self.elementMap = [:]
-        self.stepContext = nil
+        self.state = .init(goal: "No Goal", commState: .loading)
     }
 
-    /// Creates a `stepContext` starting at step zero for steps. Should only be called ONCE, and will
+    /// Sets `state` to `.step`, starting at step zero for steps. Should only be called ONCE, and will
     /// fatal error if called multiple times on the same instance.
     func setup(withGoal goal: String, steps: [String]) {
-        assert(stepContext == nil, "Step context must not exist during setup stage")
-        stepContext = .init(goal: goal, allSteps: steps, currentStep: 0)
+        assert(state.commState == .loading, "Steps must not have existed during setup")
+        state.goal = goal
+        state.commState = .step(.init(allSteps: steps, currentStep: 0))
     }
 
-    /// Updates the step
-    func updateStepContext(to newStepContext: ActionStepContext) {
-        self.stepContext = newStepContext
+    /// Updates the state to another step
+    func updateState(toStep newStepContext: ActionStepContext) {
+        self.state.commState = .step(newStepContext)
+    }
+
+    /// Updates the state to a success
+    func updateStateToComplete() {
+        self.state.commState = .complete
+    }
+
+    /// Updates the state to an error
+    func updateState(toError error: LLMCommunicationError) {
+        self.state.commState = .error(error)
     }
 
     /// Updates the elementMap
@@ -61,21 +72,55 @@ class LLMCommunication {
     }
 }
 
+/// Represents the data of an LLM communication
+struct LLMState: Equatable {
+    var goal: String
+    var commState: LLMCommunicationState
+}
+
+/// Represents the state that a communication is currently in
+enum LLMCommunicationState: Equatable {
+    /// Steps not loaded yet
+    case loading
+    /// Steps loaded, executing them
+    case step(ActionStepContext)
+    /// Steps complete without known errors
+    case complete
+    /// Steps complete with known error
+    case error(LLMCommunicationError)
+}
+
 /// An error in LLM communication
-enum LLMCommunicationError: Error {
+enum LLMCommunicationError: Error, Equatable {
     /// The action is not formatted properly
     case actionFormatInvalid
-
     /// Element was not found in the ``LLMCommunication`` instance
     case elementNotFound
     /// Action is not a valid action on the `Element` instance
     case actionNotFound
+    /// Unknown error
+    case unknown(any Error)
+
+    static func == (lhs: LLMCommunicationError, rhs: LLMCommunicationError) -> Bool {
+        switch lhs {
+        case .actionFormatInvalid:
+            return rhs == .actionFormatInvalid
+        case .elementNotFound:
+            return rhs == .elementNotFound
+        case .actionNotFound:
+            return rhs == .actionNotFound
+        case .unknown(let errorLHS):
+            switch rhs {
+            case .unknown(let errorRHS):
+                return errorLHS.localizedDescription == errorRHS.localizedDescription
+            default: return false
+            }
+        }
+    }
 }
 
 /// A structure that holds the context of a single "step" in Phase 2
 struct ActionStepContext: Hashable {
-    /// The goal
-    var goal: String
     /// The full list of steps
     var allSteps: [String]
     /// The current step

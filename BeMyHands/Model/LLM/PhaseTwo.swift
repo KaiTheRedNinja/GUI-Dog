@@ -9,7 +9,7 @@ import Foundation
 import GoogleGenerativeAI
 
 extension AccessManager {
-    func executeStep(context: ActionStepContext) async throws -> ActionStepContext? {
+    func executeStep(goal: String, context: ActionStepContext) async throws -> ActionStepContext? {
         // 1. Gather context
         guard let (description, elementMap) = try await prepareInteractableDescriptions() else {
             return nil
@@ -21,7 +21,7 @@ extension AccessManager {
         // 2. Prepare the prompt
         let prompt = String.build {
             """
-You are my hands. I want to \(context.goal). You will be given the following:
+You are my hands. I want to \(goal). You will be given the following:
 - a goal
 - a list of steps to achieve the goal that have already been completed, if any
 - the step that I want you to execute
@@ -42,7 +42,7 @@ on the element, refer to the element by its `description` AND `UUID` EXACTLY as 
 given in [description]: [UUID] and the action by its `action name`. Call the function \
 exactly ONCE.
 """
-            "Goal: \(context.goal)"
+            "Goal: \(goal)"
             ""
 
             if context.currentStep > 0 {
@@ -134,7 +134,6 @@ exactly ONCE.
         // 5. If the AI says that the step has not been completed, then recurse
         // TODO: get recursing working again. I currently assume every action completes its step.
         return ActionStepContext(
-            goal: context.goal,
             allSteps: context.allSteps,
             currentStep: context.currentStep+1
         )

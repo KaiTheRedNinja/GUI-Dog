@@ -42,18 +42,18 @@ extension AccessManager {
         let stepCount = steps.count
         communication.setup(withGoal: goal, steps: steps.filter { !$0.isEmpty })
 
-        await overlayManager.update(with: communication.stepContext)
+        await overlayManager.update(with: communication.state)
 
         // Phase 2: Satisfy the steps one by one
         var success: Bool = true
-        while communication.stepContext.currentStep < stepCount {
+        while case let .step(step) = communication.state.commState, step.currentStep < stepCount {
             // retake the snapshot
             try await takeAccessSnapshot()
 
             // note that this MAY result in infinite loops. The new context may still be
             // targeting the same step, because a single step may require multiple `executeStep`
             // calls
-            let newContext = try await executeStep(context: communication.stepContext)
+            let newContext = try await executeStep(goal: goal, context: step)
 
             // if the new context is nil, that means something went wrong and some data turned
             // up empty. TODO: throw instead of optionals
@@ -64,13 +64,18 @@ extension AccessManager {
             }
 
             // update the steps
-            communication.updateStepContext(to: newContext)
-            await overlayManager.update(with: communication.stepContext)
+            communication.updateState(toStep: newContext)
+            await overlayManager.update(with: communication.state)
         }
 
         print("Success: \(success)")
 
-        await overlayManager.update(with: nil)
+        await overlayManager.update(
+            with: .init(
+                goal: communication.state.goal,
+                commState: .complete
+            )
+        )
 
         // Done!
         // TODO: somehow notify the user that the action has been completed

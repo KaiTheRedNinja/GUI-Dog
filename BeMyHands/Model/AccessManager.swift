@@ -38,11 +38,6 @@ class AccessManager {
         access != nil
     }
 
-    /// The current step context, for display purposes, if it exists
-    var stepContext: ActionStepContext? {
-        communication?.stepContext
-    }
-
     /// Sets up the `access` and `overlayManager`
     func setup() async {
         // Create the access instance

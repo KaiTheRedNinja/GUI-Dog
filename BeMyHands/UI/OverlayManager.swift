@@ -33,8 +33,8 @@ class OverlayManager {
         windowController.window?.setFrameOrigin(.init(x: 0, y: 0))
     }
 
-    func update(with stepContext: ActionStepContext?) {
-        self.contentController.setupSteps(with: stepContext)
+    func update(with state: LLMState) {
+        self.contentController.setupState(with: state)
     }
 
     func show() {

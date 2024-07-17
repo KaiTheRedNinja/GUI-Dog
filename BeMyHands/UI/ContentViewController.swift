@@ -11,11 +11,16 @@ import Element
 
 class ContentViewController: NSViewController {
     var framesView: FramesView
-    var stepsView: NSHostingView<StepsView>
+    var stateView: NSHostingView<LLMStateView>
 
     init() {
         self.framesView = .init(frame: .zero)
-        self.stepsView = .init(rootView: .init(size: .zero))
+        self.stateView = .init(
+            rootView: .init(
+                state: .init(goal: "No Goal", commState: .loading),
+                size: .zero
+            )
+        )
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -25,19 +30,19 @@ class ContentViewController: NSViewController {
 
     func setupFrames(with frame: NSRect, actionableElements: [ActionableElement]) {
         framesView.removeFromSuperview()
-        stepsView.removeFromSuperview()
+        stateView.removeFromSuperview()
         framesView.setupView(with: frame, actionableElements: actionableElements)
 
         let view = NSView()
         view.frame = frame
         view.translatesAutoresizingMaskIntoConstraints = true
         view.addSubview(framesView)
-        view.addSubview(stepsView)
+        view.addSubview(stateView)
 
         self.view = view
     }
 
-    func setupSteps(with context: ActionStepContext?) {
+    func setupState(with state: LLMState) {
         let frame = self.view.frame
 
         let stepsFrame: NSRect = .init(
@@ -48,15 +53,20 @@ class ContentViewController: NSViewController {
         )
 
         framesView.removeFromSuperview()
-        stepsView.removeFromSuperview()
-        stepsView = .init(rootView: .init(stepContext: context, size: stepsFrame.size))
-        stepsView.frame = stepsFrame
+        stateView.removeFromSuperview()
+        stateView = .init(
+            rootView: .init(
+                state: state,
+                size: stepsFrame.size
+            )
+        )
+        stateView.frame = stepsFrame
 
         let view = NSView()
         view.frame = self.view.frame
         view.translatesAutoresizingMaskIntoConstraints = true
         view.addSubview(framesView)
-        view.addSubview(stepsView)
+        view.addSubview(stateView)
 
         self.view = view
     }
