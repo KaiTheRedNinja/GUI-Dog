@@ -42,15 +42,12 @@ information"
 
         print("Prompt: \(prompt)")
 
-        // TODO: prompt the AI
         let model = GenerativeModel(name: "gemini-1.5-flash", apiKey: Secrets.geminiKey)
         let response = try await model.generateContent(prompt)
-        if let text = response.text {
+        if let text = response.text, text != "insufficient information" {
             print("Response text: \(text)")
             return text.split(separator: "\n").map { String($0) }
         }
-
-        print("AI returned something that wasn't text")
 
         return []
     }

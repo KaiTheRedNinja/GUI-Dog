@@ -66,6 +66,7 @@ Gemini API capabilities:
     - [x] Prompt engineering
     - [x] Response parsing and iterative process
     - [ ] Fail graciously if the action cannot be completed
+- [ ] Interrupt AI
 
 ## Secrets
 This project requires a `Secrets` object, which is gitignored by default. The file is meant to be at

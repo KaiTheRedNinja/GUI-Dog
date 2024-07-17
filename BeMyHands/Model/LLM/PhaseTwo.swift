@@ -34,12 +34,13 @@ You will also be given some context, namely:
 - Menu bar items
 
 Actionable and menu bar items are in the format of:
- - [description]
+ - [description]: [UUID]
     - [action name]: [action description]
 
 Use the `executeAction` function call. When you call the function to execute an action \
-on the element, refer to the element by its `description` and the action by its `action \
-name`. Call the function exactly ONCE.
+on the element, refer to the element by its `description` AND `UUID` EXACTLY as it is \
+given in [description]: [UUID] and the action by its `action name`. Call the function \
+exactly ONCE.
 """
             "Goal: \(context.goal)"
             ""
@@ -120,13 +121,15 @@ name`. Call the function exactly ONCE.
         // validate that the parameters are present
         guard
             case let .string(itemDesc) = functionCall.args["itemDescription"],
+            let lastComponent = itemDesc.split(separator: " ").last,
+            UUID(uuidString: String(lastComponent)) != nil,
             case let .string(actionName) = functionCall.args["actionName"]
         else {
             print("Model responded with a missing parameter.")
             return nil
         }
 
-        try await communication?.execute(action: actionName, onElementWithDescription: itemDesc)
+        try await communication?.execute(action: actionName, onElementWithDescription: String(lastComponent))
 
         // 5. If the AI says that the step has not been completed, then recurse
         // TODO: get recursing working again. I currently assume every action completes its step.

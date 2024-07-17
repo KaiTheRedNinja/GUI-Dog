@@ -33,6 +33,12 @@ extension AccessManager {
 
         // Phase 1: Ask for list of steps
         let steps = try await getStepsFromLLM(goal: goal)
+
+        guard !steps.isEmpty else {
+            print("No steps given")
+            return
+        }
+
         let stepCount = steps.count
         communication.setup(withGoal: goal, steps: steps.filter { !$0.isEmpty })
 
@@ -96,8 +102,9 @@ extension AccessManager {
 
             guard let role, let description else { return "" }
 
-            let desc = role + ": " + description
-            elementMap[desc] = element
+            let uuid = UUID().uuidString
+            let desc = role + ": " + description + ": " + uuid
+            elementMap[uuid] = element
 
             return try await String.build {
                 " - " + desc

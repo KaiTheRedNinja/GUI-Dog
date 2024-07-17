@@ -42,7 +42,7 @@ struct ContentView: View {
     func requestLLM() {
         Task {
             try await manager.takeAccessSnapshot()
-            try await manager.requestLLMAction(goal: "Open my CS50 folder in the documents directory")
+            try await manager.requestLLMAction(goal: "Open a new tab and open twitter")
         }
     }
 }

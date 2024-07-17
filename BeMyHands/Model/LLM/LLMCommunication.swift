@@ -43,6 +43,8 @@ class LLMCommunication {
     /// Executes an action on an element with a certain description. Handles data checks to make sure that the element
     /// exists and that the action is valid.
     func execute(action: String, onElementWithDescription elementDescription: String) async throws {
+        print("Executing [\(action)] on element with description [\(elementDescription)]")
+
         guard action.hasPrefix("AX") && !action.contains(" ") else {
             throw LLMCommunicationError.actionFormatInvalid
         }
