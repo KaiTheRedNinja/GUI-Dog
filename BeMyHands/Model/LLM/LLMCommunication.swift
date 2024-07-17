@@ -95,29 +95,56 @@ enum LLMCommunicationState: Equatable {
 
 /// An error in LLM communication
 enum LLMCommunicationError: Error, Equatable {
+    // Missing Info
+    /// The accessibility snapshot does not exist
+    case accessSnapshotNotFound
+    /// The LLM did not supply text when text was requested
+    case textNotProvided
+    /// The LLM gave an empty response
+    case emptyResponse
+
+    // Phase One
+    /// The LLM responded with "insufficient information"
+    case insufficientInformation
+
+    // Phase Two
+    /// The LLM responded with an invalid function call
+    case invalidFunctionCall
     /// The action is not formatted properly
     case actionFormatInvalid
     /// Element was not found in the ``LLMCommunication`` instance
     case elementNotFound
     /// Action is not a valid action on the `Element` instance
     case actionNotFound
+
+    // Other
     /// Unknown error
     case unknown(any Error)
 
+    /// Description of this error
+    var description: String {
+        switch self {
+        case .accessSnapshotNotFound: "The interactable UI elements are not available"
+        case .textNotProvided: "The LLM did not respond with text when it was expected to"
+        case .emptyResponse: "The LLM responded with an empty response"
+        case .insufficientInformation: "The UI elements are not sufficient to achieve the goal"
+        case .invalidFunctionCall: "The LLM responded with an invalid function call"
+        case .actionFormatInvalid: "The LLM responded with an invalid action on an element"
+        case .elementNotFound: "The LLM responded with a nonexistent element"
+        case .actionNotFound: "The LLM responded with an action that the specified element does not support"
+        case .unknown(let error): "Unknown error: \(error)"
+        }
+    }
+
     static func == (lhs: LLMCommunicationError, rhs: LLMCommunicationError) -> Bool {
-        switch lhs {
-        case .actionFormatInvalid:
-            return rhs == .actionFormatInvalid
-        case .elementNotFound:
-            return rhs == .elementNotFound
-        case .actionNotFound:
-            return rhs == .actionNotFound
-        case .unknown(let errorLHS):
-            switch rhs {
-            case .unknown(let errorRHS):
-                return errorLHS.localizedDescription == errorRHS.localizedDescription
-            default: return false
-            }
+        lhs.description == rhs.description
+    }
+
+    init(_ baseError: any Error) {
+        if let baseError = baseError as? LLMCommunicationError {
+            self = baseError
+        } else {
+            self = .unknown(baseError)
         }
     }
 }

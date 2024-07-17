@@ -42,5 +42,3 @@ custom_rules:
     regex: "\t"
     message: "Prefer spaces for indents over tabs. See Xcode setting: 'Text Editing' -> 'Indentation'"
     severity: warning
-
-line_limit: 200

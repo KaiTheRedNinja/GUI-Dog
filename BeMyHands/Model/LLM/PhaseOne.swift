@@ -12,7 +12,7 @@ extension AccessManager {
     func getStepsFromLLM(goal: String) async throws -> [String] {
         guard let accessSnapshot else {
             print("Could not access snapshot")
-            return []
+            throw LLMCommunicationError.accessSnapshotNotFound
         }
 
         let prompt = try await String.build {
@@ -46,11 +46,15 @@ requires you to perform a type, drag, or other unsupported action, respond with 
 
         let model = GenerativeModel(name: "gemini-1.5-flash", apiKey: Secrets.geminiKey)
         let response = try await model.generateContent(prompt)
-        if let text = response.text, text != "insufficient information" {
-            print("Response text: \(text)")
-            return text.split(separator: "\n").map { String($0) }
+        if let text = response.text {
+            if text != "insufficient information" {
+                print("Response text: \(text)")
+                return text.split(separator: "\n").map { String($0) }
+            } else {
+                throw LLMCommunicationError.insufficientInformation
+            }
+        } else {
+            throw LLMCommunicationError.textNotProvided
         }
-
-        return []
     }
 }

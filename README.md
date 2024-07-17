@@ -55,17 +55,17 @@ Accessibility API capabilities:
 
 Gemini API capabilities:
 - [x] Trigger API calling (a shortcut probably)
-- [ ] First stage
+- [x] First stage
     - [x] Obtain user instruction, focused application, window title
     - [x] Prompt engineering 
     - [x] Parse response into list of steps
-    - [ ] Fail graciously if the action is too complex
-- [ ] Second stage
+    - [x] Fail graciously if the action is too complex
+- [x] Second stage
     - [x] Function calling definitions
     - [x] Obtain interactable and contextual elements on screen
     - [x] Prompt engineering
     - [x] Response parsing and iterative process
-    - [ ] Fail graciously if the action cannot be completed
+    - [x] Fail graciously if the action cannot be completed
 - [ ] Interrupt AI
 
 ## Secrets

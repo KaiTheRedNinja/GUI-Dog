@@ -11,7 +11,7 @@ import GoogleGenerativeAI
 
 extension AccessManager {
     /// Requests actions from the Gemini API based on a request and the current `accessSnapshot`
-    func requestLLMAction(goal: String) async throws {
+    func requestLLMAction(goal: String) async {
         guard communication == nil else {
             print("Could not request LLM: LLM already running")
             // TODO: fail elegantly
@@ -32,10 +32,18 @@ extension AccessManager {
         }
 
         // Phase 1: Ask for list of steps
-        let steps = try await getStepsFromLLM(goal: goal)
+        let steps: [String]
+        do {
+            steps = try await getStepsFromLLM(goal: goal)
+        } catch {
+            print("Could not get steps from LLM")
+            communication.updateState(toError: .init(error))
+            return
+        }
 
         guard !steps.isEmpty else {
             print("No steps given")
+            communication.updateState(toError: .emptyResponse)
             return
         }
 
@@ -45,30 +53,32 @@ extension AccessManager {
         await overlayManager.update(with: communication.state)
 
         // Phase 2: Satisfy the steps one by one
-        var success: Bool = true
         while case let .step(step) = communication.state.commState, step.currentStep < stepCount {
             // retake the snapshot
-            try await takeAccessSnapshot()
+            do {
+                try await takeAccessSnapshot()
+            } catch {
+                print("Could not get access snapshot")
+                communication.updateState(toError: .init(error))
+                return
+            }
 
             // note that this MAY result in infinite loops. The new context may still be
             // targeting the same step, because a single step may require multiple `executeStep`
             // calls
-            let newContext = try await executeStep(goal: goal, steps: steps, context: step)
-
-            // if the new context is nil, that means something went wrong and some data turned
-            // up empty. TODO: throw instead of optionals
-            guard let newContext else {
-                print("Failed due to unknown reasons")
-                success = false
-                break
+            let newContext: ActionStepContext
+            do {
+                newContext = try await executeStep(goal: goal, steps: steps, context: step)
+            } catch {
+                print("Could not execute the step")
+                communication.updateState(toError: .init(error))
+                return
             }
 
             // update the steps
             communication.updateState(toStep: newContext)
             await overlayManager.update(with: communication.state)
         }
-
-        print("Success: \(success)")
 
         await overlayManager.update(
             with: .init(
@@ -83,8 +93,10 @@ extension AccessManager {
     }
 
     /// Creates a description of the element
-    func prepareInteractableDescriptions() async throws -> (String, [String: ActionableElement])? {
-        guard let accessSnapshot else { return nil }
+    func prepareInteractableDescriptions() async throws -> (String, [String: ActionableElement]) {
+        guard let accessSnapshot else {
+            throw LLMCommunicationError.accessSnapshotNotFound
+        }
 
         let screenElements = accessSnapshot.actionableItems.filter { !$0.isMenuBarItem }
         var menuBarItems: [ActionableElement] = []

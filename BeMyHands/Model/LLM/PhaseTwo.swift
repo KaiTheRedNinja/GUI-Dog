@@ -9,11 +9,9 @@ import Foundation
 import GoogleGenerativeAI
 
 extension AccessManager {
-    func executeStep(goal: String, steps: [String], context: ActionStepContext) async throws -> ActionStepContext? {
+    func executeStep(goal: String, steps: [String], context: ActionStepContext) async throws -> ActionStepContext {
         // 1. Gather context
-        guard let (description, elementMap) = try await prepareInteractableDescriptions() else {
-            return nil
-        }
+        let (description, elementMap) = try await prepareInteractableDescriptions()
 
         // Update the elements in the communication instance
         communication?.updateCurrentElements(to: elementMap)
@@ -113,7 +111,7 @@ exactly ONCE.
         // validate the function call. TODO: allow multiple function calls
         guard let functionCall = response.functionCalls.first, functionCall.name == "executeAction" else {
             print("Model did not respond with a valid function call.")
-            return nil
+            throw LLMCommunicationError.invalidFunctionCall
         }
 
         // 4. Execute the actions
@@ -126,7 +124,7 @@ exactly ONCE.
             case let .string(actionName) = functionCall.args["actionName"]
         else {
             print("Model responded with a missing parameter.")
-            return nil
+            throw LLMCommunicationError.invalidFunctionCall
         }
 
         try await communication?.execute(action: actionName, onElementWithDescription: String(lastComponent))
