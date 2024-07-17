@@ -16,7 +16,7 @@ It also acts really weirdly with multiple displays due to coordinate systems, so
 
 BeMyHands relies on three components: the Accessibility API, and the Gemini API.
 
-The Accessibility API is based on https://github.com/Xce-PT/Vosh/tree/main , while the Gemini API is Google's own
+The Accessibility API is based on https://github.com/Xce-PT/Vosh , while the Gemini API is Google's own
 Gemini swift SDK. The Bridge is completely original.
 
 Interactions with the Gemini API are defined in two stages:
@@ -54,16 +54,18 @@ Accessibility API capabilities:
     - [ ] Clicking menu bar items
 
 Gemini API capabilities:
-- [ ] Trigger API calling (a shortcut probably)
-- [x] First stage: Obtain user instruction, focused application, window title
-- [x] First stage: Prompt engineering 
-- [x] First stage: Parse response into list of steps
-- [ ] First stage: Fail graciously if the action is too complex
-- [x] Second stage: Function calling definitions
-- [x] Second stage: Obtain interactable and contextual elements on screen
-- [x] Second stage: Prompt engineering
-- [x] Second stage: Response parsing and iterative process
-- [ ] Second stage: Fail graciously if the action cannot be completed
+- [x] Trigger API calling (a shortcut probably)
+- [ ] First stage
+    - [x] Obtain user instruction, focused application, window title
+    - [x] Prompt engineering 
+    - [x] Parse response into list of steps
+    - [ ] Fail graciously if the action is too complex
+- [ ] Second stage
+    - [x] Function calling definitions
+    - [x] Obtain interactable and contextual elements on screen
+    - [x] Prompt engineering
+    - [x] Response parsing and iterative process
+    - [ ] Fail graciously if the action cannot be completed
 
 ## Secrets
 This project requires a `Secrets` object, which is gitignored by default. The file is meant to be at
@@ -76,3 +78,9 @@ enum Secrets {
     static var geminiKey: String = "MY_API_KEY_HERE"
 }
 ``` 
+
+## Credits and Implementation Details
+
+- Accessibility API: Vosh (https://github.com/Xce-PT/Vosh)
+- Global keyboard shortcuts: KeyboardShortcuts (https://github.com/sindresorhus/KeyboardShortcuts)
+    - KeyboardShortcuts only works with the default (usually QWERTY) layout of the device, even if the user is using DVORAK or another layout

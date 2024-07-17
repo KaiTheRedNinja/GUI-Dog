@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Access
-import Element
+import KeyboardShortcuts
 
 struct ContentView: View {
     @State var manager: AccessManager
@@ -21,9 +21,12 @@ struct ContentView: View {
                     }
                 }
                 Button("Request LLM") {
-                    Task {
-                        try await manager.takeAccessSnapshot()
-                        try await manager.requestLLMAction(goal: "Open my CS50 folder in the documents directory")
+                    requestLLM()
+                }
+                .onAppear {
+                    KeyboardShortcuts.onKeyUp(for: .requestLLM) { [self] in
+                        print("Requesting LLM!")
+                        requestLLM()
                     }
                 }
             } else {
@@ -35,4 +38,15 @@ struct ContentView: View {
             }
         }
     }
+
+    func requestLLM() {
+        Task {
+            try await manager.takeAccessSnapshot()
+            try await manager.requestLLMAction(goal: "Open my CS50 folder in the documents directory")
+        }
+    }
+}
+
+extension KeyboardShortcuts.Name {
+    static let requestLLM = Self("requestLLM", default: .init(.l, modifiers: [.command, .option]))
 }
