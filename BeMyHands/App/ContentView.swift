@@ -42,7 +42,7 @@ struct ContentView: View {
     func requestLLM() {
         Task {
             try await manager.takeAccessSnapshot()
-            try await manager.requestLLMAction(goal: "Open a new tab and open twitter")
+            try await manager.requestLLMAction(goal: "Open a new tab and click on the twitter button")
         }
     }
 }

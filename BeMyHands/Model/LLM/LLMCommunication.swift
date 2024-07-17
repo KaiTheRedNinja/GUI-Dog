@@ -16,19 +16,18 @@ class LLMCommunication {
     private(set) var elementMap: [String: ActionableElement]
 
     /// The current state
-    private(set) var state: LLMState = .init(goal: "No Goal", commState: .loading)
+    private(set) var state: LLMState = .init(goal: "No Goal", steps: [], commState: .loading)
 
     init() {
         self.elementMap = [:]
-        self.state = .init(goal: "No Goal", commState: .loading)
+        self.state = .init(goal: "No Goal", steps: [], commState: .loading)
     }
 
     /// Sets `state` to `.step`, starting at step zero for steps. Should only be called ONCE, and will
     /// fatal error if called multiple times on the same instance.
     func setup(withGoal goal: String, steps: [String]) {
         assert(state.commState == .loading, "Steps must not have existed during setup")
-        state.goal = goal
-        state.commState = .step(.init(allSteps: steps, currentStep: 0))
+        state = .init(goal: goal, steps: steps, commState: .step(.init(currentStep: 0)))
     }
 
     /// Updates the state to another step
@@ -74,7 +73,11 @@ class LLMCommunication {
 
 /// Represents the data of an LLM communication
 struct LLMState: Equatable {
+    /// The goal
     var goal: String
+    /// The steps to achieve the goal, or [] if ``commState`` is `.loading`
+    var steps: [String]
+    /// The state of communication, with additional data if relevant
     var commState: LLMCommunicationState
 }
 
@@ -121,8 +124,6 @@ enum LLMCommunicationError: Error, Equatable {
 
 /// A structure that holds the context of a single "step" in Phase 2
 struct ActionStepContext: Hashable {
-    /// The full list of steps
-    var allSteps: [String]
     /// The current step
     var currentStep: Int
     /// The past actions done in this step. Nil if this is the first sub-step.

@@ -26,8 +26,8 @@ extension AccessManager {
 
         defer {
             self.communication = nil
-            Task {
-                await self.overlayManager.hide()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) { @MainActor in
+                self.overlayManager.hide()
             }
         }
 
@@ -53,7 +53,7 @@ extension AccessManager {
             // note that this MAY result in infinite loops. The new context may still be
             // targeting the same step, because a single step may require multiple `executeStep`
             // calls
-            let newContext = try await executeStep(goal: goal, context: step)
+            let newContext = try await executeStep(goal: goal, steps: steps, context: step)
 
             // if the new context is nil, that means something went wrong and some data turned
             // up empty. TODO: throw instead of optionals
@@ -73,6 +73,7 @@ extension AccessManager {
         await overlayManager.update(
             with: .init(
                 goal: communication.state.goal,
+                steps: communication.state.steps,
                 commState: .complete
             )
         )

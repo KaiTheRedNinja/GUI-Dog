@@ -42,7 +42,7 @@ struct LLMStateView: View {
     }
 
     func stepsSection(stepContext: ActionStepContext) -> some View {
-        ForEach(Array(stepContext.allSteps.enumerated()), id: \.offset) { (index, step) in
+        ForEach(Array(state.steps.enumerated()), id: \.offset) { (index, step) in
             HStack {
                 Group {
                     if index == stepContext.currentStep {
@@ -70,9 +70,9 @@ struct LLMStateView: View {
     LLMStateView(
         state: .init(
             goal: "Random Goal",
+            steps: (0..<5).map { "Step \($0)" },
             commState: .step(
                 .init(
-                    allSteps: (0..<5).map { "Step \($0)" },
                     currentStep: 2
                 )
             )

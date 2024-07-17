@@ -17,7 +17,7 @@ class ContentViewController: NSViewController {
         self.framesView = .init(frame: .zero)
         self.stateView = .init(
             rootView: .init(
-                state: .init(goal: "No Goal", commState: .loading),
+                state: .init(goal: "No Goal", steps: [], commState: .loading),
                 size: .zero
             )
         )
