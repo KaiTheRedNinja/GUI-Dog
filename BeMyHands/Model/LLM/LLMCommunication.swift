@@ -57,8 +57,10 @@ class LLMCommunication {
         }
         // increase step index
         self.state.currentStepIndex = (state.currentStepIndex ?? -1) + 1
-        // prepare new step
-        self.state.currentStep.state = .working(.init(pastActions: []))
+        // prepare new step, if exists
+        if state.currentStepIndex < state.steps.count {
+            self.state.currentStep.state = .working(.init(pastActions: []))
+        }
     }
 
     /// Updates the state's current step to a new context
