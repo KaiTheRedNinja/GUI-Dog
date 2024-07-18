@@ -60,13 +60,33 @@ extension AccessManager {
             return
         }
 
-        let stepCount = steps.count
         communication.setup(withGoal: goal, steps: steps.filter { !$0.isEmpty })
 
         await overlayManager.update(with: communication.state)
 
         // Phase 2: Satisfy the steps one by one
-        while case let .step(step) = communication.state.commState, step.currentStep < stepCount {
+        while true {
+            // determine if we're done here
+            let isDone: Bool // flag
+            switch communication.state.overallState {
+            case .complete, .error:
+                isDone = true
+            default:
+                isDone = false
+            }
+            if isDone { break }
+
+            // obtain information about the current step
+            let currentStep = communication.state.currentStep
+
+            let stepContext = switch currentStep.state {
+            case .working(let actionStepContext):
+                actionStepContext
+            default:
+                // TODO: fail elegantly here
+                fatalError("Internal inconsistency")
+            }
+
             // retake the snapshot
             do {
                 try await takeAccessSnapshot()
@@ -79,9 +99,9 @@ extension AccessManager {
             // note that this MAY result in infinite loops. The new context may still be
             // targeting the same step, because a single step may require multiple `executeStep`
             // calls
-            let newContext: ActionStepContext
+            let actionStatus: StepExecutionStatus
             do {
-                newContext = try await executeStep(goal: goal, steps: steps, context: step)
+                actionStatus = try await executeStep(state: communication.state, context: stepContext)
             } catch {
                 print("Could not execute the step")
                 communication.updateState(toError: .init(error))
@@ -89,16 +109,17 @@ extension AccessManager {
             }
 
             // update the steps
-            communication.updateState(toStep: newContext)
+            switch actionStatus {
+            case .incomplete(let newContext):
+                communication.updateState(toStep: newContext)
+            case .complete:
+                communication.updateStateToNextStep()
+            }
             await overlayManager.update(with: communication.state)
         }
 
         await overlayManager.update(
-            with: .init(
-                goal: communication.state.goal,
-                steps: communication.state.steps,
-                commState: .complete
-            )
+            with: communication.state
         )
 
         // Done!

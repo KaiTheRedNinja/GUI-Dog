@@ -20,12 +20,17 @@ struct LLMStateView: View {
                         .font(.title)
                 }
 
-                switch state.commState {
-                case .loading:
+                switch state.overallState {
+                case .stepsNotLoaded:
                     Text("Loading...")
-                case .step(let actionStepContext):
-                    Section("Steps") {
-                        stepsSection(stepContext: actionStepContext)
+                case .working:
+                    switch state.currentStep.state {
+                    case .working(let stepContext):
+                        Section("Steps") {
+                            stepsSection(stepContext: stepContext)
+                        }
+                    default:
+                        Text("Internal Inconsistency")
                     }
                 case .complete:
                     Text("Done!")
@@ -45,11 +50,11 @@ struct LLMStateView: View {
         ForEach(Array(state.steps.enumerated()), id: \.offset) { (index, step) in
             HStack {
                 Group {
-                    if index == stepContext.currentStep {
+                    if index == state.currentStepIndex {
                         ProgressView()
                             .progressViewStyle(.circular)
                     } else {
-                        let isBefore = index < stepContext.currentStep
+                        let isBefore = index < state.currentStepIndex
                         Image(systemName: isBefore ? "checkmark.circle" : "circle")
                             .resizable()
                             .scaledToFit()
@@ -58,7 +63,7 @@ struct LLMStateView: View {
                 }
                 .frame(width: 30, height: 30)
 
-                Text(step)
+                Text(step.step)
 
                 Spacer()
             }
@@ -70,12 +75,15 @@ struct LLMStateView: View {
     LLMStateView(
         state: .init(
             goal: "Random Goal",
-            steps: (0..<5).map { "Step \($0)" },
-            commState: .step(
+            steps: (0..<5).map {
                 .init(
-                    currentStep: 2
+                    step: "Step \($0)",
+                    state: (
+                        $0 < 2 ? .complete :
+                        $0 > 2 ? .notReached : .working(.init())
+                    )
                 )
-            )
+            }
         ),
         size: .init(width: 373, height: 373)
     )

@@ -9,7 +9,7 @@ import Foundation
 import GoogleGenerativeAI
 
 extension AccessManager {
-    func executeStep(goal: String, steps: [String], context: ActionStepContext) async throws -> ActionStepContext {
+    func executeStep(state: LLMState, context: ActionStepContext) async throws -> StepExecutionStatus {
         // 1. Gather context
         let (description, elementMap) = try await prepareInteractableDescriptions()
 
@@ -19,7 +19,7 @@ extension AccessManager {
         // 2. Prepare the prompt
         let prompt = String.build {
             """
-You are my hands. I want to \(goal). You will be given the following:
+You are my hands. I want to \(state.goal). You will be given the following:
 - a goal
 - a list of steps to achieve the goal that have already been completed, if any
 - the step that I want you to execute
@@ -40,18 +40,18 @@ on the element, refer to the element by its `description` AND `UUID` EXACTLY as 
 given in [description]: [UUID] and the action by its `action name`. Call the function \
 exactly ONCE. Respond with a FUNCTION CALL, NOT a code block.
 """
-            "Goal: \(goal)"
+            "Goal: \(state.goal)"
             ""
 
-            if context.currentStep > 0 {
+            if state.currentStepIndex > 0 {
                 "Completed steps:"
-                for step in steps[0..<context.currentStep] {
-                    "   " + step
+                for step in state.steps[0..<state.currentStepIndex] {
+                    "   " + step.step
                 }
                 ""
             }
 
-            "Current step: " + steps[context.currentStep]
+            "Current step: " + state.currentStep.step
             ""
 
             if let actions = context.pastActions {
@@ -108,7 +108,7 @@ exactly ONCE. Respond with a FUNCTION CALL, NOT a code block.
             )
         )
 
-        print("Prompt to step \(context.currentStep): \(prompt)")
+        print("Prompt to step \(state.currentStepIndex!): \(prompt)")
 
         let response = try await model.generateContent(prompt)
 
@@ -137,8 +137,11 @@ exactly ONCE. Respond with a FUNCTION CALL, NOT a code block.
 
         // 5. If the AI says that the step has not been completed, then recurse
         // TODO: get recursing working again. I currently assume every action completes its step.
-        return ActionStepContext(
-            currentStep: context.currentStep+1
-        )
+        return .complete
     }
+}
+
+enum StepExecutionStatus {
+    case incomplete(ActionStepContext)
+    case complete
 }

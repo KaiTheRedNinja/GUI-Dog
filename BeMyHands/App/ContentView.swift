@@ -41,7 +41,7 @@ struct ContentView: View {
 
     func requestLLM() {
         Task {
-            await manager.requestLLMAction(goal: "Open a new tab and click on the twitter button")
+            await manager.requestLLMAction(goal: "Open the CS50 folder in my documents directory")
         }
     }
 }

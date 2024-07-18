@@ -2,6 +2,7 @@ import ApplicationServices
 
 /// Swift wrapper for a legacy ``AXUIElement``.
 @ElementActor
+@preconcurrency
 public struct Element {
     /// Legacy value.
     let legacyValue: CFTypeRef
