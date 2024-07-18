@@ -15,7 +15,7 @@ struct BeMyHandsApp: App {
     var body: some Scene {
         MenuBarExtra {
             if let accessManager {
-                ContentView(manager: accessManager)
+                MenuExtraView(manager: accessManager)
             } else {
                 Text("Something went wrong...")
             }

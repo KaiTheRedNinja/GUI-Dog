@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  MenuExtraView.swift
 //  BeMyHands
 //
 //  Created by Kai Quan Tay on 8/7/24.
@@ -9,7 +9,7 @@ import SwiftUI
 import Access
 import KeyboardShortcuts
 
-struct ContentView: View {
+struct MenuExtraView: View {
     @State var manager: AccessManager
 
     var body: some View {

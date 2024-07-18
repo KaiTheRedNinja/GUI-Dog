@@ -22,6 +22,12 @@ extension AccessManager {
         let communication = LLMCommunication()
         self.communication = communication
 
+        do {
+            try await updateOverlayFrames()
+        } catch {
+            print("Could not update overlay")
+        }
+
         await overlayManager.show()
         await overlayManager.update(with: communication.state)
 

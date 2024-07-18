@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		931B22C12C3B6392003A6436 /* BeMyHandsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 931B22C02C3B6392003A6436 /* BeMyHandsApp.swift */; };
-		931B22C32C3B6392003A6436 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 931B22C22C3B6392003A6436 /* ContentView.swift */; };
+		931B22C32C3B6392003A6436 /* MenuExtraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 931B22C22C3B6392003A6436 /* MenuExtraView.swift */; };
 		931B22C52C3B6393003A6436 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 931B22C42C3B6393003A6436 /* Assets.xcassets */; };
 		931B22C82C3B6393003A6436 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 931B22C72C3B6393003A6436 /* Preview Assets.xcassets */; };
 		931B22D32C3B64C5003A6436 /* Access in Frameworks */ = {isa = PBXBuildFile; productRef = 931B22D22C3B64C5003A6436 /* Access */; };
@@ -35,7 +35,7 @@
 /* Begin PBXFileReference section */
 		931B22BD2C3B6392003A6436 /* BeMyHands.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeMyHands.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		931B22C02C3B6392003A6436 /* BeMyHandsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeMyHandsApp.swift; sourceTree = "<group>"; };
-		931B22C22C3B6392003A6436 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		931B22C22C3B6392003A6436 /* MenuExtraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuExtraView.swift; sourceTree = "<group>"; };
 		931B22C42C3B6393003A6436 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		931B22C72C3B6393003A6436 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		931B22C92C3B6393003A6436 /* BeMyHands.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BeMyHands.entitlements; sourceTree = "<group>"; };
@@ -123,7 +123,7 @@
 			children = (
 				93D7A44F2C450F770065186B /* Secrets.swift */,
 				931B22C02C3B6392003A6436 /* BeMyHandsApp.swift */,
-				931B22C22C3B6392003A6436 /* ContentView.swift */,
+				931B22C22C3B6392003A6436 /* MenuExtraView.swift */,
 				931B22C42C3B6393003A6436 /* Assets.xcassets */,
 				931B22D02C3B64BE003A6436 /* Info.plist */,
 				931B22C92C3B6393003A6436 /* BeMyHands.entitlements */,
@@ -273,7 +273,7 @@
 			files = (
 				936F3EEE2C3BE5E9006FC333 /* OverlayManager.swift in Sources */,
 				93D7A4502C450F7B0065186B /* Secrets.swift in Sources */,
-				931B22C32C3B6392003A6436 /* ContentView.swift in Sources */,
+				931B22C32C3B6392003A6436 /* MenuExtraView.swift in Sources */,
 				936F3EEC2C3BE541006FC333 /* OverlayWindow.swift in Sources */,
 				938D3EBC2C3FC765007EDE9A /* StringBuilder.swift in Sources */,
 				9382F3F72C4630CD00B4A1EA /* FramesView.swift in Sources */,
