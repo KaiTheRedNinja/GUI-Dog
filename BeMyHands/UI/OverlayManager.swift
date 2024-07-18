@@ -19,7 +19,7 @@ class OverlayManager {
         windowController.window?.contentViewController = contentController
     }
 
-    func update(with windowElement: Element, actionableElements: [ActionableElement]) async {
+    func update(actionableElements: [ActionableElement]) async {
         // Obtain the size of the screen
         guard let screenSize = NSScreen.main?.frame.size else {
             fatalError("Could not get screen size")

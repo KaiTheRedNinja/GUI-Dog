@@ -73,19 +73,13 @@ class AccessManager {
 
         self.accessSnapshot = snapshot
 
-        try await updateOverlayFrames()
+        await updateOverlayFrames()
     }
 
     /// Updates the overlay ui with the latest actionable items and focused window
-    func updateOverlayFrames() async throws {
-        // Get the focused window element
-        guard
-            let focusedWindow = try await access?.focusedWindow(),
-            let accessSnapshot
-        else { return }
-
-        // Update the manager
-        await overlayManager.update(with: focusedWindow, actionableElements: accessSnapshot.actionableItems)
+    func updateOverlayFrames() async {
+        // if the access snapshot doesn't exist, pass [] instead
+        await overlayManager.update(actionableElements: accessSnapshot?.actionableItems ?? [])
     }
 }
 
