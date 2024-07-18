@@ -70,7 +70,11 @@ class LLMCommunication {
 
     /// Updates the state's current step to an error. Note that this will end communication.
     func updateState(toError error: LLMCommunicationError) {
-        self.state.currentStep.state = .error(error)
+        if (state.currentStepIndex ?? -1) >= 0 {
+            self.state.currentStep.state = .error(error)
+        } else {
+            self.state.steps = [.init(step: "Error obtaining steps", state: .error(error))]
+        }
     }
 
     /// Updates the elementMap
