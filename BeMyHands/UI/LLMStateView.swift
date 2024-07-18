@@ -10,6 +10,7 @@ import SwiftUI
 struct LLMStateView: View {
     var state: LLMState
     var size: NSSize
+    var isShown: Bool
 
     var body: some View {
         VStack {
@@ -44,8 +45,10 @@ struct LLMStateView: View {
             .cornerRadius(10)
             .padding(10)
         }
+        .opacity(isShown ? 1 : 0)
         .frame(width: size.width, height: size.height)
         .animation(.default, value: state)
+        .animation(.default, value: isShown)
     }
 
     var stepsSection: some View {
@@ -85,14 +88,45 @@ struct LLMStateView: View {
     }
 }
 
+private struct ViewPreview: View {
+    @State var shown: Bool = true
+
+    var body: some View {
+        VStack {
+            LLMStateView(
+                state: .init(
+                    goal: "Working Goal",
+                    steps: (0..<5).map {
+                        .init(
+                            step: "Step \($0)",
+                            state: (
+                                $0 < 2 ? .complete :
+                                    $0 > 2 ? .notReached : .working(.init())
+                            )
+                        )
+                    },
+                    currentStepIndex: 2
+                ),
+                size: .init(width: 373, height: 373),
+                isShown: shown
+            )
+            Toggle("Shown?", isOn: $shown)
+        }
+    }
+}
+
 #Preview {
+    ViewPreview()
+
+    /*
     LazyVGrid(columns: .init(repeating: .init(), count: 2)) {
         LLMStateView(
             state: .init(
                 goal: "Non loaded goal",
                 steps: []
             ),
-            size: .init(width: 373, height: 373)
+            size: .init(width: 373, height: 373),
+            isShown: true
         )
 
         LLMStateView(
@@ -109,7 +143,8 @@ struct LLMStateView: View {
                 },
                 currentStepIndex: 2
             ),
-            size: .init(width: 373, height: 373)
+            size: .init(width: 373, height: 373),
+            isShown: true
         )
 
         LLMStateView(
@@ -123,7 +158,8 @@ struct LLMStateView: View {
                 },
                 currentStepIndex: 5
             ),
-            size: .init(width: 373, height: 373)
+            size: .init(width: 373, height: 373),
+            isShown: true
         )
 
         LLMStateView(
@@ -139,8 +175,10 @@ struct LLMStateView: View {
                 },
                 currentStepIndex: 5
             ),
-            size: .init(width: 373, height: 373)
+            size: .init(width: 373, height: 373),
+            isShown: true
         )
     }
     .frame(width: 373*2, height: 373*2)
+     */
 }

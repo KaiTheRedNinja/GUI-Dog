@@ -47,7 +47,7 @@ requires you to perform a type, drag, or other unsupported action, respond with 
         let model = GenerativeModel(name: "gemini-1.5-flash", apiKey: Secrets.geminiKey)
         let response = try await model.generateContent(prompt)
         if let text = response.text {
-            if text != "insufficient information" {
+            if text.trimmingCharacters(in: .whitespacesAndNewlines) != "insufficient information" {
                 print("Response text: \(text)")
                 return text.split(separator: "\n").map { String($0) }
             } else {

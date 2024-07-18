@@ -41,9 +41,12 @@ class OverlayManager {
         windowController.showWindow(nil)
         windowController.window?.makeKeyAndOrderFront(nil)
         windowController.window?.orderFrontRegardless()
+
+        contentController.show()
     }
 
     func hide() {
-        windowController.window?.close()
+        contentController.hide()
+//        windowController.window?.close()
     }
 }
