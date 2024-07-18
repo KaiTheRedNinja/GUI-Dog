@@ -22,20 +22,22 @@ struct LLMStateView: View {
 
                 switch state.overallState {
                 case .stepsNotLoaded:
-                    Text("Loading...")
-                case .working:
-                    switch state.currentStep.state {
-                    case .working(let stepContext):
-                        Section("Steps") {
-                            stepsSection(stepContext: stepContext)
+                    Section {
+                        VStack {
+                            ContentUnavailableView("Loading", systemImage: "checklist.unchecked")
                         }
-                    default:
-                        Text("Internal Inconsistency")
+                        .frame(height: size.width*3/4)
                     }
-                case .complete:
-                    Text("Done!")
-                case .error(let lLMCommunicationError):
-                    Text("Error: \(lLMCommunicationError.localizedDescription)")
+                case .working, .complete, .error:
+                    Section("Steps") {
+                        stepsSection
+                    }
+
+                    if case let .error(lLMCommunicationError) = state.overallState {
+                        Section("Error") {
+                            Text(lLMCommunicationError.description)
+                        }
+                    }
                 }
             }
             .frame(height: size.width)
@@ -46,24 +48,36 @@ struct LLMStateView: View {
         .animation(.default, value: state)
     }
 
-    func stepsSection(stepContext: ActionStepContext) -> some View {
+    var stepsSection: some View {
         ForEach(Array(state.steps.enumerated()), id: \.offset) { (index, step) in
-            HStack {
+            HStack(spacing: 12) {
                 Group {
-                    if index == state.currentStepIndex {
-                        ProgressView()
-                            .progressViewStyle(.circular)
-                    } else {
-                        let isBefore = index < state.currentStepIndex
-                        Image(systemName: isBefore ? "checkmark.circle" : "circle")
+                    switch step.state {
+                    case .notReached:
+                        Image(systemName: "circle")
                             .resizable()
                             .scaledToFit()
-                            .foregroundStyle(isBefore ? Color.green : .gray)
+                            .foregroundStyle(.gray)
+                    case .working:
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                            .scaleEffect(.init(0.8)) // make it look the same size as the images
+                    case .complete:
+                        Image(systemName: "checkmark.circle")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundStyle(.green)
+                    case .error:
+                        Image(systemName: "exclamationmark.triangle")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundStyle(.red)
                     }
                 }
-                .frame(width: 30, height: 30)
+                .frame(width: 25, height: 25)
 
                 Text(step.step)
+                    .font(.title2)
 
                 Spacer()
             }
@@ -72,19 +86,61 @@ struct LLMStateView: View {
 }
 
 #Preview {
-    LLMStateView(
-        state: .init(
-            goal: "Random Goal",
-            steps: (0..<5).map {
-                .init(
-                    step: "Step \($0)",
-                    state: (
-                        $0 < 2 ? .complete :
-                        $0 > 2 ? .notReached : .working(.init())
+    LazyVGrid(columns: .init(repeating: .init(), count: 2)) {
+        LLMStateView(
+            state: .init(
+                goal: "Non loaded goal",
+                steps: []
+            ),
+            size: .init(width: 373, height: 373)
+        )
+
+        LLMStateView(
+            state: .init(
+                goal: "Working Goal",
+                steps: (0..<5).map {
+                    .init(
+                        step: "Step \($0)",
+                        state: (
+                            $0 < 2 ? .complete :
+                                $0 > 2 ? .notReached : .working(.init())
+                        )
                     )
-                )
-            }
-        ),
-        size: .init(width: 373, height: 373)
-    )
+                },
+                currentStepIndex: 2
+            ),
+            size: .init(width: 373, height: 373)
+        )
+
+        LLMStateView(
+            state: .init(
+                goal: "Completed goal",
+                steps: (0..<5).map {
+                    .init(
+                        step: "Step \($0)",
+                        state: .complete
+                    )
+                },
+                currentStepIndex: 5
+            ),
+            size: .init(width: 373, height: 373)
+        )
+
+        LLMStateView(
+            state: .init(
+                goal: "Failed goal",
+                steps: (0..<5).map {
+                    .init(
+                        step: "Step \($0)",
+                        state: (
+                            $0 < 4 ? .complete : .error(LLMCommunicationError.elementNotFound)
+                        )
+                    )
+                },
+                currentStepIndex: 5
+            ),
+            size: .init(width: 373, height: 373)
+        )
+    }
+    .frame(width: 373*2, height: 373*2)
 }
