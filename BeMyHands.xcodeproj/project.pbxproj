@@ -28,6 +28,9 @@
 		9382F3F92C4631DB00B4A1EA /* LLMStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9382F3F82C4631D500B4A1EA /* LLMStateView.swift */; };
 		938D3EBC2C3FC765007EDE9A /* StringBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938D3EBB2C3FC763007EDE9A /* StringBuilder.swift */; };
 		9397F7FF2C4A3DA000A8BAC1 /* LLMManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F7FE2C4A3D9D00A8BAC1 /* LLMManager.swift */; };
+		9397F8012C4A613B00A8BAC1 /* LLMManager+PhaseOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F8002C4A613500A8BAC1 /* LLMManager+PhaseOne.swift */; };
+		9397F8032C4A615F00A8BAC1 /* LLMManager+Interface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F8022C4A615400A8BAC1 /* LLMManager+Interface.swift */; };
+		9397F8052C4A616A00A8BAC1 /* LLMManager+PhaseTwo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F8042C4A616300A8BAC1 /* LLMManager+PhaseTwo.swift */; };
 		93D7A4502C450F7B0065186B /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7A44F2C450F770065186B /* Secrets.swift */; };
 		93D7A4532C45131B0065186B /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 93D7A4522C45131B0065186B /* GoogleGenerativeAI */; };
 		93D7A4552C45140E0065186B /* AccessManager+LLM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7A4542C4514090065186B /* AccessManager+LLM.swift */; };
@@ -54,6 +57,9 @@
 		9382F3F82C4631D500B4A1EA /* LLMStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMStateView.swift; sourceTree = "<group>"; };
 		938D3EBB2C3FC763007EDE9A /* StringBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringBuilder.swift; sourceTree = "<group>"; };
 		9397F7FE2C4A3D9D00A8BAC1 /* LLMManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMManager.swift; sourceTree = "<group>"; };
+		9397F8002C4A613500A8BAC1 /* LLMManager+PhaseOne.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LLMManager+PhaseOne.swift"; sourceTree = "<group>"; };
+		9397F8022C4A615400A8BAC1 /* LLMManager+Interface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LLMManager+Interface.swift"; sourceTree = "<group>"; };
+		9397F8042C4A616300A8BAC1 /* LLMManager+PhaseTwo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LLMManager+PhaseTwo.swift"; sourceTree = "<group>"; };
 		93D7A44F2C450F770065186B /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		93D7A4542C4514090065186B /* AccessManager+LLM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AccessManager+LLM.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -160,6 +166,9 @@
 			isa = PBXGroup;
 			children = (
 				9397F7FE2C4A3D9D00A8BAC1 /* LLMManager.swift */,
+				9397F8022C4A615400A8BAC1 /* LLMManager+Interface.swift */,
+				9397F8002C4A613500A8BAC1 /* LLMManager+PhaseOne.swift */,
+				9397F8042C4A616300A8BAC1 /* LLMManager+PhaseTwo.swift */,
 				9382F3EF2C46079D00B4A1EA /* LLMCommunication.swift */,
 				93D7A4542C4514090065186B /* AccessManager+LLM.swift */,
 				9382F3F12C46118D00B4A1EA /* PhaseOne.swift */,
@@ -276,10 +285,13 @@
 			files = (
 				936F3EEE2C3BE5E9006FC333 /* OverlayManager.swift in Sources */,
 				93D7A4502C450F7B0065186B /* Secrets.swift in Sources */,
+				9397F8012C4A613B00A8BAC1 /* LLMManager+PhaseOne.swift in Sources */,
 				931B22C32C3B6392003A6436 /* MenuExtraView.swift in Sources */,
 				9397F7FF2C4A3DA000A8BAC1 /* LLMManager.swift in Sources */,
+				9397F8032C4A615F00A8BAC1 /* LLMManager+Interface.swift in Sources */,
 				936F3EEC2C3BE541006FC333 /* OverlayWindow.swift in Sources */,
 				938D3EBC2C3FC765007EDE9A /* StringBuilder.swift in Sources */,
+				9397F8052C4A616A00A8BAC1 /* LLMManager+PhaseTwo.swift in Sources */,
 				9382F3F72C4630CD00B4A1EA /* FramesView.swift in Sources */,
 				9382F3F22C46118F00B4A1EA /* PhaseOne.swift in Sources */,
 				936F3EF42C3CA4FE006FC333 /* AccessManager.swift in Sources */,
