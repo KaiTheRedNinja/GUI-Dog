@@ -45,8 +45,8 @@ extension LLMManager {
 
     private func preparePrompt(state: LLMState, context: ActionStepContext) async throws -> String {
         // Gather context
-        let appName = await accessibilityItemProvider.getCurrentAppName()
-        let focusedDescription = await accessibilityItemProvider.getFocusedElementDescription()
+        let appName = accessibilityItemProvider.getCurrentAppName()
+        let focusedDescription = accessibilityItemProvider.getFocusedElementDescription()
         let descriptions = try await accessibilityItemProvider.generateElementDescriptions()
 
         // Prepare the prompt
@@ -156,4 +156,12 @@ exactly ONCE. Respond with a FUNCTION CALL, NOT a code block.
 
         return model
     }
+}
+
+/// Represents the execution result of a step
+enum StepExecutionStatus {
+    /// The step is not complete, with a status
+    case incomplete(ActionStepContext)
+    /// The step has completed
+    case complete
 }

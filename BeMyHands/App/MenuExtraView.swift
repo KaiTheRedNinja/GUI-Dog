@@ -10,27 +10,18 @@ import Access
 import KeyboardShortcuts
 
 struct MenuExtraView: View {
-    @State var manager: AccessManager
+    var triggerLLM: () -> Void
 
     var body: some View {
         Group {
-            if manager.accessAvailable {
-                Button("Force Update") {
-                    Task {
-                        try await manager.takeAccessSnapshot()
-                    }
-                }
-                Button("Request LLM") {
+            Button("Request LLM") {
+                requestLLM()
+            }
+            .onAppear {
+                KeyboardShortcuts.onKeyUp(for: .requestLLM) { [self] in
+                    print("Requesting LLM!")
                     requestLLM()
                 }
-                .onAppear {
-                    KeyboardShortcuts.onKeyUp(for: .requestLLM) { [self] in
-                        print("Requesting LLM!")
-                        requestLLM()
-                    }
-                }
-            } else {
-                Text("Setting up...")
             }
 
             Button("Quit") {
@@ -40,9 +31,7 @@ struct MenuExtraView: View {
     }
 
     func requestLLM() {
-        Task {
-            await manager.requestLLMAction(goal: "Open the CS50 folder in my documents directory")
-        }
+        triggerLLM()
     }
 }
 

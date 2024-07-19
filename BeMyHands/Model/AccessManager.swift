@@ -16,20 +16,20 @@ class AccessManager {
 
     /// The ``OverlayManager`` instance, which manages the overlay window. This is
     /// purely for the sake of the sighted, to understand a bit more what is going on.
-    internal var overlayManager: OverlayManager
+    internal var overlayManager: OverlayManager?
 
     /// A snapshot of the accessibility items, plus some contextual information. May not be up-to-date.
     internal var accessSnapshot: AccessSnapshot?
 
-    /// The object responsible for allowing an LLM to take actions on objects. Should be purged when no LLM 
-    /// communications are occuring.
-    internal var communication: LLMCommunication?
+    /// The element map, a map of UUIDs to elements, for use during LLMs
+    internal var elementMap: [UUID: ActionableElement]
 
     @MainActor
     init() {
         self.access = nil
         self.overlayManager = .init()
         self.accessSnapshot = nil
+        self.elementMap = [:]
     }
 
     /// Whether access is defined. This is false when either access has not been granted, or ``setup()`` has not 
@@ -62,7 +62,7 @@ class AccessManager {
         self.access = access
 
         // Show the overlay, initially with no data
-        await overlayManager.show()
+        await overlayManager?.show()
     }
 
     /// Takes an access snapshot, and updates the overlay
@@ -79,7 +79,7 @@ class AccessManager {
     /// Updates the overlay ui with the latest actionable items and focused window
     func updateOverlayFrames() async {
         // if the access snapshot doesn't exist, pass [] instead
-        await overlayManager.update(actionableElements: accessSnapshot?.actionableItems ?? [])
+        await overlayManager?.update(actionableElements: accessSnapshot?.actionableItems ?? [])
     }
 }
 

@@ -9,126 +9,21 @@ import Foundation
 import Element
 import GoogleGenerativeAI
 
-extension AccessManager {
-    /// Requests actions from the Gemini API based on a request and the current `accessSnapshot`
-    func requestLLMAction(goal: String) async {
-        guard communication == nil else {
-            print("Could not request LLM: LLM already running")
-            // TODO: fail elegantly
-            return
-        }
-
-        // Create the object
-        let communication = LLMCommunication()
-        self.communication = communication
-
-        await updateOverlayFrames()
-        await overlayManager.show()
-        await overlayManager.update(with: communication.state)
-
-        defer {
-            self.communication = nil
-            DispatchQueue.main.async { @MainActor in
-                self.overlayManager.update(with: communication.state)
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) { @MainActor in
-                self.overlayManager.hide()
-            }
-        }
-
-        // retake snapshot
-        do {
-            try await takeAccessSnapshot()
-        } catch {
-            print("Could not get access snapshot")
-            communication.updateState(toError: .init(error))
-            return
-        }
-
-        // Phase 1: Ask for list of steps
-        let steps: [String]
-        do {
-            steps = try await getStepsFromLLM(goal: goal)
-        } catch {
-            print("Could not get steps from LLM")
-            communication.updateState(toError: .init(error))
-            return
-        }
-
-        guard !steps.isEmpty else {
-            print("No steps given")
-            communication.updateState(toError: .emptyResponse)
-            return
-        }
-
-        communication.setup(withGoal: goal, steps: steps.filter { !$0.isEmpty })
-
-        await overlayManager.update(with: communication.state)
-
-        // Phase 2: Satisfy the steps one by one
-        while true {
-            // determine if we're done here
-            let isDone: Bool // flag
-            switch communication.state.overallState {
-            case .complete, .error:
-                isDone = true
-            default:
-                isDone = false
-            }
-            if isDone { break }
-
-            // obtain information about the current step
-            let currentStep = communication.state.currentStep
-
-            let stepContext = switch currentStep.state {
-            case .working(let actionStepContext):
-                actionStepContext
-            default:
-                // TODO: fail elegantly here
-                fatalError("Internal inconsistency")
-            }
-
-            // retake the snapshot
-            do {
-                try await takeAccessSnapshot()
-            } catch {
-                print("Could not get access snapshot")
-                communication.updateState(toError: .init(error))
-                return
-            }
-
-            // note that this MAY result in infinite loops. The new context may still be
-            // targeting the same step, because a single step may require multiple `executeStep`
-            // calls
-            let actionStatus: StepExecutionStatus
-            do {
-                actionStatus = try await executeStep(state: communication.state, context: stepContext)
-            } catch {
-                print("Could not execute the step")
-                communication.updateState(toError: .init(error))
-                return
-            }
-
-            // update the steps
-            switch actionStatus {
-            case .incomplete(let newContext):
-                communication.updateState(toStep: newContext)
-            case .complete:
-                communication.updateStateToNextStep()
-            }
-            await overlayManager.update(with: communication.state)
-        }
-
-        await overlayManager.update(
-            with: communication.state
-        )
-
-        // Done!
-        // TODO: somehow notify the user that the action has been completed
+extension AccessManager: AccessibilityItemProvider {
+    func updateAccessibilityObjects() async throws {
+        try await takeAccessSnapshot()
+        await overlayManager?.update(actionableElements: accessSnapshot?.actionableItems ?? [])
     }
 
-    /// Creates a description of the element
-    func prepareInteractableDescriptions() async throws -> (String, [String: ActionableElement]) {
+    func getCurrentAppName() -> String? {
+        accessSnapshot?.focusedAppName
+    }
+
+    func getFocusedElementDescription() -> String? {
+        try? accessSnapshot?.focus?.getComprehensiveDescription()
+    }
+
+    func generateElementDescriptions() async throws -> [ActionableElementDescription] {
         guard let accessSnapshot else {
             throw LLMCommunicationError.accessSnapshotNotFound
         }
@@ -146,66 +41,65 @@ extension AccessManager {
             menuBarItems.append(item)
         }
 
-        var elementMap: [String: ActionableElement] = [:]
+        var elementMap: [UUID: ActionableElement] = [:]
+        var descriptions: [ActionableElementDescription] = []
 
-        func descriptionFor(element: ActionableElement) async throws -> String {
+        for element in screenElements {
+            // get info about the element, verify it exists
             let role = try await element.element.getAttribute(.roleDescription) as? String
             let description = try await element.element.getDescription()
             let actions = element.actions
+            guard let role, let description else { continue }
 
-            guard let role, let description else { return "" }
-
-            let uuid = UUID().uuidString
-            let desc = role + ": " + description + ": " + uuid
+            // store it and the ID
+            let uuid = UUID()
             elementMap[uuid] = element
 
-            return try await String.build {
-                " - " + desc
+            // describe its actions
+            var actionDescriptions: [ActionableElementDescription.ActionDescription] = []
+            for action in actions {
+                guard
+                    let description = try await element.element.describeAction(action),
+                    !description.isEmpty
+                else { continue }
 
-                for action in actions where action != "AXCancel" {
-                    let description = try await element.element.describeAction(action)
-                    "    - " + action + (
-                        description == nil
-                        ? ""
-                        : ": " + description!
-                    )
-                }
+                actionDescriptions.append(.init(
+                    actionName: action,
+                    description: description
+                ))
             }
+
+            // append it
+            descriptions.append(
+                .init(
+                    id: uuid,
+                    role: role,
+                    givenDescription: description,
+                    actions: actionDescriptions
+                )
+            )
         }
 
-        let prompt = try await String.build {
-            if let focusedAppName = accessSnapshot.focusedAppName {
-                "The focused app is \(focusedAppName)"
-            } else {
-                "There is no focused app"
-            }
+        self.elementMap = elementMap
 
-            "\n"
+        return descriptions
+    }
 
-            if let focus = accessSnapshot.focus {
-                "The focused element is \(try await focus.getComprehensiveDescription())"
-            } else {
-                "There is no focused element"
-            }
+    func execute(action: String, onElementID elementID: UUID) async throws {
+        print("Executing [\(action)] on element with description [\(elementID)]")
 
-            "\n"
-
-            "The actionable elements are:"
-            for actionableItem in screenElements {
-                try await descriptionFor(element: actionableItem)
-            }
-
-            /*
-            "\n"
-
-            "The menu bar items are:"
-            // only menu item and menu bar item should be shown here
-            for menuBarItem in menuBarItems {
-                try await descriptionFor(element: menuBarItem)
-            }
-             */
+        guard action.hasPrefix("AX") && !action.contains(" ") else {
+            throw LLMCommunicationError.actionFormatInvalid
         }
 
-        return (prompt, elementMap)
+        guard let element = elementMap[elementID] else {
+            throw LLMCommunicationError.elementNotFound
+        }
+
+        guard element.actions.contains(action) else {
+            throw LLMCommunicationError.actionNotFound
+        }
+
+        try await element.element.performAction(action)
     }
 }

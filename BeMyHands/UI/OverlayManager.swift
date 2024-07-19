@@ -9,7 +9,7 @@ import AppKit
 import Element
 
 @MainActor
-class OverlayManager {
+class OverlayManager: LLMDisplayDelegate {
     private var windowController: OverlayWindowController
     private var contentController: ContentViewController
 
@@ -33,7 +33,7 @@ class OverlayManager {
         windowController.window?.setFrameOrigin(.init(x: 0, y: 0))
     }
 
-    func update(with state: LLMState) {
+    func update(state: LLMState) {
         self.contentController.setupState(with: state)
     }
 

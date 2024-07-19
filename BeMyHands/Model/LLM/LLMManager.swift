@@ -13,14 +13,14 @@ import Access
 class LLMManager {
     /// The accessibility item provider. Note that this should be defined as soon as possible before
     /// any other methods are called.
-    var accessibilityItemProvider: AccessibilityItemProvider!
+    weak var accessibilityItemProvider: AccessibilityItemProvider!
 
     /// The UI delegate, which is informed of when the UI should update to reflect the manager's
     /// internal state. Optional.
-    var uiDelegate: LLMDisplayDelegate?
+    weak var uiDelegate: LLMDisplayDelegate?
 
     /// The current state
-    var state: LLMState = .init(goal: "No Goal", steps: [])
+    var state: LLMState = .zero
 
     /// Creates a blank `LLMManager`
     init(
@@ -29,6 +29,116 @@ class LLMManager {
     ) {
         self.accessibilityItemProvider = accessibilityItemProvider
         self.uiDelegate = uiDelegate
+    }
+
+    /// Requests actions from the Gemini API based on a request and the current `accessSnapshot`
+    func requestLLMAction(goal: String) async {
+        guard state == .zero else {
+            print("Could not request LLM: LLM already running")
+            // TODO: fail elegantly
+            return
+        }
+
+        // Create the object
+        await uiDelegate?.show()
+        await uiDelegate?.update(state: state)
+
+        // After everything, update the UI then hide it
+        defer {
+            Task {
+                await self.uiDelegate?.update(state: state)
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) { @MainActor in
+                Task {
+                    await self.uiDelegate?.hide()
+                }
+            }
+        }
+
+        // update catalog
+        do {
+            try await accessibilityItemProvider.updateAccessibilityObjects()
+        } catch {
+            print("Could not get access snapshot")
+            updateState(toError: .init(error))
+            return
+        }
+
+        // Phase 1: Ask for list of steps
+        let steps: [String]
+        do {
+            steps = try await getStepsFromLLM(goal: goal)
+        } catch {
+            print("Could not get steps from LLM")
+            updateState(toError: .init(error))
+            return
+        }
+
+        guard !steps.isEmpty else {
+            print("No steps given")
+            updateState(toError: .emptyResponse)
+            return
+        }
+
+        setup(withGoal: goal, steps: steps.filter { !$0.isEmpty })
+
+        await uiDelegate?.update(state: state)
+
+        // Phase 2: Satisfy the steps one by one
+        while true {
+            // determine if we're done here
+            let isDone: Bool // flag
+            switch state.overallState {
+            case .complete, .error:
+                isDone = true
+            default:
+                isDone = false
+            }
+            if isDone { break }
+
+            // obtain information about the current step
+            let currentStep = state.currentStep
+
+            let stepContext = switch currentStep.state {
+            case .working(let actionStepContext):
+                actionStepContext
+            default:
+                // TODO: fail elegantly here
+                fatalError("Internal inconsistency")
+            }
+
+            // retake the snapshot
+            do {
+                try await accessibilityItemProvider.updateAccessibilityObjects()
+            } catch {
+                print("Could not get access snapshot")
+                updateState(toError: .init(error))
+                return
+            }
+
+            // note that this MAY result in infinite loops. The new context may still be
+            // targeting the same step, because a single step may require multiple `executeStep`
+            // calls
+            let actionStatus: StepExecutionStatus
+            do {
+                actionStatus = try await executeStep(state: state, context: stepContext)
+            } catch {
+                print("Could not execute the step")
+                updateState(toError: .init(error))
+                return
+            }
+
+            // update the steps
+            switch actionStatus {
+            case .incomplete(let newContext):
+                updateState(toStep: newContext)
+            case .complete:
+                updateStateToNextStep()
+            }
+            await uiDelegate?.update(state: state)
+        }
+
+        // Done!
     }
 }
 
@@ -77,18 +187,21 @@ protocol AccessibilityItemProvider: AnyObject {
     func updateAccessibilityObjects() async throws
 
     /// Requests the provider to provide the name of the current app. Nil if no app is focused.
-    func getCurrentAppName() async -> String?
+    func getCurrentAppName() -> String?
     /// Requests the provider to provide a description of the currently focused element. Nil if no
     /// element is focused.
-    func getFocusedElementDescription() async -> String?
+    func getFocusedElementDescription() -> String?
 
     /// Requests the provider to generate descriptions for accessibility objects and return them.
     /// Note that it should RANDOMLY generate `id`s for each element, and results for this
-    /// function should NEVER be cached by the provider.
+    /// function should NEVER be cached by the provider. IDs provided by this function will be
+    /// referenced in calls to ``execute(action:onElementID:)``
     ///
     /// This should NOT return menu bar events.
     func generateElementDescriptions() async throws -> [ActionableElementDescription]
-    /// Requests the provider to execute an action on an element with a given ID
+    /// Requests the provider to execute an action on an element with a given ID. This will always
+    /// be called AFTER a call to ``generateElementDescriptions()``, but the ID is not
+    /// guarenteed to exist.
     func execute(action: String, onElementID elementID: UUID) async throws
 }
 

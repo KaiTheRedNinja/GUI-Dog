@@ -7,102 +7,6 @@
 
 import Element
 
-/// Holds and manages the data associated with the communication between BeMyHands and the LLM.
-///
-/// Acts as the interface for LLMs to take actions. Note that this manages data and the interface; it DOES NOT
-/// manage the communication or parsing of LLM responses.
-///
-/// The lifecycle goes like this:
-/// 1. Create the ``LLMCommunication`` instance
-/// 2. Call ``setup(withGoal:steps:)`` with the goal and steps.
-/// 3. Do the following:
-///     - Call ``updateCurrentElements(to:)`` when an element map is created
-///     - Call ``execute(action:onElementWithDescription:)`` to execute an action, from the LLM's instruction
-///     - If the call throws an error, call ``updateState(toError:)``
-///     - If the call succeeded and the step is not complete, call ``updateState(toStep:)``
-///     - Else, call ``updateStateToNextStep()`` to go to the next step.
-/// 4. When ``updateStateToNextStep()`` is called on the last step, or ``updateState(toError:)`` is 
-/// called on any step, the instance will enter  its "final stage" where further calls will be rejected. At this point,
-/// it should be used for information displaying ONLY. Create a new instance for new communications.
-class LLMCommunication {
-    /// The current map of elements
-    private(set) var elementMap: [String: ActionableElement]
-
-    /// The current state
-    private(set) var state: LLMState = .init(goal: "No Goal", steps: [])
-
-    init() {
-        self.elementMap = [:]
-        self.state = .init(goal: "No Goal", steps: [])
-    }
-
-    /// Sets `state` to `.step`, starting at step zero for steps. Should only be called ONCE, and will
-    /// fatal error if called multiple times on the same instance.
-    func setup(withGoal goal: String, steps: [String]) {
-        assert(state.steps.isEmpty, "Steps must not have existed during setup")
-        state = .init(
-            goal: goal,
-            steps: steps.map { .init(step: $0, state: .notReached) }
-        )
-        /// Switches to the first step
-        updateStateToNextStep()
-    }
-
-    /// Switches to the next step in the state. 
-    ///
-    /// This is called by ``setup(withGoal:steps:)`` to switch to the first step.
-    func updateStateToNextStep() {
-        if (state.currentStepIndex ?? -1) >= 0 { // complete the current step
-            self.state.currentStep.state = .complete
-        }
-        // increase step index
-        self.state.currentStepIndex = (state.currentStepIndex ?? -1) + 1
-        // prepare new step, if exists
-        if state.currentStepIndex < state.steps.count {
-            self.state.currentStep.state = .working(.init(pastActions: []))
-        }
-    }
-
-    /// Updates the state's current step to a new context
-    func updateState(toStep newStepContext: ActionStepContext) {
-        self.state.currentStep.state = .working(newStepContext)
-    }
-
-    /// Updates the state's current step to an error. Note that this will end communication.
-    func updateState(toError error: LLMCommunicationError) {
-        if (state.currentStepIndex ?? -1) >= 0 {
-            self.state.currentStep.state = .error(error)
-        } else {
-            self.state.steps = [.init(step: "Error obtaining steps", state: .error(error))]
-        }
-    }
-
-    /// Updates the elementMap
-    func updateCurrentElements(to elementMap: [String: ActionableElement]) {
-        self.elementMap = elementMap
-    }
-
-    /// Executes an action on an element with a certain description. Handles data checks to make sure that the element
-    /// exists and that the action is valid.
-    func execute(action: String, onElementWithDescription elementDescription: String) async throws {
-        print("Executing [\(action)] on element with description [\(elementDescription)]")
-
-        guard action.hasPrefix("AX") && !action.contains(" ") else {
-            throw LLMCommunicationError.actionFormatInvalid
-        }
-
-        guard let element = elementMap[elementDescription] else {
-            throw LLMCommunicationError.elementNotFound
-        }
-
-        guard element.actions.contains(action) else {
-            throw LLMCommunicationError.actionNotFound
-        }
-
-        try await element.element.performAction(action)
-    }
-}
-
 /// Represents the data of an LLM communication
 struct LLMState: Equatable {
     /// The goal
@@ -139,6 +43,8 @@ struct LLMState: Equatable {
         // means that steps have completed.
         return .complete
     }
+
+    static let zero = LLMState(goal: "No Goal", steps: [])
 }
 
 struct LLMStep: Equatable {
