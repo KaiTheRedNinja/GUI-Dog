@@ -86,8 +86,6 @@ extension AccessManager: AccessibilityItemProvider {
     }
 
     func execute(action: String, onElementID elementID: UUID) async throws {
-        print("Executing [\(action)] on element with description [\(elementID)]")
-
         guard action.hasPrefix("AX") && !action.contains(" ") else {
             throw LLMCommunicationError.actionFormatInvalid
         }

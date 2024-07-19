@@ -21,7 +21,7 @@
 		936F3EEE2C3BE5E9006FC333 /* OverlayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */; };
 		936F3EF02C3BE688006FC333 /* ContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EEF2C3BE688006FC333 /* ContentViewController.swift */; };
 		936F3EF42C3CA4FE006FC333 /* AccessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EF32C3CA4F9006FC333 /* AccessManager.swift */; };
-		9382F3F02C4607A900B4A1EA /* LLMCommunication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9382F3EF2C46079D00B4A1EA /* LLMCommunication.swift */; };
+		9382F3F02C4607A900B4A1EA /* LLLState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9382F3EF2C46079D00B4A1EA /* LLLState.swift */; };
 		9382F3F72C4630CD00B4A1EA /* FramesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9382F3F62C4630CD00B4A1EA /* FramesView.swift */; };
 		9382F3F92C4631DB00B4A1EA /* LLMStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9382F3F82C4631D500B4A1EA /* LLMStateView.swift */; };
 		938D3EBC2C3FC765007EDE9A /* StringBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938D3EBB2C3FC763007EDE9A /* StringBuilder.swift */; };
@@ -48,7 +48,7 @@
 		936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayManager.swift; sourceTree = "<group>"; };
 		936F3EEF2C3BE688006FC333 /* ContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewController.swift; sourceTree = "<group>"; };
 		936F3EF32C3CA4F9006FC333 /* AccessManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessManager.swift; sourceTree = "<group>"; };
-		9382F3EF2C46079D00B4A1EA /* LLMCommunication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMCommunication.swift; sourceTree = "<group>"; };
+		9382F3EF2C46079D00B4A1EA /* LLLState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLLState.swift; sourceTree = "<group>"; };
 		9382F3F62C4630CD00B4A1EA /* FramesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramesView.swift; sourceTree = "<group>"; };
 		9382F3F82C4631D500B4A1EA /* LLMStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMStateView.swift; sourceTree = "<group>"; };
 		938D3EBB2C3FC763007EDE9A /* StringBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringBuilder.swift; sourceTree = "<group>"; };
@@ -165,7 +165,7 @@
 				9397F8022C4A615400A8BAC1 /* LLMManager+Interface.swift */,
 				9397F8002C4A613500A8BAC1 /* LLMManager+PhaseOne.swift */,
 				9397F8042C4A616300A8BAC1 /* LLMManager+PhaseTwo.swift */,
-				9382F3EF2C46079D00B4A1EA /* LLMCommunication.swift */,
+				9382F3EF2C46079D00B4A1EA /* LLLState.swift */,
 				93D7A4542C4514090065186B /* AccessManager+LLM.swift */,
 			);
 			path = LLM;
@@ -291,7 +291,7 @@
 				931B22C12C3B6392003A6436 /* BeMyHandsApp.swift in Sources */,
 				9382F3F92C4631DB00B4A1EA /* LLMStateView.swift in Sources */,
 				936F3EF02C3BE688006FC333 /* ContentViewController.swift in Sources */,
-				9382F3F02C4607A900B4A1EA /* LLMCommunication.swift in Sources */,
+				9382F3F02C4607A900B4A1EA /* LLLState.swift in Sources */,
 				93D7A4552C45140E0065186B /* AccessManager+LLM.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -38,6 +38,7 @@ class LLMManager {
             // TODO: fail elegantly
             return
         }
+        state = .init(goal: goal, steps: [])
 
         // Create the object
         await uiDelegate?.show()

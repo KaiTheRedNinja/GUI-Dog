@@ -101,6 +101,8 @@ enum LLMCommunicationError: Error, Equatable {
     case actionNotFound
 
     // Other
+    /// Element error
+    case element(ElementError)
     /// Unknown error
     case unknown(any Error)
 
@@ -115,6 +117,7 @@ enum LLMCommunicationError: Error, Equatable {
         case .actionFormatInvalid: "The LLM responded with an invalid action on an element"
         case .elementNotFound: "The LLM responded with a nonexistent element"
         case .actionNotFound: "The LLM responded with an action that the specified element does not support"
+        case .element(let error): "Element error: \(error)"
         case .unknown(let error): "Unknown error: \(error)"
         }
     }
@@ -126,6 +129,8 @@ enum LLMCommunicationError: Error, Equatable {
     init(_ baseError: any Error) {
         if let baseError = baseError as? LLMCommunicationError {
             self = baseError
+        } else if let baseError = baseError as? ElementError {
+            self = .element(baseError)
         } else {
             self = .unknown(baseError)
         }
