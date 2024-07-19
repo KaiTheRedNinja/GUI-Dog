@@ -53,11 +53,6 @@ class AccessManager {
         // Set the timeout to 0.5 seconds
         await access.setTimeout(seconds: 0.5)
 
-        // Assign self as the delegate for access
-        Task { @AccessActor in
-            access.delegate = self
-        }
-
         // Save the Access instance
         self.access = access
 
@@ -80,13 +75,5 @@ class AccessManager {
     func updateOverlayFrames() async {
         // if the access snapshot doesn't exist, pass [] instead
         await overlayManager?.update(actionableElements: accessSnapshot?.actionableItems ?? [])
-    }
-}
-
-extension AccessManager: AccessDelegate {
-    func accessDidRefocus(success: Bool) {
-        print("Access refocused!")
-        // Note: we do not call update anymore, because we wait for the
-        // LLM calling to do it itself.
     }
 }
