@@ -10,7 +10,7 @@ import Element
 
 @MainActor
 class OverlayManager: LLMDisplayDelegate {
-    private var windowController: OverlayWindowController
+    private var windowController: InfoWindowController
     private var contentController: ContentViewController
 
     init() {

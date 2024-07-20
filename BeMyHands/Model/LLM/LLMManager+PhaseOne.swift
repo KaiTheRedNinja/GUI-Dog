@@ -46,6 +46,11 @@ or other unsupported action, respond with "insufficient information".
         let model = GenerativeModel(name: "gemini-1.5-flash", apiKey: Secrets.geminiKey)
         let response = try await model.generateContent(prompt)
         if let text = response.text {
+            if text.contains("insufficient information") {
+                // TODO: figure out why this triggers but the one below doesn't
+                print("bruh why does it contain insufficient info")
+                throw LLMCommunicationError.insufficientInformation
+            }
             if text.trimmingCharacters(in: .whitespacesAndNewlines) != "insufficient information" {
                 print("Response text: \(text)")
                 return text.split(separator: "\n").map { String($0) }

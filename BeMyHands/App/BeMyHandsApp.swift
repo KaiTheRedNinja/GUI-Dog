@@ -39,6 +39,8 @@ struct BeMyHandsApp: App {
 
         Task {
             await llmManager.requestLLMAction(goal: "Open the CS50 folder in my documents directory")
+            // remove the manager
+            self.llmManager = nil
         }
     }
 }
