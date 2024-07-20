@@ -1,5 +1,5 @@
 //
-//  LLMManager+PhaseTwo.swift
+//  HandsBot+PhaseTwo.swift
 //  BeMyHands
 //
 //  Created by Kai Quan Tay on 19/7/24.
@@ -8,7 +8,7 @@
 import Foundation
 import GoogleGenerativeAI
 
-extension LLMManager {
+extension HandsBot {
     func executeStep(state: LLMState, context: ActionStepContext) async throws -> StepExecutionStatus {
         let prompt = try await preparePrompt(state: state, context: context)
         let model = prepareModel()

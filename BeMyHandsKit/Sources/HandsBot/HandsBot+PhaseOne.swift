@@ -1,5 +1,5 @@
 //
-//  LLMManager+PhaseOne.swift
+//  HandsBot+PhaseOne.swift
 //  BeMyHands
 //
 //  Created by Kai Quan Tay on 19/7/24.
@@ -8,7 +8,7 @@
 import Foundation
 import GoogleGenerativeAI
 
-extension LLMManager {
+extension HandsBot {
     /// Obtains a list of steps from the LLM. It expects the current access snapshot to be up-to-date.
     func getStepsFromLLM(goal: String) async throws -> [String] {
         let appName = accessibilityItemProvider.getCurrentAppName()

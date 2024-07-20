@@ -1,5 +1,5 @@
 //
-//  LLMManager.swift
+//  HandsBot.swift
 //  BeMyHands
 //
 //  Created by Kai Quan Tay on 19/7/24.
@@ -10,7 +10,7 @@ import Access
 
 /// A class that facilitates the conversation with an LLM. This manager should be RESET
 /// for every conversation.
-public class LLMManager {
+public class HandsBot {
     /// The accessibility item provider. Note that this should be defined as soon as possible before
     /// any other methods are called.
     public weak var accessibilityItemProvider: AccessibilityItemProvider!
@@ -25,7 +25,7 @@ public class LLMManager {
     /// The current state
     var state: LLMState = .zero
 
-    /// Creates a blank `LLMManager`
+    /// Creates a blank ``HandsBot``
     public init(
         accessibilityItemProvider: AccessibilityItemProvider! = nil,
         uiDelegate: LLMDisplayDelegate? = nil
@@ -210,7 +210,7 @@ public protocol APIProvider {
     func getKey() -> String
 }
 
-/// Provides accessibility information to an ``LLMManager``.
+/// Provides accessibility information to an ``HandsBot``.
 public protocol AccessibilityItemProvider: AnyObject {
     /// Requests the provider to update its catalog of accessibility objects
     func updateAccessibilityObjects() async throws
@@ -234,9 +234,9 @@ public protocol AccessibilityItemProvider: AnyObject {
     func execute(action: String, onElementID elementID: UUID) async throws
 }
 
-/// Provides a UI to the ``LLMManager``.
+/// Provides a UI to the ``HandsBot``.
 ///
-/// Note that the `LLMManager` only informs the display delegate about changes in the LLM
+/// Note that the `HandsBot` only informs the display delegate about changes in the LLM
 /// communication state. The ``AccessibilityItemProvider`` is responsible for updating
 /// the UI directly about actionable elements.
 public protocol LLMDisplayDelegate: AnyObject {

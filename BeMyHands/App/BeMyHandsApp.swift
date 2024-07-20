@@ -11,7 +11,7 @@ import HandsBot
 
 @main
 struct BeMyHandsApp: App {
-    @State var llmManager: LLMManager?
+    @State var handsBot: HandsBot?
     @State var accessManager: AccessManager = .init()
     @State var overlayManager: OverlayManager = .init()
 
@@ -28,11 +28,11 @@ struct BeMyHandsApp: App {
     }
 
     func triggerLLM() {
-        // create the LLM manager if it doesn't exist
-        guard llmManager == nil else { return }
+        // create the hands bot if it doesn't exist
+        guard handsBot == nil else { return }
 
-        let llmManager = LLMManager()
-        self.llmManager = llmManager
+        let llmManager = HandsBot()
+        self.handsBot = llmManager
         llmManager.accessibilityItemProvider = accessManager
         llmManager.uiDelegate = overlayManager
         llmManager.apiProvider = SecretsProvider()
@@ -42,7 +42,7 @@ struct BeMyHandsApp: App {
         Task {
             await llmManager.requestLLMAction(goal: "Open the CS50 folder in my documents directory")
             // remove the manager
-            self.llmManager = nil
+            self.handsBot = nil
         }
     }
 }

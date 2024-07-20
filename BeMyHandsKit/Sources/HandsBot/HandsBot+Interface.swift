@@ -1,5 +1,5 @@
 //
-//  LLMManager+Interface.swift
+//  HandsBot+Interface.swift
 //  BeMyHands
 //
 //  Created by Kai Quan Tay on 19/7/24.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension LLMManager {
+extension HandsBot {
     /// Sets `state` to `.step`, starting at step zero for steps. Should only be called ONCE, and will
     /// fatal error if called multiple times on the same instance.
     internal func setup(withGoal goal: String, steps: [String]) {
