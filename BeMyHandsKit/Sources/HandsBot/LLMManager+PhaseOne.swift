@@ -43,7 +43,7 @@ or other unsupported action, respond with "insufficient information".
 
         print("Prompt: \(prompt)")
 
-        let model = GenerativeModel(name: "gemini-1.5-flash", apiKey: Secrets.geminiKey)
+        let model = GenerativeModel(name: "gemini-1.5-flash", apiKey: apiProvider.getKey())
         let response = try await model.generateContent(prompt)
         if let text = response.text {
             if text.contains("insufficient information") {

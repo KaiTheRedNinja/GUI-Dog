@@ -12,7 +12,6 @@
 		931B22C52C3B6393003A6436 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 931B22C42C3B6393003A6436 /* Assets.xcassets */; };
 		931B22C82C3B6393003A6436 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 931B22C72C3B6393003A6436 /* Preview Assets.xcassets */; };
 		931B22D32C3B64C5003A6436 /* Access in Frameworks */ = {isa = PBXBuildFile; productRef = 931B22D22C3B64C5003A6436 /* Access */; };
-		931B22D52C3B64C5003A6436 /* BeMyHandsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 931B22D42C3B64C5003A6436 /* BeMyHandsKit */; };
 		931B22D72C3B64C5003A6436 /* Element in Frameworks */ = {isa = PBXBuildFile; productRef = 931B22D62C3B64C5003A6436 /* Element */; };
 		931B22D92C3B64C5003A6436 /* Input in Frameworks */ = {isa = PBXBuildFile; productRef = 931B22D82C3B64C5003A6436 /* Input */; };
 		931B22DB2C3B64C5003A6436 /* Output in Frameworks */ = {isa = PBXBuildFile; productRef = 931B22DA2C3B64C5003A6436 /* Output */; };
@@ -20,16 +19,11 @@
 		936F3EEC2C3BE541006FC333 /* ControlsWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EEB2C3BE53B006FC333 /* ControlsWindow.swift */; };
 		936F3EEE2C3BE5E9006FC333 /* OverlayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */; };
 		936F3EF02C3BE688006FC333 /* ContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EEF2C3BE688006FC333 /* ContentViewController.swift */; };
-		936F3EF42C3CA4FE006FC333 /* AccessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EF32C3CA4F9006FC333 /* AccessManager.swift */; };
-		9382F3F02C4607A900B4A1EA /* LLLState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9382F3EF2C46079D00B4A1EA /* LLLState.swift */; };
 		9382F3F72C4630CD00B4A1EA /* FramesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9382F3F62C4630CD00B4A1EA /* FramesView.swift */; };
 		9382F3F92C4631DB00B4A1EA /* LLMStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9382F3F82C4631D500B4A1EA /* LLMStateView.swift */; };
-		938D3EBC2C3FC765007EDE9A /* StringBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938D3EBB2C3FC763007EDE9A /* StringBuilder.swift */; };
-		9397F7FF2C4A3DA000A8BAC1 /* LLMManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F7FE2C4A3D9D00A8BAC1 /* LLMManager.swift */; };
-		9397F8012C4A613B00A8BAC1 /* LLMManager+PhaseOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F8002C4A613500A8BAC1 /* LLMManager+PhaseOne.swift */; };
-		9397F8032C4A615F00A8BAC1 /* LLMManager+Interface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F8022C4A615400A8BAC1 /* LLMManager+Interface.swift */; };
-		9397F8052C4A616A00A8BAC1 /* LLMManager+PhaseTwo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F8042C4A616300A8BAC1 /* LLMManager+PhaseTwo.swift */; };
 		9397F8292C4BC3A600A8BAC1 /* InfoWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F8282C4BC3A300A8BAC1 /* InfoWindow.swift */; };
+		9397F82B2C4BC5CB00A8BAC1 /* HandsBot in Frameworks */ = {isa = PBXBuildFile; productRef = 9397F82A2C4BC5CB00A8BAC1 /* HandsBot */; };
+		9397F82D2C4BE63900A8BAC1 /* AccessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F82C2C4BE63900A8BAC1 /* AccessManager.swift */; };
 		93D7A4502C450F7B0065186B /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7A44F2C450F770065186B /* Secrets.swift */; };
 		93D7A4532C45131B0065186B /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 93D7A4522C45131B0065186B /* GoogleGenerativeAI */; };
 		93D7A4552C45140E0065186B /* AccessManager+LLM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7A4542C4514090065186B /* AccessManager+LLM.swift */; };
@@ -48,16 +42,10 @@
 		936F3EEB2C3BE53B006FC333 /* ControlsWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlsWindow.swift; sourceTree = "<group>"; };
 		936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayManager.swift; sourceTree = "<group>"; };
 		936F3EEF2C3BE688006FC333 /* ContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewController.swift; sourceTree = "<group>"; };
-		936F3EF32C3CA4F9006FC333 /* AccessManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessManager.swift; sourceTree = "<group>"; };
-		9382F3EF2C46079D00B4A1EA /* LLLState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLLState.swift; sourceTree = "<group>"; };
 		9382F3F62C4630CD00B4A1EA /* FramesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramesView.swift; sourceTree = "<group>"; };
 		9382F3F82C4631D500B4A1EA /* LLMStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMStateView.swift; sourceTree = "<group>"; };
-		938D3EBB2C3FC763007EDE9A /* StringBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringBuilder.swift; sourceTree = "<group>"; };
-		9397F7FE2C4A3D9D00A8BAC1 /* LLMManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMManager.swift; sourceTree = "<group>"; };
-		9397F8002C4A613500A8BAC1 /* LLMManager+PhaseOne.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LLMManager+PhaseOne.swift"; sourceTree = "<group>"; };
-		9397F8022C4A615400A8BAC1 /* LLMManager+Interface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LLMManager+Interface.swift"; sourceTree = "<group>"; };
-		9397F8042C4A616300A8BAC1 /* LLMManager+PhaseTwo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LLMManager+PhaseTwo.swift"; sourceTree = "<group>"; };
 		9397F8282C4BC3A300A8BAC1 /* InfoWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoWindow.swift; sourceTree = "<group>"; };
+		9397F82C2C4BE63900A8BAC1 /* AccessManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessManager.swift; sourceTree = "<group>"; };
 		93D7A44F2C450F770065186B /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		93D7A4542C4514090065186B /* AccessManager+LLM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AccessManager+LLM.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -69,11 +57,11 @@
 			files = (
 				931B22DB2C3B64C5003A6436 /* Output in Frameworks */,
 				933E522E2C47370F00879AE1 /* KeyboardShortcuts in Frameworks */,
+				9397F82B2C4BC5CB00A8BAC1 /* HandsBot in Frameworks */,
 				931B22D72C3B64C5003A6436 /* Element in Frameworks */,
 				931B22D92C3B64C5003A6436 /* Input in Frameworks */,
 				93D7A4532C45131B0065186B /* GoogleGenerativeAI in Frameworks */,
 				931B22D32C3B64C5003A6436 /* Access in Frameworks */,
-				931B22D52C3B64C5003A6436 /* BeMyHandsKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -154,24 +142,10 @@
 		936F3EF22C3CA4E9006FC333 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				9382F3EE2C46078800B4A1EA /* LLM */,
-				938D3EBB2C3FC763007EDE9A /* StringBuilder.swift */,
-				936F3EF32C3CA4F9006FC333 /* AccessManager.swift */,
+				93D7A4542C4514090065186B /* AccessManager+LLM.swift */,
+				9397F82C2C4BE63900A8BAC1 /* AccessManager.swift */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		9382F3EE2C46078800B4A1EA /* LLM */ = {
-			isa = PBXGroup;
-			children = (
-				9397F7FE2C4A3D9D00A8BAC1 /* LLMManager.swift */,
-				9397F8022C4A615400A8BAC1 /* LLMManager+Interface.swift */,
-				9397F8002C4A613500A8BAC1 /* LLMManager+PhaseOne.swift */,
-				9397F8042C4A616300A8BAC1 /* LLMManager+PhaseTwo.swift */,
-				9382F3EF2C46079D00B4A1EA /* LLLState.swift */,
-				93D7A4542C4514090065186B /* AccessManager+LLM.swift */,
-			);
-			path = LLM;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -193,12 +167,12 @@
 			name = BeMyHands;
 			packageProductDependencies = (
 				931B22D22C3B64C5003A6436 /* Access */,
-				931B22D42C3B64C5003A6436 /* BeMyHandsKit */,
 				931B22D62C3B64C5003A6436 /* Element */,
 				931B22D82C3B64C5003A6436 /* Input */,
 				931B22DA2C3B64C5003A6436 /* Output */,
 				93D7A4522C45131B0065186B /* GoogleGenerativeAI */,
 				933E522D2C47370F00879AE1 /* KeyboardShortcuts */,
+				9397F82A2C4BC5CB00A8BAC1 /* HandsBot */,
 			);
 			productName = BeMyHands;
 			productReference = 931B22BD2C3B6392003A6436 /* BeMyHands.app */;
@@ -282,19 +256,13 @@
 			files = (
 				936F3EEE2C3BE5E9006FC333 /* OverlayManager.swift in Sources */,
 				93D7A4502C450F7B0065186B /* Secrets.swift in Sources */,
-				9397F8012C4A613B00A8BAC1 /* LLMManager+PhaseOne.swift in Sources */,
 				931B22C32C3B6392003A6436 /* MenuExtraView.swift in Sources */,
-				9397F7FF2C4A3DA000A8BAC1 /* LLMManager.swift in Sources */,
-				9397F8032C4A615F00A8BAC1 /* LLMManager+Interface.swift in Sources */,
 				936F3EEC2C3BE541006FC333 /* ControlsWindow.swift in Sources */,
-				938D3EBC2C3FC765007EDE9A /* StringBuilder.swift in Sources */,
-				9397F8052C4A616A00A8BAC1 /* LLMManager+PhaseTwo.swift in Sources */,
 				9382F3F72C4630CD00B4A1EA /* FramesView.swift in Sources */,
-				936F3EF42C3CA4FE006FC333 /* AccessManager.swift in Sources */,
+				9397F82D2C4BE63900A8BAC1 /* AccessManager.swift in Sources */,
 				931B22C12C3B6392003A6436 /* BeMyHandsApp.swift in Sources */,
 				9382F3F92C4631DB00B4A1EA /* LLMStateView.swift in Sources */,
 				936F3EF02C3BE688006FC333 /* ContentViewController.swift in Sources */,
-				9382F3F02C4607A900B4A1EA /* LLLState.swift in Sources */,
 				93D7A4552C45140E0065186B /* AccessManager+LLM.swift in Sources */,
 				9397F8292C4BC3A600A8BAC1 /* InfoWindow.swift in Sources */,
 			);
@@ -528,10 +496,6 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = Access;
 		};
-		931B22D42C3B64C5003A6436 /* BeMyHandsKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = BeMyHandsKit;
-		};
 		931B22D62C3B64C5003A6436 /* Element */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Element;
@@ -548,6 +512,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 933E522C2C47370F00879AE1 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
 			productName = KeyboardShortcuts;
+		};
+		9397F82A2C4BC5CB00A8BAC1 /* HandsBot */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HandsBot;
 		};
 		93D7A4522C45131B0065186B /* GoogleGenerativeAI */ = {
 			isa = XCSwiftPackageProductDependency;

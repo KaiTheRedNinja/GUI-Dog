@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Access
+import HandsBot
 
 @main
 struct BeMyHandsApp: App {
@@ -20,7 +21,7 @@ struct BeMyHandsApp: App {
         } label: {
             Image(systemName: "hand.wave.fill")
                 .task {
-                    accessManager.overlayManager = overlayManager
+                    accessManager.uiDelegate = overlayManager
                     await accessManager.setup()
                 }
         }
@@ -34,6 +35,7 @@ struct BeMyHandsApp: App {
         self.llmManager = llmManager
         llmManager.accessibilityItemProvider = accessManager
         llmManager.uiDelegate = overlayManager
+        llmManager.apiProvider = SecretsProvider()
 
         // TODO: obtain the goal
 
@@ -42,5 +44,11 @@ struct BeMyHandsApp: App {
             // remove the manager
             self.llmManager = nil
         }
+    }
+}
+
+struct SecretsProvider: APIProvider {
+    func getKey() -> String {
+        Secrets.geminiKey
     }
 }

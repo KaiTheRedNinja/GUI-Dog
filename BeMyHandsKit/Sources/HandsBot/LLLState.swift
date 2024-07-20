@@ -8,16 +8,23 @@
 import Element
 
 /// Represents the data of an LLM communication
-struct LLMState: Equatable {
+public struct LLMState: Equatable {
     /// The goal
-    var goal: String
+    public var goal: String
     /// The steps to achieve the goal, or [] if ``commState`` is `.loading`
-    var steps: [LLMStep]
+    public var steps: [LLMStep]
     /// The current step. Nil if `steps` is empty
-    var currentStepIndex: Int!
+    public var currentStepIndex: Int!
+
+    /// Creates an LLM state
+    public init(goal: String = "", steps: [LLMStep] = [], currentStepIndex: Int! = nil) {
+        self.goal = goal
+        self.steps = steps
+        self.currentStepIndex = currentStepIndex
+    }
 
     /// Computed property for the current step, gettable and settable
-    var currentStep: LLMStep {
+    public var currentStep: LLMStep {
         get {
             steps[currentStepIndex]
         }
@@ -27,7 +34,7 @@ struct LLMState: Equatable {
     }
 
     /// The overall state, a computed summary of the steps' state
-    var overallState: LLMOverallState {
+    public var overallState: LLMOverallState {
         if steps.isEmpty { return .stepsNotLoaded }
         for step in steps {
             switch step.state {
@@ -44,17 +51,25 @@ struct LLMState: Equatable {
         return .complete
     }
 
-    static let zero = LLMState(goal: "No Goal", steps: [])
+    /// The default LLM state
+    public static let zero = LLMState()
 }
 
-struct LLMStep: Equatable {
+/// A single step
+public struct LLMStep: Equatable {
     /// The name of the step
-    var step: String
+    public var step: String
     /// The state of the step's completion
-    var state: LLMStepState
+    public var state: LLMStepState
+
+    /// Creates an LLMStep
+    public init(step: String, state: LLMStepState) {
+        self.step = step
+        self.state = state
+    }
 }
 
-enum LLMStepState: Equatable {
+public enum LLMStepState: Equatable {
     /// The step has not been reached yet
     case notReached
     /// The step is being worked on
@@ -65,7 +80,7 @@ enum LLMStepState: Equatable {
     case error(LLMCommunicationError)
 }
 
-enum LLMOverallState: Equatable {
+public enum LLMOverallState: Equatable {
     /// The steps have not been loaded
     case stepsNotLoaded
     /// The steps have been loaded and are being executed
@@ -77,7 +92,7 @@ enum LLMOverallState: Equatable {
 }
 
 /// An error in LLM communication
-enum LLMCommunicationError: Error, Equatable {
+public enum LLMCommunicationError: Error, Equatable {
     // Missing Info
     /// The accessibility snapshot does not exist
     case accessSnapshotNotFound
@@ -107,7 +122,7 @@ enum LLMCommunicationError: Error, Equatable {
     case unknown(any Error)
 
     /// Description of this error
-    var description: String {
+    public var description: String {
         switch self {
         case .accessSnapshotNotFound: "The interactable UI elements are not available"
         case .textNotProvided: "The LLM did not respond with text when it was expected to"
@@ -122,11 +137,11 @@ enum LLMCommunicationError: Error, Equatable {
         }
     }
 
-    static func == (lhs: LLMCommunicationError, rhs: LLMCommunicationError) -> Bool {
+    public static func == (lhs: LLMCommunicationError, rhs: LLMCommunicationError) -> Bool {
         lhs.description == rhs.description
     }
 
-    init(_ baseError: any Error) {
+    public init(_ baseError: any Error) {
         if let baseError = baseError as? LLMCommunicationError {
             self = baseError
         } else if let baseError = baseError as? ElementError {
@@ -138,7 +153,12 @@ enum LLMCommunicationError: Error, Equatable {
 }
 
 /// A structure that holds the context of a single "step" in Phase 2
-struct ActionStepContext: Hashable {
+public struct ActionStepContext: Hashable {
     /// The past actions done in this step. Nil if this is the first sub-step.
-    var pastActions: [String]?
+    public var pastActions: [String]?
+
+    /// Creates an ActionStepContext
+    public init(pastActions: [String]? = nil) {
+        self.pastActions = pastActions
+    }
 }

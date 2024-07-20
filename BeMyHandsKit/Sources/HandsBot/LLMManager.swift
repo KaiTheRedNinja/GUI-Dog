@@ -10,20 +10,23 @@ import Access
 
 /// A class that facilitates the conversation with an LLM. This manager should be RESET
 /// for every conversation.
-class LLMManager {
+public class LLMManager {
     /// The accessibility item provider. Note that this should be defined as soon as possible before
     /// any other methods are called.
-    weak var accessibilityItemProvider: AccessibilityItemProvider!
+    public weak var accessibilityItemProvider: AccessibilityItemProvider!
 
     /// The UI delegate, which is informed of when the UI should update to reflect the manager's
     /// internal state. Optional.
-    weak var uiDelegate: LLMDisplayDelegate?
+    public weak var uiDelegate: LLMDisplayDelegate?
+
+    /// The API provider, which provides the API key
+    public var apiProvider: APIProvider!
 
     /// The current state
     var state: LLMState = .zero
 
     /// Creates a blank `LLMManager`
-    init(
+    public init(
         accessibilityItemProvider: AccessibilityItemProvider! = nil,
         uiDelegate: LLMDisplayDelegate? = nil
     ) {
@@ -32,7 +35,7 @@ class LLMManager {
     }
 
     /// Requests actions from the Gemini API based on a request and the current `accessSnapshot`
-    func requestLLMAction(goal: String) async {
+    public func requestLLMAction(goal: String) async {
         guard state == .zero else {
             print("Could not request LLM: LLM already running")
             // TODO: fail elegantly
@@ -144,26 +147,45 @@ class LLMManager {
 }
 
 /// Describes an accessibility object
-struct ActionableElementDescription {
+public struct ActionableElementDescription {
     /// A UUID to uniquely identify the object
-    var id: UUID
+    public var id: UUID
     /// The role of the object
-    var role: String
+    public var role: String
     /// The given description of the object
-    var givenDescription: String
+    public var givenDescription: String
     /// The actions that the object accepts
-    var actions: [ActionDescription]
+    public var actions: [ActionDescription]
 
     /// Describes an accessibility action
-    struct ActionDescription {
+    public struct ActionDescription {
         /// The name of the action, prefixed with "AX"
-        var actionName: String
+        public var actionName: String
         /// The description of the action
-        var description: String
+        public var description: String
+
+        /// Creates an accessibility action description
+        public init(actionName: String, description: String) {
+            self.actionName = actionName
+            self.description = description
+        }
+    }
+
+    /// Creates an accessibility object description
+    public init(
+        id: UUID,
+        role: String,
+        givenDescription: String,
+        actions: [ActionDescription]
+    ) {
+        self.id = id
+        self.role = role
+        self.givenDescription = givenDescription
+        self.actions = actions
     }
 
     /// Describes itself in a bullet point form. If the given description or actions are empty, this returns nil.
-    var bulletPointDescription: String? {
+    public var bulletPointDescription: String? {
         guard !givenDescription.isEmpty, !actions.isEmpty else { return nil }
 
         let desc = role + ": " + givenDescription + ": " + id.uuidString
@@ -182,8 +204,14 @@ struct ActionableElementDescription {
     }
 }
 
+/// Provides the Gemini API key
+public protocol APIProvider {
+    /// Provides the Gemini API key
+    func getKey() -> String
+}
+
 /// Provides accessibility information to an ``LLMManager``.
-protocol AccessibilityItemProvider: AnyObject {
+public protocol AccessibilityItemProvider: AnyObject {
     /// Requests the provider to update its catalog of accessibility objects
     func updateAccessibilityObjects() async throws
 
@@ -211,7 +239,7 @@ protocol AccessibilityItemProvider: AnyObject {
 /// Note that the `LLMManager` only informs the display delegate about changes in the LLM
 /// communication state. The ``AccessibilityItemProvider`` is responsible for updating
 /// the UI directly about actionable elements.
-protocol LLMDisplayDelegate: AnyObject {
+public protocol LLMDisplayDelegate: AnyObject {
     /// Shows the display UI
     func show() async
     /// Hides the display UI

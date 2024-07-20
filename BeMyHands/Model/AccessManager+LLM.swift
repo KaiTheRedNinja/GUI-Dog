@@ -6,24 +6,25 @@
 //
 
 import Foundation
+import Access
 import Element
-import GoogleGenerativeAI
+import HandsBot
 
 extension AccessManager: AccessibilityItemProvider {
-    func updateAccessibilityObjects() async throws {
+    public func updateAccessibilityObjects() async throws {
         try await takeAccessSnapshot()
-        await overlayManager?.update(actionableElements: accessSnapshot?.actionableItems ?? [])
+        await uiDelegate?.update(actionableElements: accessSnapshot?.actionableItems ?? [])
     }
 
-    func getCurrentAppName() -> String? {
+    public func getCurrentAppName() -> String? {
         accessSnapshot?.focusedAppName
     }
 
-    func getFocusedElementDescription() -> String? {
+    public func getFocusedElementDescription() -> String? {
         try? accessSnapshot?.focus?.getComprehensiveDescription()
     }
 
-    func generateElementDescriptions() async throws -> [ActionableElementDescription] {
+    public func generateElementDescriptions() async throws -> [ActionableElementDescription] {
         guard let accessSnapshot else {
             throw LLMCommunicationError.accessSnapshotNotFound
         }
@@ -46,7 +47,7 @@ extension AccessManager: AccessibilityItemProvider {
 
         for element in screenElements {
             // get info about the element, verify it exists
-            let role = try await element.element.getAttribute(.roleDescription) as? String
+            let role = try await element.element.getAttribute(ElementAttribute.roleDescription) as? String
             let description = try await element.element.getDescription()
             let actions = element.actions
             guard let role, let description else { continue }
@@ -85,7 +86,7 @@ extension AccessManager: AccessibilityItemProvider {
         return descriptions
     }
 
-    func execute(action: String, onElementID elementID: UUID) async throws {
+    public func execute(action: String, onElementID elementID: UUID) async throws {
         guard action.hasPrefix("AX") && !action.contains(" ") else {
             throw LLMCommunicationError.actionFormatInvalid
         }

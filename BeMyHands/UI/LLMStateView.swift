@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import HandsBot
 
 struct LLMStateView: View {
     var state: LLMState

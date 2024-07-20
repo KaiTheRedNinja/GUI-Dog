@@ -9,10 +9,6 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "BeMyHandsKit",
-            targets: ["BeMyHandsKit"]
-        ),
-        .library(
             name: "Access",
             targets: ["Access"]
         ),
@@ -27,11 +23,19 @@ let package = Package(
         .library(
             name: "Element",
             targets: ["Element"]
+        ),
+        .library(
+            name: "HandsBot",
+            targets: ["HandsBot"]
         )
     ],
     targets: [
         .target(
-            name: "BeMyHandsKit"
+            name: "HandsBot",
+            dependencies: [
+                .byName(name: "Access"),
+                .byName(name: "Element")
+            ]
         ),
 
         // CREDIT: João Santos, https://github.com/Xce-PT/Vosh/
@@ -48,11 +52,6 @@ let package = Package(
             dependencies: [.byName(name: "Output")]
         ),
         .target(name: "Output"),
-        .target(name: "Element"),
-
-        .testTarget(
-            name: "BeMyHandsKitTests",
-            dependencies: ["BeMyHandsKit"]
-        ),
+        .target(name: "Element")
     ]
 )

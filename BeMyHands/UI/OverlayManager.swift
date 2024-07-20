@@ -7,9 +7,10 @@
 
 import AppKit
 import Element
+import HandsBot
 
 @MainActor
-class OverlayManager: LLMDisplayDelegate {
+class OverlayManager: LLMDisplayDelegate, AccessDisplayDelegate {
     private var windowController: InfoWindowController
     private var contentController: ContentViewController
 

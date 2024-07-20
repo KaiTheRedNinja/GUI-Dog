@@ -8,6 +8,7 @@
 import AppKit
 import SwiftUI
 import Element
+import HandsBot
 
 class ContentViewController: NSViewController {
     var framesView: FramesView
@@ -18,8 +19,8 @@ class ContentViewController: NSViewController {
         self.framesView = .init(frame: .zero)
         self.stateView = .init(
             rootView: .init(
-                state: .init(goal: "No Goal", steps: []),
-                size: .zero,
+                state: LLMState.zero,
+                size: NSSize.zero,
                 isShown: false
             )
         )
