@@ -20,9 +20,10 @@ You are my hands. I want to \(goal). You will be given some context, and I want 
 actions to take, as numbered bullet points such as "1. Open new tab". Try and use as few steps as possible, and rely \
 only on buttons on the screen.
 
-Note that you are NOT able to type, only press buttons. If the goal requires data that you cannot feasibly obtain \
-from the names and descriptions of clickable buttons, such as reading text, or requires you to perform a drag, typing, \
-or other unsupported action, respond with "insufficient information".
+Note that you are NOT able to type, only press buttons. You are able to read the titles and descriptions of buttons, \
+including clickable non-button items like files. If the goal requires data that you cannot feasibly obtain from the \
+names and descriptions of clickable buttons, such as reading text, or requires you to perform a drag, typing, or other \
+unsupported action, respond with "insufficient information".
 
 """
 
