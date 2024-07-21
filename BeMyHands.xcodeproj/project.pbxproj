@@ -135,11 +135,10 @@
 		936F3EEA2C3BE535006FC333 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				93CFAD6A2C4CD9BE0084A039 /* Window */,
 				9397F8372C4CA72E00A8BAC1 /* Status */,
 				9397F8362C4CA71E00A8BAC1 /* Frames */,
 				9397F8382C4CA73800A8BAC1 /* Goals */,
-				9397F8282C4BC3A300A8BAC1 /* InfoWindow.swift */,
-				936F3EEB2C3BE53B006FC333 /* ControlsWindow.swift */,
 				936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */,
 			);
 			path = UI;
@@ -148,8 +147,8 @@
 		936F3EF22C3CA4E9006FC333 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				93D7A4542C4514090065186B /* AccessManager+LLM.swift */,
 				9397F82C2C4BE63900A8BAC1 /* AccessManager.swift */,
+				93D7A4542C4514090065186B /* AccessManager+LLM.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -179,6 +178,15 @@
 				9397F8392C4CA77400A8BAC1 /* GoalsView.swift */,
 			);
 			path = Goals;
+			sourceTree = "<group>";
+		};
+		93CFAD6A2C4CD9BE0084A039 /* Window */ = {
+			isa = PBXGroup;
+			children = (
+				9397F8282C4BC3A300A8BAC1 /* InfoWindow.swift */,
+				936F3EEB2C3BE53B006FC333 /* ControlsWindow.swift */,
+			);
+			path = Window;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

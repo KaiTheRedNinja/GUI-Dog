@@ -143,7 +143,7 @@ exactly ONCE. Respond with a FUNCTION CALL, NOT a code block.
         // 3. Request the AI
         let model = GenerativeModel(
             name: "gemini-1.5-flash",
-            apiKey: apiProvider.getKey(),
+            apiKey: apiKeyProvider.getKey(),
             // Specify the function declaration.
             tools: [Tool(functionDeclarations: [executeActionDecl])],
             toolConfig: .init(

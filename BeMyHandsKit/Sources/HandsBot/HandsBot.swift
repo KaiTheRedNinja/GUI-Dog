@@ -15,12 +15,15 @@ public class HandsBot {
     /// any other methods are called.
     public weak var accessibilityItemProvider: AccessibilityItemProvider!
 
+    /// The app opening delegate, informed when apps should be opened/focused.
+    public weak var appOpenDelegate: AppOpenDelegate?
+
     /// The UI delegate, which is informed of when the UI should update to reflect the manager's
     /// internal state. Optional.
     public weak var uiDelegate: LLMDisplayDelegate?
 
     /// The API provider, which provides the API key
-    public var apiProvider: APIProvider!
+    public weak var apiKeyProvider: APIKeyProvider!
 
     /// The current state
     var state: LLMState = .zero
@@ -205,7 +208,7 @@ public struct ActionableElementDescription {
 }
 
 /// Provides the Gemini API key
-public protocol APIProvider {
+public protocol APIKeyProvider: AnyObject {
     /// Provides the Gemini API key
     func getKey() -> String
 }
@@ -232,6 +235,13 @@ public protocol AccessibilityItemProvider: AnyObject {
     /// be called AFTER a call to ``generateElementDescriptions()``, but the ID is not
     /// guarenteed to exist.
     func execute(action: String, onElementID elementID: UUID) async throws
+}
+
+public protocol AppOpenDelegate: AnyObject {
+    /// Focuses an app, or opens it if it is not open
+    /// - Parameter appName: Name of the app
+    /// - Returns: Whether the operation succeeded or not
+    func focusApp(named appName: String) -> Bool
 }
 
 /// Provides a UI to the ``HandsBot``.

@@ -43,7 +43,8 @@ struct BeMyHandsApp: App {
             self.handsBot = llmManager
             llmManager.accessibilityItemProvider = accessManager
             llmManager.uiDelegate = overlayManager
-            llmManager.apiProvider = SecretsProvider()
+            llmManager.apiKeyProvider = APIKey.global
+            llmManager.appOpenDelegate = AppOpen.global
 
             await llmManager.requestLLMAction(goal: goal)
             // remove the manager
@@ -52,8 +53,25 @@ struct BeMyHandsApp: App {
     }
 }
 
-struct SecretsProvider: APIProvider {
+class APIKey: APIKeyProvider {
     func getKey() -> String {
         Secrets.geminiKey
     }
+
+    static let global: APIKey = .init()
+}
+
+class AppOpen: AppOpenDelegate {
+    func focusApp(named appName: String) -> Bool {
+        guard let appPath = FileManager.default.urls(
+            for: .applicationDirectory,
+            in: .systemDomainMask
+        ).first?.appendingPathComponent("\(appName).app") else {
+            return false
+        }
+
+        return NSWorkspace.shared.open(appPath)
+    }
+
+    static let global: AppOpen = .init()
 }
