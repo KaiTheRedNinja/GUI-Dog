@@ -132,7 +132,8 @@ public extension Access {
                 await Output.shared.convey(content)
                 return
             }
-            var content = [OutputSemantic]()
+
+            // Focus the app
             if processIdentifier != self.processIdentifier {
                 let application = await Element(processIdentifier: processIdentifier)
                 let observer = try await ElementObserver(element: application)
@@ -142,41 +143,27 @@ public extension Access {
                 self.application = application
                 self.processIdentifier = processIdentifier
                 self.observer = observer
-                let applicationLabel = try await application.getAttribute(.title) as? String
-                content.append(.application(applicationLabel ?? "Application"))
             }
+
+            // Error if focusing the app failed
             guard let application = self.application, let observer = self.observer else {
                 fatalError("Logic failed")
             }
+
+            // Get focused element
             if let keyboardFocus = try await application.getAttribute(.focusedElement) as? Element {
-                if let window = try await keyboardFocus.getAttribute(.windowElement) as? Element {
-                    if let windowLabel = try await window.getAttribute(.title) as? String, !windowLabel.isEmpty {
-                        content.append(.window(windowLabel))
-                    } else {
-                        content.append(.window("Untitled"))
-                    }
-                }
                 let focus = try await AccessFocus(on: keyboardFocus)
                 self.focus = focus
-                content.append(contentsOf: try await focus.reader.read())
             } else if let window = try await application.getAttribute(.focusedWindow) as? Element,
                       let child = try await AccessEntity(for: window).getFirstChild() {
-                if let windowLabel = try await window.getAttribute(.title) as? String, !windowLabel.isEmpty {
-                    content.append(.window(windowLabel))
-                } else {
-                    content.append(.window("Untitled"))
-                }
                 let focus = try await AccessFocus(on: child)
                 self.focus = focus
-                content.append(contentsOf: try await focus.reader.read())
             } else {
                 self.focus = nil
                 try await observer.subscribe(to: .elementDidAppear)
-                content.append(.noFocus)
             }
-            //            print("Content: \(content)")
-            //            await Output.shared.convey(content)
 
+            // Inform the delegate
             delegate?.accessDidRefocus(success: true)
         } catch {
             print("Failed: \(error)")
@@ -185,5 +172,4 @@ public extension Access {
             delegate?.accessDidRefocus(success: false)
         }
     }
-
 }
