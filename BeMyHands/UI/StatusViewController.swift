@@ -11,12 +11,10 @@ import Element
 import HandsBot
 
 class StatusViewController: NSViewController {
-//    var framesView: FramesView
     var stateView: NSHostingView<LLMStateView>
     var visible: Bool
 
     init() {
-//        self.framesView = .init(frame: .zero)
         self.stateView = .init(
             rootView: .init(
                 state: LLMState.zero,
@@ -32,15 +30,12 @@ class StatusViewController: NSViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setupFrames(with frame: NSRect, actionableElements: [ActionableElement]) {
-//        framesView.removeFromSuperview()
+    func setupFrames(with frame: NSRect) {
         stateView.removeFromSuperview()
-//        framesView.setupView(with: frame, actionableElements: actionableElements)
 
         let view = NSView()
         view.frame = frame
         view.translatesAutoresizingMaskIntoConstraints = true
-//        view.addSubview(framesView)
         view.addSubview(stateView)
 
         self.view = view
@@ -56,7 +51,6 @@ class StatusViewController: NSViewController {
             height: frame.height
         )
 
-//        framesView.removeFromSuperview()
         stateView.removeFromSuperview()
         stateView = .init(
             rootView: .init(
@@ -70,7 +64,6 @@ class StatusViewController: NSViewController {
         let view = NSView()
         view.frame = self.view.frame
         view.translatesAutoresizingMaskIntoConstraints = true
-//        view.addSubview(framesView)
         view.addSubview(stateView)
 
         self.view = view
@@ -83,10 +76,6 @@ class StatusViewController: NSViewController {
         self.visible = visible
 
         stateView.removeFromSuperview()
-//        framesView.removeFromSuperview()
-
-//        let framesViewAnimator = framesView.animator()
-//        framesViewAnimator.isHidden = !visible
 
         let frame = self.view.frame
         let stepsFrame: NSRect = .init(
@@ -108,7 +97,6 @@ class StatusViewController: NSViewController {
         let view = NSView()
         view.frame = self.view.frame
         view.translatesAutoresizingMaskIntoConstraints = true
-//        view.addSubview(framesView)
         view.addSubview(stateView)
 
         self.view = view
