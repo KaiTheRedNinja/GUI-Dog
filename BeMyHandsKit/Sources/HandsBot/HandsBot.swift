@@ -15,7 +15,8 @@ public class HandsBot {
     /// The discovery context providers
     public var discoveryContentProviders: [any DiscoveryContextProvider] = []
 
-    /// The step capability providers
+    /// The step capability providers. Note that their names MUST NOT be substrings of another name, or
+    /// else it may cause issues with the LLM.
     public var stepCapabilityProviders: [any StepCapabilityProvider] = []
 
     /// The UI delegate, which is informed of when the UI should update to reflect the manager's

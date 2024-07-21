@@ -17,7 +17,7 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
     }
 
     var description: String {
-        "Clicks or opens elements visible on screen"
+        "Click or opens elements visible on screen"
     }
 
     var instructions: String {
@@ -55,10 +55,10 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
         await uiDelegate?.update(actionableElements: accessSnapshot?.actionableItems ?? [])
     }
 
-    func getContext() async throws -> String? {
+    @_implements(DiscoveryContextProvider, getContext())
+    func getDiscoveryContext() async throws -> String? {
         let appName = accessSnapshot?.focusedAppName
         let focusedDescription = try? await accessSnapshot?.focus?.getComprehensiveDescription()
-        let descriptions = try await generateElementDescriptions()
 
         return String.build {
             if let appName {
@@ -74,6 +74,16 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
             } else {
                 "There is no focused element"
             }
+        }
+    }
+
+    @_implements(StepCapabilityProvider, getContext())
+    func getStepContext() async throws -> String? {
+        let discovery = try await getDiscoveryContext()!
+        let descriptions = try await generateElementDescriptions()
+
+        return String.build {
+            discovery
 
             "\n"
 

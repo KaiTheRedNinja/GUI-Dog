@@ -15,27 +15,42 @@ extension HandsBot {
         }
 
         // Allow the LLM to pick which provider to use
-        let provider = try await chooseProvider(state: state, context: context)
+        let (provider, relevantContext) = try await chooseProvider(
+            state: state,
+            context: context
+        )
 
         // Execute the step
-        try await executeStep(withProvider: provider, state: state, context: context)
+        try await executeStep(
+            withProvider: provider,
+            state: state,
+            context: context,
+            relevantContext: relevantContext
+        )
 
         // If the AI says that the step has not been completed, then recurse
         // TODO: get recursing working again. I currently assume every action completes its step.
         return .complete
     }
 
+    /// Chooses a provider
+    /// - Parameters:
+    ///   - state: The LLM state
+    ///   - context: The LLM context
+    /// - Returns: The provider and its context, to be reused
     private func chooseProvider(
         state: LLMState,
         context: ActionStepContext
-    ) async throws -> any StepCapabilityProvider {
+    ) async throws -> (any StepCapabilityProvider, String) {
         // Gather context
         var contexts: [String] = []
+        var contextMap: [String: String] = [:]
         for stepCapabilityProvider in self.stepCapabilityProviders {
             try await stepCapabilityProvider.updateContext()
             let itemContext = try await stepCapabilityProvider.getContext()
             if let itemContext {
                 contexts.append(itemContext)
+                contextMap[stepCapabilityProvider.name] = itemContext
             }
         }
 
@@ -98,6 +113,8 @@ Respond in text with the names of THE NAME OF ONLY ONE of the tools: [\(stepCapa
             apiKey: apiKeyProvider.getKey()
         )
 
+        print("Choose prompt: \(prompt)")
+
         let result = try await model.generateContent(prompt)
 
         guard let text = result.text else {
@@ -108,28 +125,20 @@ Respond in text with the names of THE NAME OF ONLY ONE of the tools: [\(stepCapa
             throw LLMCommunicationError.insufficientInformation
         }
 
-        guard let provider = stepCapabilityProviders.first(where: { $0.name == text }) else {
+        // TODO: use UUIDs instead of their names
+        guard let provider = stepCapabilityProviders.first(where: { text.contains($0.name) }) else {
             throw LLMCommunicationError.invalidFunctionCall
         }
 
-        return provider
+        return (provider, contextMap[provider.name]!)
     }
 
     private func executeStep(
         withProvider provider: any StepCapabilityProvider,
         state: LLMState,
-        context: ActionStepContext
+        context: ActionStepContext,
+        relevantContext: String
     ) async throws {
-        // Gather context
-        var contexts: [String] = []
-        for stepCapabilityProvider in self.stepCapabilityProviders {
-            try await stepCapabilityProvider.updateContext()
-            let itemContext = try await stepCapabilityProvider.getContext()
-            if let itemContext {
-                contexts.append(itemContext)
-            }
-        }
-
         // Prepare the prompt
         let prompt = String.build {
             """
@@ -163,10 +172,7 @@ Respond in text with the names of THE NAME OF ONLY ONE of the tools: [\(stepCapa
                 ""
             }
 
-            for itemContext in contexts {
-                itemContext
-                "\n"
-            }
+            relevantContext
 
             """
             To achieve this goal, follow these instructions and call the \(provider.name) tool function:
@@ -191,6 +197,8 @@ Respond in text with the names of THE NAME OF ONLY ONE of the tools: [\(stepCapa
                 )
             )
         )
+
+        print("Result prompt: \(prompt)")
 
         let result = try await model.generateContent(prompt)
         guard let functionCall = result.functionCalls.first, functionCall.name == provider.name else {

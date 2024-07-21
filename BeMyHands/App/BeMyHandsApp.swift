@@ -65,7 +65,7 @@ class APIKey: APIKeyProvider {
 class AppOpen: StepCapabilityProvider {
     var name: String { "openApp" }
 
-    var description: String { "Opens an app with a specified name" }
+    var description: String { "Open an app with a specified name" }
 
     var instructions: String {
         """
