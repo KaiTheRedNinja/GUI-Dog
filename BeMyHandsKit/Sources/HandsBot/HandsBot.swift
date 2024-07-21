@@ -7,16 +7,16 @@
 
 import Foundation
 import Access
+import GoogleGenerativeAI
 
 /// A class that facilitates the conversation with an LLM. This manager should be RESET
 /// for every conversation.
 public class HandsBot {
-    /// The accessibility item provider. Note that this should be defined as soon as possible before
-    /// any other methods are called.
-    public weak var accessibilityItemProvider: AccessibilityItemProvider!
+    /// The discovery context providers
+    public var discoveryContentProviders: [any DiscoveryContextProvider] = []
 
-    /// The app opening delegate, informed when apps should be opened/focused.
-    public weak var appOpenDelegate: AppOpenDelegate?
+    /// The step capability providers
+    public var stepCapabilityProviders: [any StepCapabilityProvider] = []
 
     /// The UI delegate, which is informed of when the UI should update to reflect the manager's
     /// internal state. Optional.
@@ -29,13 +29,7 @@ public class HandsBot {
     var state: LLMState = .zero
 
     /// Creates a blank ``HandsBot``
-    public init(
-        accessibilityItemProvider: AccessibilityItemProvider! = nil,
-        uiDelegate: LLMDisplayDelegate? = nil
-    ) {
-        self.accessibilityItemProvider = accessibilityItemProvider
-        self.uiDelegate = uiDelegate
-    }
+    public init() {}
 
     /// Requests actions from the Gemini API based on a request and the current `accessSnapshot`
     public func requestLLMAction(goal: String) async {
@@ -62,11 +56,13 @@ public class HandsBot {
             }
         }
 
-        // update catalog
+        // update the capability providers
         do {
-            try await accessibilityItemProvider.updateAccessibilityObjects()
+            for stepCapabilityProvider in stepCapabilityProviders {
+                try await stepCapabilityProvider.updateContext()
+            }
         } catch {
-            print("Could not get access snapshot")
+            print("Could not update capabilities")
             updateState(toError: .init(error))
             return
         }
@@ -114,11 +110,13 @@ public class HandsBot {
                 fatalError("Internal inconsistency")
             }
 
-            // retake the snapshot
+            // update the capability providers
             do {
-                try await accessibilityItemProvider.updateAccessibilityObjects()
+                for stepCapabilityProvider in stepCapabilityProviders {
+                    try await stepCapabilityProvider.updateContext()
+                }
             } catch {
-                print("Could not get access snapshot")
+                print("Could not update capabilities")
                 updateState(toError: .init(error))
                 return
             }
@@ -149,99 +147,48 @@ public class HandsBot {
     }
 }
 
-/// Describes an accessibility object
-public struct ActionableElementDescription {
-    /// A UUID to uniquely identify the object
-    public var id: UUID
-    /// The role of the object
-    public var role: String
-    /// The given description of the object
-    public var givenDescription: String
-    /// The actions that the object accepts
-    public var actions: [ActionDescription]
+/// Provides context to the LLM when deciding the steps to execute in phase one.
+public protocol DiscoveryContextProvider {
+    /// Called before ``getContext()`` to inform the provider to update the context
+    func updateContext() async throws
+    /// Get the context. Nil if context is unavailable.
+    func getContext() async throws -> String?
+}
 
-    /// Describes an accessibility action
-    public struct ActionDescription {
-        /// The name of the action, prefixed with "AX"
-        public var actionName: String
-        /// The description of the action
-        public var description: String
+/// Provides a capability to the LLM while executing a step.
+///
+/// The LLM can decide to use a capability when executing a step.
+/// 1. ``name`` and ``description`` are retrieved for each capability and given to theLLM
+/// 2. The LLM chooses a capability, or exits if none match the task
+/// 3. ``instructions`` and ``getContext()`` are used to provide instructions to the LLM
+/// for how to use the capability, and any context if the capability requires options.
+public protocol StepCapabilityProvider {
+    /// The name of the capability. Should be IDENTICAL to the ``functionDeclaration``'s `name`
+    var name: String { get }
+    /// A description of the capability. Should be a verb, eg. "Click on on-screen buttons"
+    var description: String { get }
+    /// The instructions for how to use the capability. Will be given verbatim to the LLM.
+    var instructions: String { get }
+    /// The function for the LLM to call to execute the step
+    var functionDeclaration: FunctionDeclaration { get }
 
-        /// Creates an accessibility action description
-        public init(actionName: String, description: String) {
-            self.actionName = actionName
-            self.description = description
-        }
-    }
-
-    /// Creates an accessibility object description
-    public init(
-        id: UUID,
-        role: String,
-        givenDescription: String,
-        actions: [ActionDescription]
-    ) {
-        self.id = id
-        self.role = role
-        self.givenDescription = givenDescription
-        self.actions = actions
-    }
-
-    /// Describes itself in a bullet point form. If the given description or actions are empty, this returns nil.
-    public var bulletPointDescription: String? {
-        guard !givenDescription.isEmpty, !actions.isEmpty else { return nil }
-
-        let desc = role + ": " + givenDescription + ": " + id.uuidString
-
-        return String.build {
-            " - " + desc
-
-            for action in actions where action.actionName != "AXCancel" {
-                "    - " + action.actionName + (
-                    action.description.isEmpty
-                    ? ""
-                    : ": " + action.description
-                )
-            }
-        }
-    }
+    /// Called before ``getContext()`` to inform the provider to update the context
+    func updateContext() async throws
+    /// The context for using the capability, such as the currently open app. Nil if context is not
+    /// needed.
+    func getContext() async throws -> String?
+    /// Called whenever the LLM responds with a function declaration with the correct name. Note
+    /// that this DOES NOT guarentee that the function call is actually correct; this function should
+    /// validate parameters before execution.
+    func execute(function: FunctionCall) async throws
+    /// Called whenever the LLM responds but does not call the given function
+    func functionFailed()
 }
 
 /// Provides the Gemini API key
 public protocol APIKeyProvider: AnyObject {
     /// Provides the Gemini API key
     func getKey() -> String
-}
-
-/// Provides accessibility information to an ``HandsBot``.
-public protocol AccessibilityItemProvider: AnyObject {
-    /// Requests the provider to update its catalog of accessibility objects
-    func updateAccessibilityObjects() async throws
-
-    /// Requests the provider to provide the name of the current app. Nil if no app is focused.
-    func getCurrentAppName() -> String?
-    /// Requests the provider to provide a description of the currently focused element. Nil if no
-    /// element is focused.
-    func getFocusedElementDescription() -> String?
-
-    /// Requests the provider to generate descriptions for accessibility objects and return them.
-    /// Note that it should RANDOMLY generate `id`s for each element, and results for this
-    /// function should NEVER be cached by the provider. IDs provided by this function will be
-    /// referenced in calls to ``execute(action:onElementID:)``
-    ///
-    /// This should NOT return menu bar events.
-    func generateElementDescriptions() async throws -> [ActionableElementDescription]
-    /// Requests the provider to execute an action on an element with a given ID. This will always
-    /// be called AFTER a call to ``generateElementDescriptions()``, but the ID is not
-    /// guarenteed to exist.
-    func execute(action: String, onElementID elementID: UUID) async throws
-}
-
-public protocol AppOpenDelegate: AnyObject {
-    /// Focuses an app, or opens it if it is not open
-    /// - Parameter appName: Name of the app
-    /// - Returns: Whether the operation succeeded or not
-    func focusApp(named appName: String) -> Bool
 }
 
 /// Provides a UI to the ``HandsBot``.

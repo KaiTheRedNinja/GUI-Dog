@@ -11,34 +11,40 @@ import GoogleGenerativeAI
 extension HandsBot {
     /// Obtains a list of steps from the LLM. It expects the current access snapshot to be up-to-date.
     func getStepsFromLLM(goal: String) async throws -> [String] {
-        let appName = accessibilityItemProvider.getCurrentAppName()
-        let focusedDescription = accessibilityItemProvider.getFocusedElementDescription()
+        var context: [String] = []
+
+        for discoveryContentProvider in self.discoveryContentProviders {
+            try await discoveryContentProvider.updateContext()
+            let itemContext = try await discoveryContentProvider.getContext()
+            if let itemContext {
+                context.append(itemContext)
+            }
+        }
 
         let prompt = String.build {
-            """
+"""
 You are my hands. I want to \(goal). You will be given some context, and I want you to write a high-level list of \
-actions to take, as numbered bullet points such as "1. Open new tab". Try and use as few steps as possible, and rely \
-only on buttons on the screen.
-
-Note that you are NOT able to type, only press buttons. You are able to read the titles and descriptions of buttons, \
-including clickable non-button items like files. If the goal requires data that you cannot feasibly obtain from the \
-names and descriptions of clickable buttons, such as reading text, or requires you to perform a drag, typing, or other \
-unsupported action, respond with "insufficient information".
+actions to take, as numbered bullet points such as "1. Open new tab". Try and use as few steps as possible. The only \
+actions you will have available to you are:
 
 """
 
-            if let appName {
-                "The focused app is \(appName)"
-            } else {
-                "There is no focused app"
+            for stepCapabilityProvider in self.stepCapabilityProviders {
+                " - " + stepCapabilityProvider.description
             }
 
-            "\n"
+"""
 
-            if let focusedDescription {
-                "The focused element is \(focusedDescription)"
-            } else {
-                "There is no focused element"
+Note that you are UNABLE to execute any actions other than the ones listed above. You are able to read the titles and \
+descriptions of buttons, including clickable non-button items like files. If the goal requires data that you cannot \
+feasibly obtain from the names and descriptions of clickable buttons, such as reading text, or requires you to perform \
+a drag, typing, or other unsupported action, respond with "insufficient information".
+
+"""
+
+            for itemContext in context {
+                itemContext
+                "\n"
             }
         }
 

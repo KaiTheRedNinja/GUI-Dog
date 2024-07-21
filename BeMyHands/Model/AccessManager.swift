@@ -81,3 +81,61 @@ public protocol AccessDisplayDelegate: AnyObject {
     func show() async
     func update(actionableElements: [ActionableElement]) async
 }
+
+/// Describes an accessibility object
+public struct ActionableElementDescription {
+    /// A UUID to uniquely identify the object
+    public var id: UUID
+    /// The role of the object
+    public var role: String
+    /// The given description of the object
+    public var givenDescription: String
+    /// The actions that the object accepts
+    public var actions: [ActionDescription]
+
+    /// Describes an accessibility action
+    public struct ActionDescription {
+        /// The name of the action, prefixed with "AX"
+        public var actionName: String
+        /// The description of the action
+        public var description: String
+
+        /// Creates an accessibility action description
+        public init(actionName: String, description: String) {
+            self.actionName = actionName
+            self.description = description
+        }
+    }
+
+    /// Creates an accessibility object description
+    public init(
+        id: UUID,
+        role: String,
+        givenDescription: String,
+        actions: [ActionDescription]
+    ) {
+        self.id = id
+        self.role = role
+        self.givenDescription = givenDescription
+        self.actions = actions
+    }
+
+    /// Describes itself in a bullet point form. If the given description or actions are empty, this returns nil.
+    public var bulletPointDescription: String? {
+        guard !givenDescription.isEmpty, !actions.isEmpty else { return nil }
+
+        let desc = role + ": " + givenDescription + ": " + id.uuidString
+
+        return String.build {
+            " - " + desc
+
+            for action in actions where action.actionName != "AXCancel" {
+                "    - " + action.actionName + (
+                    action.description.isEmpty
+                    ? ""
+                    : ": " + action.description
+                )
+            }
+        }
+    }
+}

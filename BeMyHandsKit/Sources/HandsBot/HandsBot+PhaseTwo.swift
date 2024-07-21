@@ -10,44 +10,34 @@ import GoogleGenerativeAI
 
 extension HandsBot {
     func executeStep(state: LLMState, context: ActionStepContext) async throws -> StepExecutionStatus {
-        let prompt = try await preparePrompt(state: state, context: context)
-        let model = prepareModel()
-
-        print("Prompt to step \(state.currentStepIndex!): \(prompt)")
-        let response = try await model.generateContent(prompt)
-        print("Step response: \(response)")
-
-        // validate the function call. TODO: allow multiple function calls
-        guard let functionCall = response.functionCalls.first, functionCall.name == "executeAction" else {
-            print("Model did not respond with a valid function call.")
-            throw LLMCommunicationError.invalidFunctionCall
+        guard !stepCapabilityProviders.isEmpty else {
+            fatalError("No step capability providers!")
         }
 
-        // Execute the actions
+        // Allow the LLM to pick which provider to use
+        let provider = try await chooseProvider(state: state, context: context)
 
-        // validate that the parameters are present
-        guard
-            case let .string(itemDesc) = functionCall.args["itemDescription"],
-            let lastComponent = itemDesc.split(separator: " ").last,
-            UUID(uuidString: String(lastComponent)) != nil,
-            case let .string(actionName) = functionCall.args["actionName"]
-        else {
-            print("Model responded with a missing parameter.")
-            throw LLMCommunicationError.invalidFunctionCall
-        }
-
-        try await execute(action: actionName, onElementID: String(lastComponent))
+        // Execute the step
+        try await executeStep(withProvider: provider, state: state, context: context)
 
         // If the AI says that the step has not been completed, then recurse
         // TODO: get recursing working again. I currently assume every action completes its step.
         return .complete
     }
 
-    private func preparePrompt(state: LLMState, context: ActionStepContext) async throws -> String {
+    private func chooseProvider(
+        state: LLMState,
+        context: ActionStepContext
+    ) async throws -> any StepCapabilityProvider {
         // Gather context
-        let appName = accessibilityItemProvider.getCurrentAppName()
-        let focusedDescription = accessibilityItemProvider.getFocusedElementDescription()
-        let descriptions = try await accessibilityItemProvider.generateElementDescriptions()
+        var contexts: [String] = []
+        for stepCapabilityProvider in self.stepCapabilityProviders {
+            try await stepCapabilityProvider.updateContext()
+            let itemContext = try await stepCapabilityProvider.getContext()
+            if let itemContext {
+                contexts.append(itemContext)
+            }
+        }
 
         // Prepare the prompt
         let prompt = String.build {
@@ -58,20 +48,6 @@ You are my hands. I want to \(state.goal). You will be given the following:
 - the step that I want you to execute
 - actions to achieve said step that have already been executed
 
-You will also be given some context, namely:
-- The focused app
-- The focused element
-- Actioanble elements, in the form of actionable items (eg. buttons) on the screen
-- Menu bar items
-
-Actionable and menu bar items are in the format of:
- - [description]: [UUID]
-    - [action name]: [action description]
-
-Use the `executeAction` function call. When you call the function to execute an action \
-on the element, refer to the element by its `description` AND `UUID` EXACTLY as it is \
-given in [description]: [UUID] and the action by its `action name`. Call the function \
-exactly ONCE. Respond with a FUNCTION CALL, NOT a code block.
 """
             "Goal: \(state.goal)"
             ""
@@ -95,66 +71,134 @@ exactly ONCE. Respond with a FUNCTION CALL, NOT a code block.
                 ""
             }
 
-            if let appName {
-                "The focused app is \(appName)"
-            } else {
-                "There is no focused app"
+            for itemContext in contexts {
+                itemContext
+                "\n"
             }
 
-            "\n"
+            """
 
-            if let focusedDescription {
-                "The focused element is \(focusedDescription)"
-            } else {
-                "There is no focused element"
+To achieve this goal, select one of the following tools:
+"""
+
+            for stepCapabilityProvider in self.stepCapabilityProviders {
+                // TODO: use UUIDs instead of names for greater resillience
+                " - " + stepCapabilityProvider.name + ": " + stepCapabilityProvider.description
             }
 
-            "\n"
+            """
 
-            "The actionable elements are:"
-            for description in descriptions {
-                if let description = description.bulletPointDescription {
-                    description
-                }
+Respond in text with the names of THE NAME OF ONLY ONE of the tools: [\(stepCapabilityProviders.map { $0.name })], or \
+"NO TOOL" if the step requires an action that none of the tools provide.
+"""
+        }
+
+        let model = GenerativeModel(
+            name: "gemini-1.5-flash",
+            apiKey: apiKeyProvider.getKey()
+        )
+
+        let result = try await model.generateContent(prompt)
+
+        guard let text = result.text else {
+            throw LLMCommunicationError.emptyResponse
+        }
+
+        guard text != "NO TOOL" else {
+            throw LLMCommunicationError.insufficientInformation
+        }
+
+        guard let provider = stepCapabilityProviders.first(where: { $0.name == text }) else {
+            throw LLMCommunicationError.invalidFunctionCall
+        }
+
+        return provider
+    }
+
+    private func executeStep(
+        withProvider provider: any StepCapabilityProvider,
+        state: LLMState,
+        context: ActionStepContext
+    ) async throws {
+        // Gather context
+        var contexts: [String] = []
+        for stepCapabilityProvider in self.stepCapabilityProviders {
+            try await stepCapabilityProvider.updateContext()
+            let itemContext = try await stepCapabilityProvider.getContext()
+            if let itemContext {
+                contexts.append(itemContext)
             }
         }
 
-        return prompt
-    }
+        // Prepare the prompt
+        let prompt = String.build {
+            """
+            You are my hands. I want to \(state.goal). You will be given the following:
+            - a goal
+            - a list of steps to achieve the goal that have already been completed, if any
+            - the step that I want you to execute
+            - actions to achieve said step that have already been executed
 
-    private func prepareModel() -> GenerativeModel {
-        // prepare the declaration
-        let executeActionDecl = FunctionDeclaration(
-            name: "executeAction",
-            description: "Executes a single action, such as a press or open, on an actionable item",
-            parameters: [
-                "itemDescription": Schema(
-                    type: .string,
-                    description: "The given description of the item"
-                ),
-                "actionName": Schema(
-                    type: .string,
-                    description: "The given name of the action, usually prefixed with AX"
-                )
-            ],
-            requiredParameters: ["itemDescription", "actionName"]
-        )
+            """
 
-        // 3. Request the AI
+            "Goal: \(state.goal)"
+            ""
+
+            if state.currentStepIndex > 0 {
+                "Completed steps:"
+                for step in state.steps[0..<state.currentStepIndex] {
+                    "   " + step.step
+                }
+                ""
+            }
+
+            "Current step: " + state.currentStep.step
+            ""
+
+            if let actions = context.pastActions {
+                "Actions taken to achieve the step:"
+                for action in actions {
+                    " - " + action
+                }
+                ""
+            }
+
+            for itemContext in contexts {
+                itemContext
+                "\n"
+            }
+
+            """
+            To achieve this goal, follow these instructions and call the \(provider.name) tool function:
+            """
+
+            provider.instructions
+
+            """
+            Call the function exactly ONCE. Respond with a FUNCTION CALL, NOT a code block.
+            """
+        }
+
         let model = GenerativeModel(
             name: "gemini-1.5-flash",
             apiKey: apiKeyProvider.getKey(),
             // Specify the function declaration.
-            tools: [Tool(functionDeclarations: [executeActionDecl])],
+            tools: [Tool(functionDeclarations: [provider.functionDeclaration])],
             toolConfig: .init(
                 functionCallingConfig: .init(
                     mode: .any,
-                    allowedFunctionNames: ["executeAction"]
+                    allowedFunctionNames: [provider.name]
                 )
             )
         )
 
-        return model
+        let result = try await model.generateContent(prompt)
+        guard let functionCall = result.functionCalls.first, functionCall.name == provider.name else {
+            provider.functionFailed()
+            throw LLMCommunicationError.invalidFunctionCall
+        }
+
+        try await provider.execute(function: functionCall)
     }
 }
 

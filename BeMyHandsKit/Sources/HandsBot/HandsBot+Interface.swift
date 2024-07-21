@@ -48,20 +48,4 @@ extension HandsBot {
             self.state.steps = [.init(step: "Error obtaining steps", state: .error(error))]
         }
     }
-
-    /// Executes an action on an element with a certain description. Handles data checks to make sure that the element
-    /// exists and that the action is valid.
-    internal func execute(action: String, onElementID elementID: String) async throws {
-        print("Executing [\(action)] on element with description [\(elementID)]")
-
-        guard action.hasPrefix("AX") && !action.contains(" ") else {
-            throw LLMCommunicationError.actionFormatInvalid
-        }
-
-        guard let elementID = UUID(uuidString: elementID) else {
-            throw LLMCommunicationError.elementNotFound
-        }
-
-        try await accessibilityItemProvider.execute(action: action, onElementID: elementID)
-    }
 }

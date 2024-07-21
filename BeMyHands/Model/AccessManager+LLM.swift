@@ -9,20 +9,118 @@ import Foundation
 import Access
 import Element
 import HandsBot
+import GoogleGenerativeAI
 
-extension AccessManager: AccessibilityItemProvider {
-    public func updateAccessibilityObjects() async throws {
+extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
+    var name: String {
+        "executeAction"
+    }
+
+    var description: String {
+        "Clicks or opens elements visible on screen"
+    }
+
+    var instructions: String {
+        """
+        Actionable items are in the format of:
+        - [description]: [UUID]
+            - [action name]: [action description]
+
+        Use the `executeAction` function call. When you call the function to execute an action \
+        on the element, refer to the element by its `description` AND `UUID` EXACTLY as it is \
+        given in [description]: [UUID] and the action by its `action name`.
+        """
+    }
+
+    var functionDeclaration: GoogleGenerativeAI.FunctionDeclaration {
+        .init(
+            name: self.name,
+            description: self.description,
+            parameters: [
+                "itemDescription": Schema(
+                    type: .string,
+                    description: "The given description of the item"
+                ),
+                "actionName": Schema(
+                    type: .string,
+                    description: "The given name of the action, usually prefixed with AX"
+                )
+            ],
+            requiredParameters: ["itemDescription", "actionName"]
+        )
+    }
+
+    func updateContext() async throws {
         try await takeAccessSnapshot()
         await uiDelegate?.update(actionableElements: accessSnapshot?.actionableItems ?? [])
     }
 
-    public func getCurrentAppName() -> String? {
-        accessSnapshot?.focusedAppName
+    func getContext() async throws -> String? {
+        let appName = accessSnapshot?.focusedAppName
+        let focusedDescription = try? await accessSnapshot?.focus?.getComprehensiveDescription()
+        let descriptions = try await generateElementDescriptions()
+
+        return String.build {
+            if let appName {
+                "The focused app is \(appName)"
+            } else {
+                "There is no focused app"
+            }
+
+            "\n"
+
+            if let focusedDescription {
+                "The focused element is \(focusedDescription)"
+            } else {
+                "There is no focused element"
+            }
+
+            "\n"
+
+            "The actionable elements are:"
+            for description in descriptions {
+                if let description = description.bulletPointDescription {
+                    description
+                }
+            }
+        }
     }
 
-    public func getFocusedElementDescription() -> String? {
-        try? accessSnapshot?.focus?.getComprehensiveDescription()
+    func execute(function: GoogleGenerativeAI.FunctionCall) async throws {
+        // validate the function call. TODO: allow multiple function calls
+        guard function.name == "executeAction" else {
+            throw LLMCommunicationError.invalidFunctionCall
+        }
+
+        // Execute the actions
+
+        // validate that the parameters are present
+        guard
+            case let .string(itemDesc) = function.args["itemDescription"],
+            case let .string(actionName) = function.args["actionName"],
+            let lastComponent = itemDesc.split(separator: " ").last,
+            let uuid = UUID(uuidString: String(lastComponent))
+        else {
+            print("Model responded with a missing parameter.")
+            throw LLMCommunicationError.invalidFunctionCall
+        }
+
+        guard actionName.hasPrefix("AX") && !actionName.contains(" ") else {
+            throw LLMCommunicationError.actionFormatInvalid
+        }
+
+        guard let element = elementMap[uuid] else {
+            throw LLMCommunicationError.elementNotFound
+        }
+
+        guard element.actions.contains(actionName) else {
+            throw LLMCommunicationError.actionNotFound
+        }
+
+        try await element.element.performAction(actionName)
     }
+
+    func functionFailed() {}
 
     public func generateElementDescriptions() async throws -> [ActionableElementDescription] {
         guard let accessSnapshot else {
@@ -84,21 +182,5 @@ extension AccessManager: AccessibilityItemProvider {
         self.elementMap = elementMap
 
         return descriptions
-    }
-
-    public func execute(action: String, onElementID elementID: UUID) async throws {
-        guard action.hasPrefix("AX") && !action.contains(" ") else {
-            throw LLMCommunicationError.actionFormatInvalid
-        }
-
-        guard let element = elementMap[elementID] else {
-            throw LLMCommunicationError.elementNotFound
-        }
-
-        guard element.actions.contains(action) else {
-            throw LLMCommunicationError.actionNotFound
-        }
-
-        try await element.element.performAction(action)
     }
 }

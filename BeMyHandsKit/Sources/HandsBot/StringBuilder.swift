@@ -5,8 +5,9 @@
 //  Created by Kai Quan Tay on 11/7/24.
 //
 
+/// Builds a string
 @resultBuilder
-enum StringBuilder {
+public enum StringBuilder {
     /// Builds a string from many strings.
     public static func buildBlock(_ components: String...) -> String {
         components.joined(separator: "\n")

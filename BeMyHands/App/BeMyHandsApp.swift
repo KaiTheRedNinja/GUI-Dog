@@ -8,6 +8,7 @@
 import SwiftUI
 import Access
 import HandsBot
+import GoogleGenerativeAI
 
 @main
 struct BeMyHandsApp: App {
@@ -41,10 +42,10 @@ struct BeMyHandsApp: App {
 
             let llmManager = HandsBot()
             self.handsBot = llmManager
-            llmManager.accessibilityItemProvider = accessManager
+            llmManager.discoveryContentProviders = [accessManager]
+            llmManager.stepCapabilityProviders = [accessManager, AppOpen.global]
             llmManager.uiDelegate = overlayManager
             llmManager.apiKeyProvider = APIKey.global
-            llmManager.appOpenDelegate = AppOpen.global
 
             await llmManager.requestLLMAction(goal: goal)
             // remove the manager
@@ -61,7 +62,44 @@ class APIKey: APIKeyProvider {
     static let global: APIKey = .init()
 }
 
-class AppOpen: AppOpenDelegate {
+class AppOpen: StepCapabilityProvider {
+    var name: String { "openApp" }
+
+    var description: String { "Opens an app with a specified name" }
+
+    var instructions: String {
+        """
+        Call appOpen with the name of the app you want to open
+        """
+    }
+
+    var functionDeclaration: GoogleGenerativeAI.FunctionDeclaration {
+        .init(
+            name: self.name,
+            description: self.description,
+            parameters: [
+                "appName": .init(type: .string, description: "The name of the app to open, without the .app suffix")
+            ],
+            requiredParameters: ["appName"]
+        )
+    }
+
+    // Context not needed
+    func updateContext() async throws {}
+    func getContext() async throws -> String? { nil }
+
+    func execute(function: FunctionCall) async throws {
+        guard function.name == name, case let .string(appName) = function.args["appName"] else {
+            throw LLMCommunicationError.invalidFunctionCall
+        }
+
+        if focusApp(named: appName) == false {
+            throw AppOpenError.couldNotOpen
+        }
+    }
+
+    func functionFailed() {}
+
     func focusApp(named appName: String) -> Bool {
         guard let appPath = FileManager.default.urls(
             for: .applicationDirectory,
@@ -74,4 +112,8 @@ class AppOpen: AppOpenDelegate {
     }
 
     static let global: AppOpen = .init()
+}
+
+enum AppOpenError: Error {
+    case couldNotOpen
 }
