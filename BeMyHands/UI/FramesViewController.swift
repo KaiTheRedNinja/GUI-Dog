@@ -1,5 +1,5 @@
 //
-//  ContentViewController.swift
+//  FramesViewController.swift
 //  BeMyHands
 //
 //  Created by Kai Quan Tay on 8/7/24.
@@ -10,20 +10,20 @@ import SwiftUI
 import Element
 import HandsBot
 
-class ContentViewController: NSViewController {
+class FramesViewController: NSViewController {
     var framesView: FramesView
-    var stateView: NSHostingView<LLMStateView>
+//    var stateView: NSHostingView<LLMStateView>
     var visible: Bool
 
     init() {
         self.framesView = .init(frame: .zero)
-        self.stateView = .init(
-            rootView: .init(
-                state: LLMState.zero,
-                size: NSSize.zero,
-                isShown: false
-            )
-        )
+//        self.stateView = .init(
+//            rootView: .init(
+//                state: LLMState.zero,
+//                size: NSSize.zero,
+//                isShown: false
+//            )
+//        )
         self.visible = false
         super.init(nibName: nil, bundle: nil)
     }
@@ -34,14 +34,14 @@ class ContentViewController: NSViewController {
 
     func setupFrames(with frame: NSRect, actionableElements: [ActionableElement]) {
         framesView.removeFromSuperview()
-        stateView.removeFromSuperview()
+//        stateView.removeFromSuperview()
         framesView.setupView(with: frame, actionableElements: actionableElements)
 
         let view = NSView()
         view.frame = frame
         view.translatesAutoresizingMaskIntoConstraints = true
         view.addSubview(framesView)
-        view.addSubview(stateView)
+//        view.addSubview(stateView)
 
         self.view = view
     }
@@ -57,21 +57,21 @@ class ContentViewController: NSViewController {
         )
 
         framesView.removeFromSuperview()
-        stateView.removeFromSuperview()
-        stateView = .init(
-            rootView: .init(
-                state: state,
-                size: stepsFrame.size,
-                isShown: visible
-            )
-        )
-        stateView.frame = stepsFrame
+//        stateView.removeFromSuperview()
+//        stateView = .init(
+//            rootView: .init(
+//                state: state,
+//                size: stepsFrame.size,
+//                isShown: visible
+//            )
+//        )
+//        stateView.frame = stepsFrame
 
         let view = NSView()
         view.frame = self.view.frame
         view.translatesAutoresizingMaskIntoConstraints = true
         view.addSubview(framesView)
-        view.addSubview(stateView)
+//        view.addSubview(stateView)
 
         self.view = view
     }
@@ -82,7 +82,7 @@ class ContentViewController: NSViewController {
     func changeVisibility(visible: Bool) {
         self.visible = visible
 
-        stateView.removeFromSuperview()
+//        stateView.removeFromSuperview()
         framesView.removeFromSuperview()
 
         let framesViewAnimator = framesView.animator()
@@ -96,20 +96,20 @@ class ContentViewController: NSViewController {
             height: frame.height
         )
 
-        stateView = .init(
-            rootView: .init(
-                state: stateView.rootView.state,
-                size: stateView.rootView.size,
-                isShown: visible
-            )
-        )
-        stateView.frame = stepsFrame
+//        stateView = .init(
+//            rootView: .init(
+//                state: stateView.rootView.state,
+//                size: stateView.rootView.size,
+//                isShown: visible
+//            )
+//        )
+//        stateView.frame = stepsFrame
 
         let view = NSView()
         view.frame = self.view.frame
         view.translatesAutoresizingMaskIntoConstraints = true
         view.addSubview(framesView)
-        view.addSubview(stateView)
+//        view.addSubview(stateView)
 
         self.view = view
     }

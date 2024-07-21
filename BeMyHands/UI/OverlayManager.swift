@@ -11,13 +11,19 @@ import HandsBot
 
 @MainActor
 class OverlayManager: LLMDisplayDelegate, AccessDisplayDelegate {
-    private var windowController: InfoWindowController
-    private var contentController: ContentViewController
+    private var framesWindowController: InfoWindowController
+    private var framesController: FramesViewController
+
+    private var statusWindowController: InfoWindowController
+    private var statusController: StatusViewController
 
     init() {
-        self.windowController = .init()
-        self.contentController = .init()
-        windowController.window?.contentViewController = contentController
+        framesWindowController = .init()
+        framesController = .init()
+        statusWindowController = .init()
+        statusController = .init()
+        framesWindowController.window?.contentViewController = framesController
+        statusWindowController.window?.contentViewController = statusController
     }
 
     func update(actionableElements: [ActionableElement]) async {
@@ -27,27 +33,36 @@ class OverlayManager: LLMDisplayDelegate, AccessDisplayDelegate {
         }
 
         // Set up the size and position of the frames controller
-        self.contentController.setupFrames(
+        self.framesController.setupFrames(
             with: .init(origin: .zero, size: screenSize),
             actionableElements: actionableElements
         )
-        windowController.window?.setFrameOrigin(.init(x: 0, y: 0))
+        self.statusController.setupFrames(
+            with: .init(origin: .zero, size: screenSize),
+            actionableElements: actionableElements
+        )
+        framesWindowController.window?.setFrameOrigin(.init(x: 0, y: 0))
+        statusWindowController.window?.setFrameOrigin(.init(x: 0, y: 0))
     }
 
     func update(state: LLMState) {
-        self.contentController.setupState(with: state)
+        self.framesController.setupState(with: state)
+        self.statusController.setupState(with: state)
     }
 
     func show() {
-        windowController.showWindow(nil)
-        windowController.window?.makeKeyAndOrderFront(nil)
-        windowController.window?.orderFrontRegardless()
+        for windowController in [framesWindowController, statusWindowController] {
+            windowController.showWindow(nil)
+            windowController.window?.makeKeyAndOrderFront(nil)
+            windowController.window?.orderFrontRegardless()
+        }
 
-        contentController.show()
+        framesController.show()
+        statusController.show()
     }
 
     func hide() {
-        contentController.hide()
-//        windowController.window?.close()
+        framesController.hide()
+        statusController.hide()
     }
 }
