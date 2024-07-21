@@ -55,7 +55,7 @@ Accessibility API capabilities:
 
 Gemini API capabilities:
 - [x] Trigger API calling (a shortcut probably)
-- [ ] Obtain goal from user
+- [x] Obtain goal from user
 - [x] First stage
     - [x] Obtain user instruction, focused application, window title
     - [x] Prompt engineering 

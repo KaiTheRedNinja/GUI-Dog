@@ -25,6 +25,8 @@
 		9397F82B2C4BC5CB00A8BAC1 /* HandsBot in Frameworks */ = {isa = PBXBuildFile; productRef = 9397F82A2C4BC5CB00A8BAC1 /* HandsBot */; };
 		9397F82D2C4BE63900A8BAC1 /* AccessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F82C2C4BE63900A8BAC1 /* AccessManager.swift */; };
 		9397F8332C4CA3AC00A8BAC1 /* StatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F8322C4CA3A700A8BAC1 /* StatusViewController.swift */; };
+		9397F8352C4CA71400A8BAC1 /* GoalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F8342C4CA70F00A8BAC1 /* GoalViewController.swift */; };
+		9397F83A2C4CA77400A8BAC1 /* GoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F8392C4CA77400A8BAC1 /* GoalsView.swift */; };
 		93D7A4502C450F7B0065186B /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7A44F2C450F770065186B /* Secrets.swift */; };
 		93D7A4532C45131B0065186B /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 93D7A4522C45131B0065186B /* GoogleGenerativeAI */; };
 		93D7A4552C45140E0065186B /* AccessManager+LLM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7A4542C4514090065186B /* AccessManager+LLM.swift */; };
@@ -48,6 +50,8 @@
 		9397F8282C4BC3A300A8BAC1 /* InfoWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoWindow.swift; sourceTree = "<group>"; };
 		9397F82C2C4BE63900A8BAC1 /* AccessManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessManager.swift; sourceTree = "<group>"; };
 		9397F8322C4CA3A700A8BAC1 /* StatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusViewController.swift; sourceTree = "<group>"; };
+		9397F8342C4CA70F00A8BAC1 /* GoalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalViewController.swift; sourceTree = "<group>"; };
+		9397F8392C4CA77400A8BAC1 /* GoalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsView.swift; sourceTree = "<group>"; };
 		93D7A44F2C450F770065186B /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		93D7A4542C4514090065186B /* AccessManager+LLM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AccessManager+LLM.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -131,13 +135,12 @@
 		936F3EEA2C3BE535006FC333 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				9397F8372C4CA72E00A8BAC1 /* Status */,
+				9397F8362C4CA71E00A8BAC1 /* Frames */,
+				9397F8382C4CA73800A8BAC1 /* Goals */,
 				9397F8282C4BC3A300A8BAC1 /* InfoWindow.swift */,
 				936F3EEB2C3BE53B006FC333 /* ControlsWindow.swift */,
 				936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */,
-				936F3EEF2C3BE688006FC333 /* FramesViewController.swift */,
-				9397F8322C4CA3A700A8BAC1 /* StatusViewController.swift */,
-				9382F3F62C4630CD00B4A1EA /* FramesView.swift */,
-				9382F3F82C4631D500B4A1EA /* LLMStateView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -149,6 +152,33 @@
 				9397F82C2C4BE63900A8BAC1 /* AccessManager.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		9397F8362C4CA71E00A8BAC1 /* Frames */ = {
+			isa = PBXGroup;
+			children = (
+				936F3EEF2C3BE688006FC333 /* FramesViewController.swift */,
+				9382F3F62C4630CD00B4A1EA /* FramesView.swift */,
+			);
+			path = Frames;
+			sourceTree = "<group>";
+		};
+		9397F8372C4CA72E00A8BAC1 /* Status */ = {
+			isa = PBXGroup;
+			children = (
+				9397F8322C4CA3A700A8BAC1 /* StatusViewController.swift */,
+				9382F3F82C4631D500B4A1EA /* LLMStateView.swift */,
+			);
+			path = Status;
+			sourceTree = "<group>";
+		};
+		9397F8382C4CA73800A8BAC1 /* Goals */ = {
+			isa = PBXGroup;
+			children = (
+				9397F8342C4CA70F00A8BAC1 /* GoalViewController.swift */,
+				9397F8392C4CA77400A8BAC1 /* GoalsView.swift */,
+			);
+			path = Goals;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -260,6 +290,7 @@
 				936F3EEE2C3BE5E9006FC333 /* OverlayManager.swift in Sources */,
 				93D7A4502C450F7B0065186B /* Secrets.swift in Sources */,
 				931B22C32C3B6392003A6436 /* MenuExtraView.swift in Sources */,
+				9397F8352C4CA71400A8BAC1 /* GoalViewController.swift in Sources */,
 				936F3EEC2C3BE541006FC333 /* ControlsWindow.swift in Sources */,
 				9397F8332C4CA3AC00A8BAC1 /* StatusViewController.swift in Sources */,
 				9382F3F72C4630CD00B4A1EA /* FramesView.swift in Sources */,
@@ -267,6 +298,7 @@
 				931B22C12C3B6392003A6436 /* BeMyHandsApp.swift in Sources */,
 				9382F3F92C4631DB00B4A1EA /* LLMStateView.swift in Sources */,
 				936F3EF02C3BE688006FC333 /* FramesViewController.swift in Sources */,
+				9397F83A2C4CA77400A8BAC1 /* GoalsView.swift in Sources */,
 				93D7A4552C45140E0065186B /* AccessManager+LLM.swift in Sources */,
 				9397F8292C4BC3A600A8BAC1 /* InfoWindow.swift in Sources */,
 			);

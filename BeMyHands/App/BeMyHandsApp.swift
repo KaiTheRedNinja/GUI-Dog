@@ -31,16 +31,21 @@ struct BeMyHandsApp: App {
         // create the hands bot if it doesn't exist
         guard handsBot == nil else { return }
 
-        let llmManager = HandsBot()
-        self.handsBot = llmManager
-        llmManager.accessibilityItemProvider = accessManager
-        llmManager.uiDelegate = overlayManager
-        llmManager.apiProvider = SecretsProvider()
-
-        // TODO: obtain the goal
-
         Task {
-            await llmManager.requestLLMAction(goal: "Open the CS50 folder in my documents directory")
+            let goal = await overlayManager.requestGoal()
+
+            guard let goal else {
+                // TODO: inform the user that the goal is empty
+                return
+            }
+
+            let llmManager = HandsBot()
+            self.handsBot = llmManager
+            llmManager.accessibilityItemProvider = accessManager
+            llmManager.uiDelegate = overlayManager
+            llmManager.apiProvider = SecretsProvider()
+
+            await llmManager.requestLLMAction(goal: goal)
             // remove the manager
             self.handsBot = nil
         }
