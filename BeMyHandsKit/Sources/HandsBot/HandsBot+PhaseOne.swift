@@ -36,9 +36,14 @@ actions you will have available to you are:
 """
 
 Note that you are UNABLE to execute any actions other than the ones listed above. You are able to read the titles and \
-descriptions of buttons, including clickable non-button items like files. If the goal requires data that you cannot \
-feasibly obtain from the names and descriptions of clickable buttons, such as reading text, or requires you to perform \
-a drag, typing, or other unsupported action, respond with "insufficient information".
+descriptions of buttons, including clickable non-button items like files.
+
+Respond with a list of steps, where each step should match one of the above actions that you can perform, such as \
+"Click on New Tab button" or "Open Finder".
+
+If the goal requires you to read data that you cannot feasibly obtain from the names and descriptions of clickable \
+buttons, such as reading text, or requires you to perform an action other than the ones listed above such as typing, \
+respond with "insufficient information".
 
 """
 
@@ -53,17 +58,11 @@ a drag, typing, or other unsupported action, respond with "insufficient informat
         let model = GenerativeModel(name: "gemini-1.5-flash", apiKey: apiKeyProvider.getKey())
         let response = try await model.generateContent(prompt)
         if let text = response.text {
+            print("Response text: \(text)")
             if text.contains("insufficient information") {
-                // TODO: figure out why this triggers but the one below doesn't
-                print("bruh why does it contain insufficient info")
                 throw LLMCommunicationError.insufficientInformation
             }
-            if text.trimmingCharacters(in: .whitespacesAndNewlines) != "insufficient information" {
-                print("Response text: \(text)")
-                return text.split(separator: "\n").map { String($0) }
-            } else {
-                throw LLMCommunicationError.insufficientInformation
-            }
+            return text.split(separator: "\n").map { String($0) }
         } else {
             throw LLMCommunicationError.textNotProvided
         }

@@ -61,7 +61,7 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
         let focusedDescription = try? await accessSnapshot?.focus?.getComprehensiveDescription()
 
         return String.build {
-            if let appName {
+            if let appName, !appName.isEmpty {
                 "The focused app is \(appName)"
             } else {
                 "There is no focused app"
@@ -69,7 +69,7 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
 
             "\n"
 
-            if let focusedDescription {
+            if let focusedDescription, !focusedDescription.isEmpty {
                 "The focused element is \(focusedDescription)"
             } else {
                 "There is no focused element"

@@ -101,14 +101,7 @@ class AppOpen: StepCapabilityProvider {
     func functionFailed() {}
 
     func focusApp(named appName: String) -> Bool {
-        guard let appPath = FileManager.default.urls(
-            for: .applicationDirectory,
-            in: .systemDomainMask
-        ).first?.appendingPathComponent("\(appName).app") else {
-            return false
-        }
-
-        return NSWorkspace.shared.open(appPath)
+        NSWorkspace.shared.launchApplication(appName)
     }
 
     static let global: AppOpen = .init()

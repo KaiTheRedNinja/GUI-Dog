@@ -37,11 +37,11 @@ extension HandsBot {
     /// - Parameters:
     ///   - state: The LLM state
     ///   - context: The LLM context
-    /// - Returns: The provider and its context, to be reused
+    /// - Returns: The provider and its context, to be reused if it exists
     private func chooseProvider(
         state: LLMState,
         context: ActionStepContext
-    ) async throws -> (any StepCapabilityProvider, String) {
+    ) async throws -> (any StepCapabilityProvider, String?) {
         // Gather context
         var contexts: [String] = []
         var contextMap: [String: String] = [:]
@@ -130,14 +130,14 @@ Respond in text with the names of THE NAME OF ONLY ONE of the tools: [\(stepCapa
             throw LLMCommunicationError.invalidFunctionCall
         }
 
-        return (provider, contextMap[provider.name]!)
+        return (provider, contextMap[provider.name])
     }
 
     private func executeStep(
         withProvider provider: any StepCapabilityProvider,
         state: LLMState,
         context: ActionStepContext,
-        relevantContext: String
+        relevantContext: String?
     ) async throws {
         // Prepare the prompt
         let prompt = String.build {
@@ -172,7 +172,9 @@ Respond in text with the names of THE NAME OF ONLY ONE of the tools: [\(stepCapa
                 ""
             }
 
-            relevantContext
+            if let relevantContext {
+                relevantContext
+            }
 
             """
             To achieve this goal, follow these instructions and call the \(provider.name) tool function:
