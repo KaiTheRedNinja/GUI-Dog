@@ -96,6 +96,9 @@ class AppOpen: StepCapabilityProvider {
         if focusApp(named: appName) == false {
             throw AppOpenError.couldNotOpen
         }
+
+        // wait for the app to open
+        try await Task.sleep(for: .seconds(1))
     }
 
     func functionFailed() {}

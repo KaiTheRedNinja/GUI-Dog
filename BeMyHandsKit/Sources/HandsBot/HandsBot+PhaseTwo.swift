@@ -56,35 +56,7 @@ extension HandsBot {
 
         // Prepare the prompt
         let prompt = String.build {
-            """
-You are my hands. I want to \(state.goal). You will be given the following:
-- a goal
-- a list of steps to achieve the goal that have already been completed, if any
-- the step that I want you to execute
-- actions to achieve said step that have already been executed
-
-"""
-            "Goal: \(state.goal)"
-            ""
-
-            if state.currentStepIndex > 0 {
-                "Completed steps:"
-                for step in state.steps[0..<state.currentStepIndex] {
-                    "   " + step.step
-                }
-                ""
-            }
-
-            "Current step: " + state.currentStep.step
-            ""
-
-            if let actions = context.pastActions {
-                "Actions taken to achieve the step:"
-                for action in actions {
-                    " - " + action
-                }
-                ""
-            }
+            stepStateDescription(state: state, context: context)
 
             for itemContext in contexts {
                 itemContext
@@ -103,7 +75,7 @@ To achieve this goal, select one of the following tools:
 
             """
 
-Respond in text with the names of THE NAME OF ONLY ONE of the tools: [\(stepCapabilityProviders.map { $0.name })], or \
+Respond in text with the names of THE NAME OF ONLY ONE of the tools: \(stepCapabilityProviders.map { $0.name }), or \
 "NO TOOL" if the step requires an action that none of the tools provide.
 """
         }
@@ -141,36 +113,7 @@ Respond in text with the names of THE NAME OF ONLY ONE of the tools: [\(stepCapa
     ) async throws {
         // Prepare the prompt
         let prompt = String.build {
-            """
-            You are my hands. I want to \(state.goal). You will be given the following:
-            - a goal
-            - a list of steps to achieve the goal that have already been completed, if any
-            - the step that I want you to execute
-            - actions to achieve said step that have already been executed
-
-            """
-
-            "Goal: \(state.goal)"
-            ""
-
-            if state.currentStepIndex > 0 {
-                "Completed steps:"
-                for step in state.steps[0..<state.currentStepIndex] {
-                    "   " + step.step
-                }
-                ""
-            }
-
-            "Current step: " + state.currentStep.step
-            ""
-
-            if let actions = context.pastActions {
-                "Actions taken to achieve the step:"
-                for action in actions {
-                    " - " + action
-                }
-                ""
-            }
+            stepStateDescription(state: state, context: context)
 
             if let relevantContext {
                 relevantContext
@@ -209,6 +152,41 @@ Respond in text with the names of THE NAME OF ONLY ONE of the tools: [\(stepCapa
         }
 
         try await provider.execute(function: functionCall)
+    }
+
+    private func stepStateDescription(state: LLMState, context: ActionStepContext) -> String {
+        String.build {
+            """
+            You are my hands. I want to \(state.goal). You will be given the following:
+            - a goal
+            - a list of steps to achieve the goal that have already been completed, if any
+            - the step that I want you to execute
+            - actions to achieve said step that have already been executed, if any
+
+            """
+
+            "Goal: \(state.goal)"
+            ""
+
+            if state.currentStepIndex > 0 {
+                "Completed steps:"
+                for step in state.steps[0..<state.currentStepIndex] {
+                    "   " + step.step
+                }
+                ""
+            }
+
+            "Current step: " + state.currentStep.step
+            ""
+
+            if let actions = context.pastActions, !actions.isEmpty {
+                "Actions taken to achieve the step:"
+                for action in actions {
+                    " - " + action
+                }
+                ""
+            }
+        }
     }
 }
 

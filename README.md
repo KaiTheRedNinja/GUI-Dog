@@ -50,7 +50,7 @@ Accessibility API capabilities:
     - [x] Make it possible to execute actions
     - [x] Create a clean API
 - [ ] Other capabilities
-    - [ ] Focusing apps
+    - [x] Focusing apps
     - [ ] Clicking menu bar items
 
 Gemini API capabilities:

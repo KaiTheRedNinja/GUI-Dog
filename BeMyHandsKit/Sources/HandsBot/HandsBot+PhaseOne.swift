@@ -39,11 +39,18 @@ Note that you are UNABLE to execute any actions other than the ones listed above
 descriptions of buttons, including clickable non-button items like files.
 
 Respond with a list of steps, where each step should match one of the above actions that you can perform, such as \
-"Click on New Tab button" or "Open Finder".
+"Click on New Tab button" or "Open Finder". Note that you only need to outline high-level steps, more details, context \
+and instructions will be provided when each step is executed.
 
-If the goal requires you to read data that you cannot feasibly obtain from the names and descriptions of clickable \
-buttons, such as reading text, or requires you to perform an action other than the ones listed above such as typing, \
-respond with "insufficient information".
+When executing each step, you will be given additional context, such as the names and descriptions of clickable buttons.
+
+If the goal EXPLICITLY requires:
+- Executing an action that cannot possibly be performed using the actions above, such as typing
+- Context that is not available to you, such as "my phone number" or "alice's address"
+- Reading text that is not a part of a button or clickable item like a tab, such as text from a label
+respond with a reason and end with "insufficient information".
+
+If not, respond with the list of steps.
 
 """
 
@@ -59,7 +66,7 @@ respond with "insufficient information".
         let response = try await model.generateContent(prompt)
         if let text = response.text {
             print("Response text: \(text)")
-            if text.contains("insufficient information") {
+            if text.lowercased().contains("insufficient information") {
                 throw LLMCommunicationError.insufficientInformation
             }
             return text.split(separator: "\n").map { String($0) }
