@@ -8,7 +8,7 @@
 import ApplicationServices
 import OSLog
 
-private let logger = Logger(subsystem: #file, category: "Access")
+private let logger = Logger(subsystem: #fileID, category: "Access")
 
 public extension Element {
     /// Creates a list of all the actions supported by this element.

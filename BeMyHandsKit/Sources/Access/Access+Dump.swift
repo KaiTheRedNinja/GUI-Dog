@@ -11,7 +11,7 @@ import OSLog
 import Element
 import Output
 
-private let logger = Logger(subsystem: #file, category: "Access")
+private let logger = Logger(subsystem: #fileID, category: "Access")
 
 public extension Access {
     /// Dumps the system wide element to a property list file chosen by the user.

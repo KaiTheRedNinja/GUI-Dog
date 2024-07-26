@@ -9,7 +9,7 @@ import Foundation
 import Access
 import OSLog
 
-private let logger = Logger(subsystem: #file, category: "HandsBot")
+private let logger = Logger(subsystem: #fileID, category: "HandsBot")
 
 /// A class that facilitates the conversation with an LLM. This manager should be RESET
 /// for every conversation.

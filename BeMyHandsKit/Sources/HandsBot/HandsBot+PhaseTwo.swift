@@ -8,7 +8,7 @@
 import Foundation
 import OSLog
 
-private let logger = Logger(subsystem: #file, category: "HandsBot")
+private let logger = Logger(subsystem: #fileID, category: "HandsBot")
 
 extension HandsBot {
     func executeStep(state: LLMState, context: ActionStepContext) async throws -> StepExecutionStatus {

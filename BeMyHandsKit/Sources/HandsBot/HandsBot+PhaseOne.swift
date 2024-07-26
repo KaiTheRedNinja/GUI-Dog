@@ -8,7 +8,7 @@
 import Foundation
 import OSLog
 
-private let logger = Logger(subsystem: #file, category: "HandsBot")
+private let logger = Logger(subsystem: #fileID, category: "HandsBot")
 
 extension HandsBot {
     /// Obtains a list of steps from the LLM. It expects the current access snapshot to be up-to-date.

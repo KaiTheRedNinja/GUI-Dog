@@ -10,7 +10,7 @@ import Access
 import Element
 import OSLog
 
-private let logger = Logger(subsystem: #file, category: "BeMyHands")
+private let logger = Logger(subsystem: #fileID, category: "BeMyHands")
 
 @Observable
 class AccessManager {

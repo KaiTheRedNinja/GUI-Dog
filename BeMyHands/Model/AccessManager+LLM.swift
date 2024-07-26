@@ -12,7 +12,7 @@ import HandsBot
 import GoogleGenerativeAI
 import OSLog
 
-private let logger = Logger(subsystem: #file, category: "BeMyHands")
+private let logger = Logger(subsystem: #fileID, category: "BeMyHands")
 
 extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
     var name: String {

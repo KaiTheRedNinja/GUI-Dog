@@ -11,7 +11,7 @@ import OSLog
 import Element
 import Output
 
-private let logger = Logger(subsystem: #file, category: "Access")
+private let logger = Logger(subsystem: #fileID, category: "Access")
 
 public extension Access {
     /// Returns the currently focused window

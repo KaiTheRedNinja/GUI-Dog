@@ -9,7 +9,7 @@ import HandsBot
 import OSLog
 import GoogleGenerativeAI
 
-private let logger = Logger(subsystem: #file, category: "BeMyHands")
+private let logger = Logger(subsystem: #fileID, category: "BeMyHands")
 
 class GeminiLLMProvider: LLMProvider {
     func generateResponse(
@@ -19,15 +19,19 @@ class GeminiLLMProvider: LLMProvider {
         logger.info("Prompt: \(prompt)")
         logger.info("Prompt has \(functions?.count ?? 0) functions.")
 
-        guard let functions = functions as? [FunctionDeclaration] else {
+        // if functions exists, isn't empty, but isn't a [FunctionDeclaration], error
+        if let functions, !functions.isEmpty, !(functions is [FunctionDeclaration]) {
             throw LLMCommunicationError.invalidFunctionCall
         }
+
+        // typecast functions properly
+        let functions = (functions as? [FunctionDeclaration]) ?? []
 
         let model = GenerativeModel(
             name: "gemini-1.5-flash",
             apiKey: Secrets.geminiKey,
             // Specify the function declaration.
-            tools: [Tool(functionDeclarations: functions)],
+            tools: functions.map { Tool(functionDeclarations: [$0]) },
             toolConfig: functions.isEmpty ? nil : .init(
                 functionCallingConfig: .init(
                     mode: .any

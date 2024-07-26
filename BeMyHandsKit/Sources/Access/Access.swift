@@ -4,7 +4,7 @@ import OSLog
 import Element
 import Output
 
-private let logger = Logger(subsystem: #file, category: "Access")
+private let logger = Logger(subsystem: #fileID, category: "Access")
 
 /// Accessibility context.
 @AccessActor

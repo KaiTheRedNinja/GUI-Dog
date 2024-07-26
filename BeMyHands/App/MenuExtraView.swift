@@ -10,7 +10,7 @@ import Access
 import KeyboardShortcuts
 import OSLog
 
-private let logger = Logger(subsystem: #file, category: "BeMyHands")
+private let logger = Logger(subsystem: #fileID, category: "BeMyHands")
 
 struct MenuExtraView: View {
     var triggerLLM: () -> Void
