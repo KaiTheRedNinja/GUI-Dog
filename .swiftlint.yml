@@ -42,3 +42,12 @@ custom_rules:
     regex: "\t"
     message: "Prefer spaces for indents over tabs. See Xcode setting: 'Text Editing' -> 'Indentation'"
     severity: warning
+
+  # Don't use print
+  disallow_print:
+    included: ".*.swift"
+    name: "No print"
+    # print is defined as any "print(" preceeded by anything other than whitespace
+    regex: "^\\s*print\\("
+    message: "Please do not use print(), use OSLog's `Logger`"
+    severity: warning
