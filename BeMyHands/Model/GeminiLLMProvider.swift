@@ -62,7 +62,7 @@ class GeminiLLMProvider: LLMProvider {
             throw error
         }
 
-        let rawResponseDesc = "Raw response: \(rawResponse)"
+        let rawResponseDesc = "Raw response: \(dumpDescription(of: rawResponse))"
         logger.info("\(rawResponseDesc)")
 
         return .init(text: rawResponse.text, functionCalls: rawResponse.functionCalls)

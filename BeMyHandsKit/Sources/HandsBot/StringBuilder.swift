@@ -55,3 +55,18 @@ public extension String {
         return try await content()
     }
 }
+
+/// Uses `dump` from the swift standard library to dump the description of a value
+public func dumpDescription<T>(of value: T) -> String {
+    var output = DumpOutput()
+    dump(value, to: &output)
+    return output.store
+}
+
+struct DumpOutput: TextOutputStream {
+    var store: String = ""
+
+    mutating func write(_ string: String) {
+        store += string
+    }
+}
