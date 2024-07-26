@@ -30,6 +30,10 @@ class GeminiLLMProvider: LLMProvider {
         let model = GenerativeModel(
             name: "gemini-1.5-flash",
             apiKey: Secrets.geminiKey,
+            safetySettings: [
+                // The API has a habit of saying that actions are dangerous. We just ignore that.
+                .init(harmCategory: .dangerousContent, threshold: .blockNone)
+            ],
             // Specify the function declaration.
             tools: functions.map { Tool(functionDeclarations: [$0]) },
             toolConfig: functions.isEmpty ? nil : .init(
