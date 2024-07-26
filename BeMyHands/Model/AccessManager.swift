@@ -8,6 +8,9 @@
 import SwiftUI
 import Access
 import Element
+import OSLog
+
+private let logger = Logger(subsystem: #file, category: "BeMyHands")
 
 @Observable
 class AccessManager {
@@ -42,9 +45,9 @@ class AccessManager {
         // Create the access instance
         guard let access = await Access() else {
             // Could not be created. Usually due to lack of permissions.
-            print("Could not create access")
+            logger.error("Could not create access")
             try? await Task.sleep(nanoseconds: 3_000_000_000)
-            print("Exiting")
+            logger.info("Exiting")
             await NSApplication.shared.terminate(nil)
             return
         }

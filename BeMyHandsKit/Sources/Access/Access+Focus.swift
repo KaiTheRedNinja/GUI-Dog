@@ -11,6 +11,8 @@ import OSLog
 import Element
 import Output
 
+private let logger = Logger(subsystem: #file, category: "Access")
+
 public extension Access {
     /// Returns the currently focused window
     @MainActor
@@ -166,7 +168,7 @@ public extension Access {
             // Inform the delegate
             delegate?.accessDidRefocus(success: true)
         } catch {
-            print("Failed: \(error)")
+            logger.error("Failed: \(error)")
             await handleError(error)
 
             delegate?.accessDidRefocus(success: false)

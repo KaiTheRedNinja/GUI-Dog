@@ -8,6 +8,9 @@
 import Foundation
 import Access
 import GoogleGenerativeAI
+import OSLog
+
+private let logger = Logger(subsystem: #file, category: "HandsBot")
 
 /// A class that facilitates the conversation with an LLM. This manager should be RESET
 /// for every conversation.
@@ -35,7 +38,7 @@ public class HandsBot {
     /// Requests actions from the Gemini API based on a request and the current `accessSnapshot`
     public func requestLLMAction(goal: String) async {
         guard state == .zero else {
-            print("Could not request LLM: LLM already running")
+            logger.info("Could not request LLM: LLM already running")
             // TODO: fail elegantly
             return
         }
@@ -63,7 +66,7 @@ public class HandsBot {
                 try await stepCapabilityProvider.updateContext()
             }
         } catch {
-            print("Could not update capabilities")
+            logger.error("Could not update capabilities")
             updateState(toError: .init(error))
             return
         }
@@ -73,13 +76,13 @@ public class HandsBot {
         do {
             steps = try await getStepsFromLLM(goal: goal)
         } catch {
-            print("Could not get steps from LLM")
+            logger.error("Could not get steps from LLM")
             updateState(toError: .init(error))
             return
         }
 
         guard !steps.isEmpty else {
-            print("No steps given")
+            logger.error("No steps given")
             updateState(toError: .emptyResponse)
             return
         }
@@ -117,7 +120,7 @@ public class HandsBot {
                     try await stepCapabilityProvider.updateContext()
                 }
             } catch {
-                print("Could not update capabilities")
+                logger.error("Could not update capabilities")
                 updateState(toError: .init(error))
                 return
             }
@@ -129,7 +132,7 @@ public class HandsBot {
             do {
                 actionStatus = try await executeStep(state: state, context: stepContext)
             } catch {
-                print("Could not execute the step")
+                logger.error("Could not execute the step")
                 updateState(toError: .init(error))
                 return
             }

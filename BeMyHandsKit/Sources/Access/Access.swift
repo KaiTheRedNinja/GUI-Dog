@@ -4,6 +4,8 @@ import OSLog
 import Element
 import Output
 
+private let logger = Logger(subsystem: #file, category: "Access")
+
 /// Accessibility context.
 @AccessActor
 public final class Access {
@@ -19,8 +21,6 @@ public final class Access {
     internal var focus: AccessFocus?
     /// Trigger to refocus when the frontmost application changes.
     internal var refocusTrigger: NSKeyValueObservation?
-    /// System logging facility.
-    internal static let logger = Logger()
 
     /// The delegate to inform about important events
     public weak var delegate: (any AccessDelegate)?
@@ -42,6 +42,7 @@ public final class Access {
         }
         await refocus(processIdentifier: NSWorkspace.shared.frontmostApplication?.processIdentifier)
         refocusTrigger = NSWorkspace.shared.observe(\.frontmostApplication, options: .new) {[weak self] (_, value) in
+            logger.info("Refocused!")
             guard let runningApplication = value.newValue, let runningApplication else {
                 return
             }
@@ -80,7 +81,7 @@ public final class Access {
 
         // Get actionable elements
         guard let elements = try await actionableElements() else {
-            print("No elements found")
+            logger.warning("No elements found")
             return nil
         }
 
@@ -199,7 +200,7 @@ public final class Access {
             let content = [OutputSemantic.timeout]
             await Output.shared.convey(content)
         default:
-            Self.logger.warning("Unexpected error \(error, privacy: .public)")
+            logger.warning("Unexpected error \(error, privacy: .public)")
             return
         }
     }

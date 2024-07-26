@@ -6,6 +6,9 @@
 //
 
 import ApplicationServices
+import OSLog
+
+private let logger = Logger(subsystem: #file, category: "Access")
 
 public extension Element {
     /// Creates a list of all the actions supported by this element.
@@ -79,7 +82,9 @@ public extension Element {
         case .actionUnsupported, .apiDisabled, .invalidElement, .notImplemented, .timeout:
             throw error
         default:
-            print("Unexpected error performing accessibility element action \(action): \(error.localizedDescription)")
+            logger.error("""
+Unexpected error performing accessibility element action \(action): \(error.localizedDescription)
+""")
         }
     }
 
@@ -158,7 +163,7 @@ public extension Element {
             var childrenActionableItems = [ActionableElement]()
             for (index, child) in children.lazy.compactMap({ $0 as? Element }).enumerated() {
                 guard index < maxChildren else {
-                    print("Hit children limit")
+                    logger.info("Hit children limit")
                     break
                 }
 

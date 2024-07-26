@@ -7,6 +7,9 @@
 
 import Foundation
 import GoogleGenerativeAI
+import OSLog
+
+private let logger = Logger(subsystem: #file, category: "HandsBot")
 
 extension HandsBot {
     /// Obtains a list of steps from the LLM. It expects the current access snapshot to be up-to-date.
@@ -60,12 +63,12 @@ If not, respond with the list of steps.
             }
         }
 
-        print("Prompt: \(prompt)")
+        logger.info("Prompt: \(prompt)")
 
         let model = GenerativeModel(name: "gemini-1.5-flash", apiKey: apiKeyProvider.getKey())
         let response = try await model.generateContent(prompt)
         if let text = response.text {
-            print("Response text: \(text)")
+            logger.info("Response text: \(text)")
             if text.lowercased().contains("insufficient information") {
                 throw LLMCommunicationError.insufficientInformation
             }

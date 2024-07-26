@@ -11,6 +11,8 @@ import OSLog
 import Element
 import Output
 
+private let logger = Logger(subsystem: #file, category: "Access")
+
 public extension Access {
     /// Dumps the system wide element to a property list file chosen by the user.
     @MainActor
@@ -54,7 +56,7 @@ public extension Access {
                 return
             }
             let data = try PropertyListSerialization.data(fromPropertyList: dump, format: .binary, options: .zero)
-            print("Data: \(dump)")
+            logger.info("Data: \(dump)")
             let savePanel = NSSavePanel()
             savePanel.canCreateDirectories = true
             savePanel.message = "Choose a location to dump the selected accessibility elements."

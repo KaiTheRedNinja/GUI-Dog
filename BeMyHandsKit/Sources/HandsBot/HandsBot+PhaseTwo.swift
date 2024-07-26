@@ -7,6 +7,9 @@
 
 import Foundation
 import GoogleGenerativeAI
+import OSLog
+
+private let logger = Logger(subsystem: #file, category: "HandsBot")
 
 extension HandsBot {
     func executeStep(state: LLMState, context: ActionStepContext) async throws -> StepExecutionStatus {
@@ -46,7 +49,7 @@ extension HandsBot {
         var contexts: [String] = []
         var contextMap: [String: String] = [:]
         for stepCapabilityProvider in self.stepCapabilityProviders {
-            try await stepCapabilityProvider.updateContext()
+            // no need to update the context here, it was updated previously.
             let itemContext = try await stepCapabilityProvider.getContext()
             if let itemContext {
                 contexts.append(itemContext)
@@ -85,15 +88,34 @@ Respond in text with the names of THE NAME OF ONLY ONE of the tools: \(stepCapab
             apiKey: apiKeyProvider.getKey()
         )
 
-        print("Choose prompt: \(prompt)")
+        logger.info("Choose prompt: \(prompt)")
 
-        let result = try await model.generateContent(prompt)
+        let result: GenerateContentResponse
+        do {
+            result = try await model.generateContent(prompt)
+        } catch {
+            if let error = error as? GenerateContentError {
+                switch error {
+                case let .responseStoppedEarly(reason, response):
+                    let errorMsg = "Error: \(reason), \(response)"
+                    logger.error("\(errorMsg)")
+                default:
+                    logger.error("Other google error: \(error)")
+                }
+            } else {
+                logger.error("Other error: \(error)")
+            }
+
+            throw error
+        }
 
         guard let text = result.text else {
             throw LLMCommunicationError.emptyResponse
         }
 
-        guard text != "NO TOOL" else {
+        logger.info("Response: \(text)")
+
+        guard !text.contains("NO TOOL") else {
             throw LLMCommunicationError.insufficientInformation
         }
 
@@ -143,9 +165,12 @@ Respond in text with the names of THE NAME OF ONLY ONE of the tools: \(stepCapab
             )
         )
 
-        print("Result prompt: \(prompt)")
+        logger.info("Result prompt: \(prompt)")
 
         let result = try await model.generateContent(prompt)
+
+        logger.info("Response: \(String(describing: result))")
+
         guard let functionCall = result.functionCalls.first, functionCall.name == provider.name else {
             provider.functionFailed()
             throw LLMCommunicationError.invalidFunctionCall

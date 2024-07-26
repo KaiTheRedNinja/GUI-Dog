@@ -10,6 +10,9 @@ import Access
 import Element
 import HandsBot
 import GoogleGenerativeAI
+import OSLog
+
+private let logger = Logger(subsystem: #file, category: "BeMyHands")
 
 extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
     var name: String {
@@ -51,8 +54,10 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
     }
 
     func updateContext() async throws {
+        logger.info("Updating context!")
         try await takeAccessSnapshot()
         await uiDelegate?.update(actionableElements: accessSnapshot?.actionableItems ?? [])
+        logger.info("Context updated!")
     }
 
     @_implements(DiscoveryContextProvider, getContext())
@@ -111,7 +116,7 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
             let lastComponent = itemDesc.split(separator: " ").last,
             let uuid = UUID(uuidString: String(lastComponent))
         else {
-            print("Model responded with a missing parameter.")
+            logger.error("Model responded with a missing parameter.")
             throw LLMCommunicationError.invalidFunctionCall
         }
 
