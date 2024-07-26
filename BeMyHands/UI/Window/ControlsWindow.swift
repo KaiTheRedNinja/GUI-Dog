@@ -36,6 +36,8 @@ class ControlsWindow: NSPanel {
             backing: backingStoreType,
             defer: flag
         )
+        self.isOpaque = false
+        self.backgroundColor = NSColor.clear
         self.level = .screenSaver
         self.collectionBehavior =  [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary]
         self.isFloatingPanel = true

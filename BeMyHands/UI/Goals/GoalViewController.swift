@@ -9,19 +9,18 @@ import AppKit
 import SwiftUI
 
 class GoalViewController: NSViewController {
-    var goalsView: GoalsView
+    var goalsView: NSHostingView<GoalsView>
     var visible: Bool
 
     init() {
         let size = NSSize(width: 600, height: 55)
 
-        self.goalsView = .init(frame: .init(origin: .zero, size: size))
+        self.goalsView = .init(rootView: .init(size: size, callback: nil))
+        self.goalsView.frame = .init(origin: .zero, size: size)
         self.visible = false
         super.init(nibName: nil, bundle: nil)
 
         self.view = NSView(frame: .init(origin: .zero, size: size))
-        view.wantsLayer = true
-        view.layer?.backgroundColor = .white
     }
 
     required init?(coder: NSCoder) {
@@ -49,6 +48,6 @@ class GoalViewController: NSViewController {
     }
 
     func setCallback(to callback: @escaping (String) -> Void) {
-        goalsView.setCallback(to: callback)
+        goalsView.rootView.callback = callback
     }
 }

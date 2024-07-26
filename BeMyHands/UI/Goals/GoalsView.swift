@@ -5,33 +5,46 @@
 //  Created by Kai Quan Tay on 21/7/24.
 //
 
-import Cocoa
+import SwiftUI
 
-class GoalsView: NSView {
-//    var textField: GoalsTextField
+struct GoalsView: View {
+    var size: NSSize
+    var callback: ((String) -> Void)?
 
-    override init(frame frameRect: NSRect) {
-//        self.textField = .init(frame: frameRect)
-        super.init(frame: frameRect)
+    @State private var text: String = ""
+    @FocusState private var textFieldFocus: Bool
 
-//        textField.bezelStyle = .roundedBezel
-//        self.addSubview(textField)
+    var body: some View {
+        RoundedRectangle(cornerRadius: size.height/3)
+            .fill(.regularMaterial)
+            .overlay {
+                content
+            }
+            .onAppear {
+                textFieldFocus = true
+            }
+            .frame(width: size.width, height: size.height)
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("Not Implemented")
-    }
-
-    func setCallback(to callback: @escaping (String) -> Void) {
-//        textField.callback = callback
+    var content: some View {
+        HStack {
+            Image(systemName: "hand.wave")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 30, height: 30)
+                .padding(.leading, 12)
+                .padding(.trailing, 3)
+            TextField("What would you like to do?", text: $text)
+                .focused($textFieldFocus)
+                .font(.title)
+                .textFieldStyle(.plain)
+                .onSubmit {
+                    callback?(text)
+                }
+        }
     }
 }
 
-class GoalsTextField: NSTextField {
-    var callback: ((String) -> Void)!
-
-    override func textDidEndEditing(_ notification: Notification) {
-//        callback(self.stringValue)
-//        callback = nil
-    }
+#Preview {
+    GoalsView(size: .init(width: 600, height: 55))
 }
