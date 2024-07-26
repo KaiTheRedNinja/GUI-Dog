@@ -8,14 +8,14 @@
 import Cocoa
 
 class GoalsView: NSView {
-    var textField: GoalsTextField
+//    var textField: GoalsTextField
 
     override init(frame frameRect: NSRect) {
-        self.textField = .init(frame: frameRect)
+//        self.textField = .init(frame: frameRect)
         super.init(frame: frameRect)
 
-        textField.bezelStyle = .roundedBezel
-        self.addSubview(textField)
+//        textField.bezelStyle = .roundedBezel
+//        self.addSubview(textField)
     }
 
     required init?(coder: NSCoder) {
@@ -23,7 +23,7 @@ class GoalsView: NSView {
     }
 
     func setCallback(to callback: @escaping (String) -> Void) {
-        textField.callback = callback
+//        textField.callback = callback
     }
 }
 
@@ -31,6 +31,7 @@ class GoalsTextField: NSTextField {
     var callback: ((String) -> Void)!
 
     override func textDidEndEditing(_ notification: Notification) {
-        callback(self.stringValue)
+//        callback(self.stringValue)
+//        callback = nil
     }
 }

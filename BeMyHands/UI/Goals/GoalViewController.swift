@@ -13,11 +13,13 @@ class GoalViewController: NSViewController {
     var visible: Bool
 
     init() {
-        self.goalsView = .init(frame: .init(x: 0, y: 0, width: 200, height: 50))
+        let size = NSSize(width: 600, height: 55)
+
+        self.goalsView = .init(frame: .init(origin: .zero, size: size))
         self.visible = false
         super.init(nibName: nil, bundle: nil)
 
-        self.view = NSView(frame: .init(x: 0, y: 0, width: 200, height: 50))
+        self.view = NSView(frame: .init(origin: .zero, size: size))
         view.wantsLayer = true
         view.layer?.backgroundColor = .white
     }

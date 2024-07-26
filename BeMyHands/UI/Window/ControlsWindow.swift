@@ -26,14 +26,20 @@ class ControlsWindow: NSPanel {
         backing backingStoreType: NSWindow.BackingStoreType,
         defer flag: Bool
     ) {
-        super.init(contentRect: NSRect.zero, styleMask: .nonactivatingPanel, backing: backingStoreType, defer: flag)
-        self.isOpaque = false
-        self.backgroundColor = NSColor.clear
-        self.ignoresMouseEvents = true
-        self.hasShadow = false
+        super.init(
+            contentRect: NSRect.zero,
+            styleMask: [
+                .nonactivatingPanel,
+                .resizable,
+                .fullSizeContentView
+            ],
+            backing: backingStoreType,
+            defer: flag
+        )
         self.level = .screenSaver
         self.collectionBehavior =  [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary]
         self.isFloatingPanel = true
+        self.isMovableByWindowBackground = true
     }
 
     override var canBecomeKey: Bool {

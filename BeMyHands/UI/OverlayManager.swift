@@ -33,6 +33,28 @@ class OverlayManager: LLMDisplayDelegate, AccessDisplayDelegate {
     }
 
     func requestGoal() async -> String? {
+        // Obtain the size of the screen
+        guard let screenFrame = NSScreen.main?.frame else {
+            fatalError("Could not get screen size")
+        }
+        let screenSize = screenFrame.size
+
+        // Position the window to be in the center of the screen
+        let goalWindowSize = NSSize(width: 600, height: 55)
+
+        // The relative positioning, where 0.5 is halfway through the screen.
+        // Note that the coordinate system starts from the bottom of the screen, so smaller
+        // numbers are closer to the bottom
+        let relativePosition = NSPoint(x: 0.5, y: 0.6)
+
+        // Set the position of the window
+        goalWindowController.window?.setFrameOrigin(
+            .init(
+                x: screenFrame.minX + screenSize.width*relativePosition.x - (goalWindowSize.width/2),
+                y: screenFrame.minY + screenSize.height*relativePosition.y - (goalWindowSize.height/2)
+            )
+        )
+
         goalWindowController.showWindow(nil)
         goalWindowController.window?.makeKeyAndOrderFront(nil)
         goalWindowController.window?.orderFrontRegardless()
