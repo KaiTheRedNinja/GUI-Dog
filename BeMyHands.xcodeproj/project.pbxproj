@@ -21,6 +21,8 @@
 		936F3EF02C3BE688006FC333 /* FramesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EEF2C3BE688006FC333 /* FramesViewController.swift */; };
 		9382F3F72C4630CD00B4A1EA /* FramesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9382F3F62C4630CD00B4A1EA /* FramesView.swift */; };
 		9382F3F92C4631DB00B4A1EA /* LLMStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9382F3F82C4631D500B4A1EA /* LLMStateView.swift */; };
+		939488622C537E8F0052FBBF /* AppOpen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939488612C537E8F0052FBBF /* AppOpen.swift */; };
+		939488642C537EBD0052FBBF /* GeminiLLMProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939488632C537EBA0052FBBF /* GeminiLLMProvider.swift */; };
 		9397F8292C4BC3A600A8BAC1 /* InfoWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F8282C4BC3A300A8BAC1 /* InfoWindow.swift */; };
 		9397F82B2C4BC5CB00A8BAC1 /* HandsBot in Frameworks */ = {isa = PBXBuildFile; productRef = 9397F82A2C4BC5CB00A8BAC1 /* HandsBot */; };
 		9397F82D2C4BE63900A8BAC1 /* AccessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F82C2C4BE63900A8BAC1 /* AccessManager.swift */; };
@@ -47,6 +49,8 @@
 		936F3EEF2C3BE688006FC333 /* FramesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramesViewController.swift; sourceTree = "<group>"; };
 		9382F3F62C4630CD00B4A1EA /* FramesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramesView.swift; sourceTree = "<group>"; };
 		9382F3F82C4631D500B4A1EA /* LLMStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMStateView.swift; sourceTree = "<group>"; };
+		939488612C537E8F0052FBBF /* AppOpen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppOpen.swift; sourceTree = "<group>"; };
+		939488632C537EBA0052FBBF /* GeminiLLMProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeminiLLMProvider.swift; sourceTree = "<group>"; };
 		9397F8282C4BC3A300A8BAC1 /* InfoWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoWindow.swift; sourceTree = "<group>"; };
 		9397F82C2C4BE63900A8BAC1 /* AccessManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessManager.swift; sourceTree = "<group>"; };
 		9397F8322C4CA3A700A8BAC1 /* StatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusViewController.swift; sourceTree = "<group>"; };
@@ -147,8 +151,10 @@
 		936F3EF22C3CA4E9006FC333 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				939488632C537EBA0052FBBF /* GeminiLLMProvider.swift */,
 				9397F82C2C4BE63900A8BAC1 /* AccessManager.swift */,
 				93D7A4542C4514090065186B /* AccessManager+LLM.swift */,
+				939488612C537E8F0052FBBF /* AppOpen.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -299,12 +305,14 @@
 				93D7A4502C450F7B0065186B /* Secrets.swift in Sources */,
 				931B22C32C3B6392003A6436 /* MenuExtraView.swift in Sources */,
 				9397F8352C4CA71400A8BAC1 /* GoalViewController.swift in Sources */,
+				939488622C537E8F0052FBBF /* AppOpen.swift in Sources */,
 				936F3EEC2C3BE541006FC333 /* ControlsWindow.swift in Sources */,
 				9397F8332C4CA3AC00A8BAC1 /* StatusViewController.swift in Sources */,
 				9382F3F72C4630CD00B4A1EA /* FramesView.swift in Sources */,
 				9397F82D2C4BE63900A8BAC1 /* AccessManager.swift in Sources */,
 				931B22C12C3B6392003A6436 /* BeMyHandsApp.swift in Sources */,
 				9382F3F92C4631DB00B4A1EA /* LLMStateView.swift in Sources */,
+				939488642C537EBD0052FBBF /* GeminiLLMProvider.swift in Sources */,
 				936F3EF02C3BE688006FC333 /* FramesViewController.swift in Sources */,
 				9397F83A2C4CA77400A8BAC1 /* GoalsView.swift in Sources */,
 				93D7A4552C45140E0065186B /* AccessManager+LLM.swift in Sources */,
