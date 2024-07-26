@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import GoogleGenerativeAI
 import OSLog
 
 private let logger = Logger(subsystem: #file, category: "HandsBot")
@@ -65,8 +64,8 @@ If not, respond with the list of steps.
 
         logger.info("Prompt: \(prompt)")
 
-        let model = GenerativeModel(name: "gemini-1.5-flash", apiKey: apiKeyProvider.getKey())
-        let response = try await model.generateContent(prompt)
+        let response = try await llmProvider.generateResponse(prompt: prompt, functions: nil)
+
         if let text = response.text {
             logger.info("Response text: \(text)")
             if text.lowercased().contains("insufficient information") {

@@ -35,8 +35,8 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
         """
     }
 
-    var functionDeclaration: GoogleGenerativeAI.FunctionDeclaration {
-        .init(
+    var functionDeclaration: LLMFuncDecl {
+        FunctionDeclaration(
             name: self.name,
             description: self.description,
             parameters: [
@@ -101,9 +101,11 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
         }
     }
 
-    func execute(function: GoogleGenerativeAI.FunctionCall) async throws {
+    func execute(function: LLMFuncCall) async throws {
         // validate the function call. TODO: allow multiple function calls
-        guard function.name == "executeAction" else {
+
+        guard let function = function as? FunctionCall,
+              function.name == "executeAction" else {
             throw LLMCommunicationError.invalidFunctionCall
         }
 

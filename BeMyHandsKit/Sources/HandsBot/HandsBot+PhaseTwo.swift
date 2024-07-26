@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import GoogleGenerativeAI
 import OSLog
 
 private let logger = Logger(subsystem: #file, category: "HandsBot")
@@ -83,31 +82,10 @@ Respond in text with the names of THE NAME OF ONLY ONE of the tools: \(stepCapab
 """
         }
 
-        let model = GenerativeModel(
-            name: "gemini-1.5-flash",
-            apiKey: apiKeyProvider.getKey()
-        )
-
         logger.info("Choose prompt: \(prompt)")
 
-        let result: GenerateContentResponse
-        do {
-            result = try await model.generateContent(prompt)
-        } catch {
-            if let error = error as? GenerateContentError {
-                switch error {
-                case let .responseStoppedEarly(reason, response):
-                    let errorMsg = "Error: \(reason), \(response)"
-                    logger.error("\(errorMsg)")
-                default:
-                    logger.error("Other google error: \(error)")
-                }
-            } else {
-                logger.error("Other error: \(error)")
-            }
-
-            throw error
-        }
+        let result: LLMResponse
+        result = try await llmProvider.generateResponse(prompt: prompt, functions: nil)
 
         guard let text = result.text else {
             throw LLMCommunicationError.emptyResponse
@@ -152,22 +130,11 @@ Respond in text with the names of THE NAME OF ONLY ONE of the tools: \(stepCapab
             """
         }
 
-        let model = GenerativeModel(
-            name: "gemini-1.5-flash",
-            apiKey: apiKeyProvider.getKey(),
-            // Specify the function declaration.
-            tools: [Tool(functionDeclarations: [provider.functionDeclaration])],
-            toolConfig: .init(
-                functionCallingConfig: .init(
-                    mode: .any,
-                    allowedFunctionNames: [provider.name]
-                )
-            )
-        )
-
         logger.info("Result prompt: \(prompt)")
 
-        let result = try await model.generateContent(prompt)
+        let result = try await llmProvider.generateResponse(prompt: prompt, functions: [
+            provider.functionDeclaration
+        ])
 
         logger.info("Response: \(String(describing: result))")
 

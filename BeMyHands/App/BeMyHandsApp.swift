@@ -9,6 +9,9 @@ import SwiftUI
 import Access
 import HandsBot
 import GoogleGenerativeAI
+import OSLog
+
+private let logger = Logger(subsystem: #file, category: "BeMyHands")
 
 @main
 struct BeMyHandsApp: App {
@@ -45,7 +48,7 @@ struct BeMyHandsApp: App {
             llmManager.discoveryContentProviders = [accessManager]
             llmManager.stepCapabilityProviders = [accessManager, AppOpen.global]
             llmManager.uiDelegate = overlayManager
-            llmManager.apiKeyProvider = APIKey.global
+            llmManager.llmProvider = GeminiLLMProvider.global
 
             await llmManager.requestLLMAction(goal: goal)
             // remove the manager
@@ -54,12 +57,50 @@ struct BeMyHandsApp: App {
     }
 }
 
-class APIKey: APIKeyProvider {
-    func getKey() -> String {
-        Secrets.geminiKey
+class GeminiLLMProvider: LLMProvider {
+    func generateResponse(
+        prompt: String,
+        functions: [any LLMFuncDecl]?
+    ) async throws -> LLMResponse {
+        guard let functions = functions as? [FunctionDeclaration] else {
+            throw LLMCommunicationError.invalidFunctionCall
+        }
+
+        let model = GenerativeModel(
+            name: "gemini-1.5-flash",
+            apiKey: Secrets.geminiKey,
+            // Specify the function declaration.
+            tools: [Tool(functionDeclarations: functions)],
+            toolConfig: functions.isEmpty ? nil : .init(
+                functionCallingConfig: .init(
+                    mode: .any
+                )
+            )
+        )
+
+        let rawResponse: GenerateContentResponse
+        do {
+            rawResponse = try await model.generateContent(prompt)
+        } catch {
+            if let error = error as? GenerateContentError {
+                switch error {
+                case let .responseStoppedEarly(reason, response):
+                    let errorMsg = "Response stopped early: \(reason), \(response)"
+                    logger.error("\(errorMsg)")
+                default:
+                    logger.error("Other google error: \(error)")
+                }
+            } else {
+                logger.error("Other error: \(error)")
+            }
+
+            throw error
+        }
+
+        return .init(text: rawResponse.text, functionCalls: rawResponse.functionCalls)
     }
 
-    static let global: APIKey = .init()
+    static let global = GeminiLLMProvider()
 }
 
 class AppOpen: StepCapabilityProvider {
@@ -73,8 +114,8 @@ class AppOpen: StepCapabilityProvider {
         """
     }
 
-    var functionDeclaration: GoogleGenerativeAI.FunctionDeclaration {
-        .init(
+    var functionDeclaration: LLMFuncDecl {
+        FunctionDeclaration(
             name: self.name,
             description: self.description,
             parameters: [
@@ -88,8 +129,9 @@ class AppOpen: StepCapabilityProvider {
     func updateContext() async throws {}
     func getContext() async throws -> String? { nil }
 
-    func execute(function: FunctionCall) async throws {
-        guard function.name == name, case let .string(appName) = function.args["appName"] else {
+    func execute(function: any LLMFuncCall) async throws {
+        guard let function = function as? FunctionCall,
+              function.name == name, case let .string(appName) = function.args["appName"] else {
             throw LLMCommunicationError.invalidFunctionCall
         }
 
@@ -113,3 +155,6 @@ class AppOpen: StepCapabilityProvider {
 enum AppOpenError: Error {
     case couldNotOpen
 }
+
+extension FunctionCall: @retroactive LLMFuncCall {}
+extension FunctionDeclaration: @retroactive LLMFuncDecl {}

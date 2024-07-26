@@ -7,7 +7,6 @@
 
 import Foundation
 import Access
-import GoogleGenerativeAI
 import OSLog
 
 private let logger = Logger(subsystem: #file, category: "HandsBot")
@@ -26,8 +25,8 @@ public class HandsBot {
     /// internal state. Optional.
     public weak var uiDelegate: LLMDisplayDelegate?
 
-    /// The API provider, which provides the API key
-    public weak var apiKeyProvider: APIKeyProvider!
+    /// The LLM provider, which provides access to the chatbot
+    public weak var llmProvider: LLMProvider!
 
     /// The current state
     var state: LLMState = .zero
@@ -174,7 +173,7 @@ public protocol StepCapabilityProvider {
     /// The instructions for how to use the capability. Will be given verbatim to the LLM.
     var instructions: String { get }
     /// The function for the LLM to call to execute the step
-    var functionDeclaration: FunctionDeclaration { get }
+    var functionDeclaration: any LLMFuncDecl { get }
 
     /// Called before ``getContext()`` to inform the provider to update the context
     func updateContext() async throws
@@ -184,15 +183,45 @@ public protocol StepCapabilityProvider {
     /// Called whenever the LLM responds with a function declaration with the correct name. Note
     /// that this DOES NOT guarentee that the function call is actually correct; this function should
     /// validate parameters before execution.
-    func execute(function: FunctionCall) async throws
+    func execute(function: any LLMFuncCall) async throws
     /// Called whenever the LLM responds but does not call the given function
     func functionFailed()
 }
 
-/// Provides the Gemini API key
-public protocol APIKeyProvider: AnyObject {
-    /// Provides the Gemini API key
-    func getKey() -> String
+/// Provides the LLM
+public protocol LLMProvider: AnyObject {
+    /// Generates a response with a prompt and optional functions.
+    ///
+    /// Note that `functions` is an array of functions defined by the various capabilities'
+    /// ``StepCapabilityProvider/functionDeclaration``s.
+    ///
+    /// The response's ``LLMFuncDecl`` property are not used by HandsBot, and are instead passed directly to
+    /// the capability provider's ``StepCapabilityProvider/execute(function:)`` protocol method.
+    func generateResponse(prompt: String, functions: [any LLMFuncDecl]?) async throws -> LLMResponse
+}
+
+/// A function call
+public protocol LLMFuncCall {
+    /// The name of the function
+    var name: String { get }
+}
+
+/// A function declaration. This is empty because usually function requests are private
+public protocol LLMFuncDecl {
+}
+
+/// LLM response
+public struct LLMResponse {
+    /// The text response
+    public var text: String?
+    /// The function call response
+    public var functionCalls: [any LLMFuncCall]
+
+    /// Creates an LLM response
+    public init(text: String?, functionCalls: [any LLMFuncCall]) {
+        self.text = text
+        self.functionCalls = functionCalls
+    }
 }
 
 /// Provides a UI to the ``HandsBot``.
