@@ -92,3 +92,10 @@ enum Secrets {
 ## Credits and Implementation Details
 
 - Accessibility API: Vosh (https://github.com/Xce-PT/Vosh)
+- UI library: Luminare (https://github.com/MrKai77/Luminare)
+
+## License
+
+BeMyHands is licensed under the GNU General Public License v3.0.
+
+Explanation for the license of BeMyHands is available [here](LICENSE_Explanation.md)
