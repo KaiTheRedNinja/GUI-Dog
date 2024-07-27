@@ -44,6 +44,7 @@ struct LLMStateView: View {
             }
             .frame(height: size.width)
             .cornerRadius(10)
+            .shadow(radius: 10)
             .padding(10)
         }
         .opacity(isShown ? 1 : 0)
