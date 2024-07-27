@@ -22,25 +22,30 @@ struct SetupView: View {
     }
 
     var body: some View {
-        VStack {
+        ZStack {
+            Color.clear
             switch stage {
             case .home:
                 SetupHomeView(stage: $stage)
             case .blindOrNot:
                 SetupVisionView(stage: $stage)
             case .setupAccessManager:
-                SetupAccessView(stage: $stage)
+                SetupAccessView(stage: $stage, setupCallback: setupCallback)
             case .finish:
                 SetupFinishView(stage: $stage)
             }
-
+        }
+        .overlay(alignment: .topLeading) {
             if stage != .home {
-                Spacer()
-                    .frame(height: 30)
-
                 Button("Previous Page") {
-                    stage = .home
+                    stage = switch stage {
+                    case .blindOrNot: .home
+                    case .setupAccessManager: .blindOrNot
+                    case .finish: .setupAccessManager
+                    default: fatalError()
+                    }
                 }
+                .padding(10)
             }
         }
         .padding()
