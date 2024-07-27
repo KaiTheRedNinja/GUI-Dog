@@ -15,7 +15,6 @@
 		931B22D72C3B64C5003A6436 /* Element in Frameworks */ = {isa = PBXBuildFile; productRef = 931B22D62C3B64C5003A6436 /* Element */; };
 		931B22D92C3B64C5003A6436 /* Input in Frameworks */ = {isa = PBXBuildFile; productRef = 931B22D82C3B64C5003A6436 /* Input */; };
 		931B22DB2C3B64C5003A6436 /* Output in Frameworks */ = {isa = PBXBuildFile; productRef = 931B22DA2C3B64C5003A6436 /* Output */; };
-		933E522E2C47370F00879AE1 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 933E522D2C47370F00879AE1 /* KeyboardShortcuts */; };
 		936392402C54A0D100EFF9AB /* StatusWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9363923F2C54A0CE00EFF9AB /* StatusWindow.swift */; };
 		936392432C54C52500EFF9AB /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936392422C54C52500EFF9AB /* SetupView.swift */; };
 		936392472C54D4EB00EFF9AB /* SetupHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936392462C54D4EB00EFF9AB /* SetupHomeView.swift */; };
@@ -78,7 +77,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				931B22DB2C3B64C5003A6436 /* Output in Frameworks */,
-				933E522E2C47370F00879AE1 /* KeyboardShortcuts in Frameworks */,
 				9397F82B2C4BC5CB00A8BAC1 /* HandsBot in Frameworks */,
 				931B22D72C3B64C5003A6436 /* Element in Frameworks */,
 				931B22D92C3B64C5003A6436 /* Input in Frameworks */,
@@ -236,7 +234,6 @@
 				931B22D82C3B64C5003A6436 /* Input */,
 				931B22DA2C3B64C5003A6436 /* Output */,
 				93D7A4522C45131B0065186B /* GoogleGenerativeAI */,
-				933E522D2C47370F00879AE1 /* KeyboardShortcuts */,
 				9397F82A2C4BC5CB00A8BAC1 /* HandsBot */,
 			);
 			productName = BeMyHands;
@@ -269,7 +266,6 @@
 			mainGroup = 931B22B42C3B6391003A6436;
 			packageReferences = (
 				93D7A4512C45131B0065186B /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
-				933E522C2C47370F00879AE1 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 			);
 			productRefGroup = 931B22BE2C3B6392003A6436 /* Products */;
 			projectDirPath = "";
@@ -551,14 +547,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		933E522C2C47370F00879AE1 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.1;
-			};
-		};
 		93D7A4512C45131B0065186B /* XCRemoteSwiftPackageReference "generative-ai-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google/generative-ai-swift";
@@ -585,11 +573,6 @@
 		931B22DA2C3B64C5003A6436 /* Output */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Output;
-		};
-		933E522D2C47370F00879AE1 /* KeyboardShortcuts */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 933E522C2C47370F00879AE1 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
-			productName = KeyboardShortcuts;
 		};
 		9397F82A2C4BC5CB00A8BAC1 /* HandsBot */ = {
 			isa = XCSwiftPackageProductDependency;

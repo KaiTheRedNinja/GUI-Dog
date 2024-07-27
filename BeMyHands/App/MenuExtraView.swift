@@ -7,7 +7,6 @@
 
 import SwiftUI
 import Access
-import KeyboardShortcuts
 import OSLog
 
 private let logger = Logger(subsystem: #fileID, category: "BeMyHands")
@@ -20,12 +19,6 @@ struct MenuExtraView: View {
             Button("Request LLM") {
                 requestLLM()
             }
-            .onAppear {
-                KeyboardShortcuts.onKeyUp(for: .requestLLM) { [self] in
-                    logger.info("Requesting LLM!")
-                    requestLLM()
-                }
-            }
 
             Button("Quit") {
                 NSApplication.shared.terminate(nil)
@@ -36,8 +29,4 @@ struct MenuExtraView: View {
     func requestLLM() {
         triggerLLM()
     }
-}
-
-extension KeyboardShortcuts.Name {
-    static let requestLLM = Self("requestLLM", default: .init(.l, modifiers: [.command, .option]))
 }

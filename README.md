@@ -92,5 +92,3 @@ enum Secrets {
 ## Credits and Implementation Details
 
 - Accessibility API: Vosh (https://github.com/Xce-PT/Vosh)
-- Global keyboard shortcuts: KeyboardShortcuts (https://github.com/sindresorhus/KeyboardShortcuts)
-    - KeyboardShortcuts only works with the default (usually QWERTY) layout of the device, even if the user is using DVORAK or another layout
