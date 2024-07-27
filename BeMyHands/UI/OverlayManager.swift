@@ -11,13 +11,13 @@ import HandsBot
 
 @MainActor
 class OverlayManager: LLMDisplayDelegate, AccessDisplayDelegate {
-    private var framesWindowController: InfoWindowController
+    private var framesWindowController: FramesWindowController
     private var framesController: FramesViewController
 
-    private var statusWindowController: InfoWindowController
+    private var statusWindowController: StatusWindowController
     private var statusController: StatusViewController
 
-    private var goalWindowController: ControlsWindowController
+    private var goalWindowController: GoalsWindowController
     private var goalController: GoalViewController
 
     init() {
@@ -58,7 +58,6 @@ class OverlayManager: LLMDisplayDelegate, AccessDisplayDelegate {
         goalWindowController.showWindow(nil)
         goalWindowController.window?.makeKeyAndOrderFront(nil)
         goalWindowController.window?.orderFrontRegardless()
-        goalController.show()
 
         let value = await withCheckedContinuation { cont in
             goalController.setCallback { value in
@@ -66,7 +65,7 @@ class OverlayManager: LLMDisplayDelegate, AccessDisplayDelegate {
             }
         }
 
-        goalController.hide()
+        goalWindowController.close()
 
         if value.isEmpty {
             return nil

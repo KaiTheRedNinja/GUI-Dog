@@ -16,14 +16,15 @@
 		931B22D92C3B64C5003A6436 /* Input in Frameworks */ = {isa = PBXBuildFile; productRef = 931B22D82C3B64C5003A6436 /* Input */; };
 		931B22DB2C3B64C5003A6436 /* Output in Frameworks */ = {isa = PBXBuildFile; productRef = 931B22DA2C3B64C5003A6436 /* Output */; };
 		933E522E2C47370F00879AE1 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 933E522D2C47370F00879AE1 /* KeyboardShortcuts */; };
-		936F3EEC2C3BE541006FC333 /* ControlsWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EEB2C3BE53B006FC333 /* ControlsWindow.swift */; };
+		936392402C54A0D100EFF9AB /* StatusWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9363923F2C54A0CE00EFF9AB /* StatusWindow.swift */; };
+		936F3EEC2C3BE541006FC333 /* GoalsWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EEB2C3BE53B006FC333 /* GoalsWindow.swift */; };
 		936F3EEE2C3BE5E9006FC333 /* OverlayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */; };
 		936F3EF02C3BE688006FC333 /* FramesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EEF2C3BE688006FC333 /* FramesViewController.swift */; };
 		9382F3F72C4630CD00B4A1EA /* FramesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9382F3F62C4630CD00B4A1EA /* FramesView.swift */; };
 		9382F3F92C4631DB00B4A1EA /* LLMStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9382F3F82C4631D500B4A1EA /* LLMStateView.swift */; };
 		939488622C537E8F0052FBBF /* AppOpen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939488612C537E8F0052FBBF /* AppOpen.swift */; };
 		939488642C537EBD0052FBBF /* GeminiLLMProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939488632C537EBA0052FBBF /* GeminiLLMProvider.swift */; };
-		9397F8292C4BC3A600A8BAC1 /* InfoWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F8282C4BC3A300A8BAC1 /* InfoWindow.swift */; };
+		9397F8292C4BC3A600A8BAC1 /* FramesWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F8282C4BC3A300A8BAC1 /* FramesWindow.swift */; };
 		9397F82B2C4BC5CB00A8BAC1 /* HandsBot in Frameworks */ = {isa = PBXBuildFile; productRef = 9397F82A2C4BC5CB00A8BAC1 /* HandsBot */; };
 		9397F82D2C4BE63900A8BAC1 /* AccessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F82C2C4BE63900A8BAC1 /* AccessManager.swift */; };
 		9397F8332C4CA3AC00A8BAC1 /* StatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F8322C4CA3A700A8BAC1 /* StatusViewController.swift */; };
@@ -44,14 +45,15 @@
 		931B22CF2C3B63DA003A6436 /* BeMyHandsKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = BeMyHandsKit; sourceTree = "<group>"; };
 		931B22D02C3B64BE003A6436 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		931B22DC2C3B76A3003A6436 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		936F3EEB2C3BE53B006FC333 /* ControlsWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlsWindow.swift; sourceTree = "<group>"; };
+		9363923F2C54A0CE00EFF9AB /* StatusWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusWindow.swift; sourceTree = "<group>"; };
+		936F3EEB2C3BE53B006FC333 /* GoalsWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsWindow.swift; sourceTree = "<group>"; };
 		936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayManager.swift; sourceTree = "<group>"; };
 		936F3EEF2C3BE688006FC333 /* FramesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramesViewController.swift; sourceTree = "<group>"; };
 		9382F3F62C4630CD00B4A1EA /* FramesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramesView.swift; sourceTree = "<group>"; };
 		9382F3F82C4631D500B4A1EA /* LLMStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMStateView.swift; sourceTree = "<group>"; };
 		939488612C537E8F0052FBBF /* AppOpen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppOpen.swift; sourceTree = "<group>"; };
 		939488632C537EBA0052FBBF /* GeminiLLMProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeminiLLMProvider.swift; sourceTree = "<group>"; };
-		9397F8282C4BC3A300A8BAC1 /* InfoWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoWindow.swift; sourceTree = "<group>"; };
+		9397F8282C4BC3A300A8BAC1 /* FramesWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramesWindow.swift; sourceTree = "<group>"; };
 		9397F82C2C4BE63900A8BAC1 /* AccessManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessManager.swift; sourceTree = "<group>"; };
 		9397F8322C4CA3A700A8BAC1 /* StatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusViewController.swift; sourceTree = "<group>"; };
 		9397F8342C4CA70F00A8BAC1 /* GoalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalViewController.swift; sourceTree = "<group>"; };
@@ -139,7 +141,6 @@
 		936F3EEA2C3BE535006FC333 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				93CFAD6A2C4CD9BE0084A039 /* Window */,
 				9397F8372C4CA72E00A8BAC1 /* Status */,
 				9397F8362C4CA71E00A8BAC1 /* Frames */,
 				9397F8382C4CA73800A8BAC1 /* Goals */,
@@ -162,6 +163,7 @@
 		9397F8362C4CA71E00A8BAC1 /* Frames */ = {
 			isa = PBXGroup;
 			children = (
+				9397F8282C4BC3A300A8BAC1 /* FramesWindow.swift */,
 				936F3EEF2C3BE688006FC333 /* FramesViewController.swift */,
 				9382F3F62C4630CD00B4A1EA /* FramesView.swift */,
 			);
@@ -171,6 +173,7 @@
 		9397F8372C4CA72E00A8BAC1 /* Status */ = {
 			isa = PBXGroup;
 			children = (
+				9363923F2C54A0CE00EFF9AB /* StatusWindow.swift */,
 				9397F8322C4CA3A700A8BAC1 /* StatusViewController.swift */,
 				9382F3F82C4631D500B4A1EA /* LLMStateView.swift */,
 			);
@@ -180,19 +183,11 @@
 		9397F8382C4CA73800A8BAC1 /* Goals */ = {
 			isa = PBXGroup;
 			children = (
+				936F3EEB2C3BE53B006FC333 /* GoalsWindow.swift */,
 				9397F8342C4CA70F00A8BAC1 /* GoalViewController.swift */,
 				9397F8392C4CA77400A8BAC1 /* GoalsView.swift */,
 			);
 			path = Goals;
-			sourceTree = "<group>";
-		};
-		93CFAD6A2C4CD9BE0084A039 /* Window */ = {
-			isa = PBXGroup;
-			children = (
-				9397F8282C4BC3A300A8BAC1 /* InfoWindow.swift */,
-				936F3EEB2C3BE53B006FC333 /* ControlsWindow.swift */,
-			);
-			path = Window;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -306,7 +301,7 @@
 				931B22C32C3B6392003A6436 /* MenuExtraView.swift in Sources */,
 				9397F8352C4CA71400A8BAC1 /* GoalViewController.swift in Sources */,
 				939488622C537E8F0052FBBF /* AppOpen.swift in Sources */,
-				936F3EEC2C3BE541006FC333 /* ControlsWindow.swift in Sources */,
+				936F3EEC2C3BE541006FC333 /* GoalsWindow.swift in Sources */,
 				9397F8332C4CA3AC00A8BAC1 /* StatusViewController.swift in Sources */,
 				9382F3F72C4630CD00B4A1EA /* FramesView.swift in Sources */,
 				9397F82D2C4BE63900A8BAC1 /* AccessManager.swift in Sources */,
@@ -315,8 +310,9 @@
 				939488642C537EBD0052FBBF /* GeminiLLMProvider.swift in Sources */,
 				936F3EF02C3BE688006FC333 /* FramesViewController.swift in Sources */,
 				9397F83A2C4CA77400A8BAC1 /* GoalsView.swift in Sources */,
+				936392402C54A0D100EFF9AB /* StatusWindow.swift in Sources */,
 				93D7A4552C45140E0065186B /* AccessManager+LLM.swift in Sources */,
-				9397F8292C4BC3A600A8BAC1 /* InfoWindow.swift in Sources */,
+				9397F8292C4BC3A600A8BAC1 /* FramesWindow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

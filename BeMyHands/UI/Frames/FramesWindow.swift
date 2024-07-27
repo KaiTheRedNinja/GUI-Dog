@@ -1,5 +1,5 @@
 //
-//  InfoWindow.swift
+//  FramesWindow.swift
 //  BeMyHands
 //
 //  Created by Kai Quan Tay on 20/7/24.
@@ -7,10 +7,10 @@
 
 import Cocoa
 
-/// Wraps a ``InfoWindow``
-class InfoWindowController: NSWindowController {
+/// Wraps a ``FramesWindow``
+class FramesWindowController: NSWindowController {
     init() {
-        super.init(window: InfoWindow())
+        super.init(window: FramesWindow())
     }
 
     required init?(coder: NSCoder) {
@@ -20,7 +20,7 @@ class InfoWindowController: NSWindowController {
 
 /// A window used to display information. Present on all spaces, above all windows,
 /// invisible background, non-interactable.
-class InfoWindow: NSPanel {
+class FramesWindow: NSPanel {
     override init(
         contentRect: NSRect,
         styleMask style: NSWindow.StyleMask,

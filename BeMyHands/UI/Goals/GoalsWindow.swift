@@ -1,5 +1,5 @@
 //
-//  ControlsWindow.swift
+//  GoalsWindow.swift
 //  BeMyHands
 //
 //  Created by Kai Quan Tay on 8/7/24.
@@ -7,10 +7,10 @@
 
 import Cocoa
 
-/// Wraps a ``ControlsWindow``
-class ControlsWindowController: NSWindowController {
+/// Wraps a ``GoalsWindow``
+class GoalsWindowController: NSWindowController {
     init() {
-        super.init(window: ControlsWindow())
+        super.init(window: GoalsWindow())
     }
 
     required init?(coder: NSCoder) {
@@ -18,8 +18,8 @@ class ControlsWindowController: NSWindowController {
     }
 }
 
-/// A window used to show controls. Present above all windows, doesn't steal focus.
-class ControlsWindow: NSPanel {
+/// A window used to show the goal. Present above all windows, doesn't steal focus.
+class GoalsWindow: NSPanel {
     override init(
         contentRect: NSRect,
         styleMask style: NSWindow.StyleMask,
