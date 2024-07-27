@@ -7,8 +7,12 @@
 
 import SwiftUI
 import Access
+import Element
 import HandsBot
 import GoogleGenerativeAI
+import OSLog
+
+private let logger = Logger(subsystem: #fileID, category: "BeMyHands")
 
 @main
 struct BeMyHandsApp: App {
@@ -16,13 +20,27 @@ struct BeMyHandsApp: App {
     @State var accessManager: AccessManager = .init()
     @State var overlayManager: OverlayManager = .init()
 
+    @Environment(\.openWindow)
+    var openWindow
+
     var body: some Scene {
+        WindowGroup(id: "setupWindow") {
+            Text("Setting Up")
+        }
+
         MenuBarExtra {
             MenuExtraView(triggerLLM: triggerLLM)
         } label: {
             Image(systemName: "hand.wave.fill")
                 .task {
                     accessManager.uiDelegate = overlayManager
+
+                    guard Element.confirmProcessTrustedStatus() else {
+                        logger.info("No permissions!")
+                        openWindow(id: "setupWindow")
+                        return
+                    }
+
                     await accessManager.setup()
                 }
         }

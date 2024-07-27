@@ -71,8 +71,8 @@ Gemini API capabilities:
 
 App Capabilities:
 - [ ] Announce when the AI is doing things
-- [ ] Clean up steps UI
-- [ ] Add animations (for sighted people's sake. Make sure it stays accessibility friendly.)
+- [x] Clean up steps UI
+- [x] Add animations (for sighted people's sake. Make sure it stays accessibility friendly.)
 - [ ] Onboarding
     - [ ] Obtain accessibility permissions easily
     - [ ] Customise trigger shortcut
