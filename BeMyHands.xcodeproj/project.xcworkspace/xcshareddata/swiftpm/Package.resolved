@@ -1,5 +1,5 @@
 {
-  "originHash" : "5e98b1916cf4e6c68bb43f4c1441dc8c22ef5fca9c47ee68f558ae9ad9809451",
+  "originHash" : "462f5c219653c699669f27c2a16c91656dcf7462c303e6804a075941aab4104a",
   "pins" : [
     {
       "identity" : "generative-ai-swift",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "54784005b57c2235a7669e0c12e8dafa68f0ca5f",
         "version" : "0.5.4"
+      }
+    },
+    {
+      "identity" : "luminare",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/MrKai77/Luminare",
+      "state" : {
+        "branch" : "main",
+        "revision" : "3702a0fe0a9766e5bed243c77075a2302d5ad23a"
       }
     }
   ],

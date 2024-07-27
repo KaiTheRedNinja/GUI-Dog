@@ -21,6 +21,7 @@
 		936392492C54D4F700EFF9AB /* SetupVisionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936392482C54D4F700EFF9AB /* SetupVisionView.swift */; };
 		9363924B2C54D50600EFF9AB /* SetupAccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9363924A2C54D50600EFF9AB /* SetupAccessView.swift */; };
 		9363924D2C54D50D00EFF9AB /* SetupFinishView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9363924C2C54D50D00EFF9AB /* SetupFinishView.swift */; };
+		936392502C54E40400EFF9AB /* Luminare in Frameworks */ = {isa = PBXBuildFile; productRef = 9363924F2C54E40400EFF9AB /* Luminare */; };
 		936F3EEC2C3BE541006FC333 /* GoalsWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EEB2C3BE53B006FC333 /* GoalsWindow.swift */; };
 		936F3EEE2C3BE5E9006FC333 /* OverlayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */; };
 		936F3EF02C3BE688006FC333 /* FramesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EEF2C3BE688006FC333 /* FramesViewController.swift */; };
@@ -82,6 +83,7 @@
 				931B22D92C3B64C5003A6436 /* Input in Frameworks */,
 				93D7A4532C45131B0065186B /* GoogleGenerativeAI in Frameworks */,
 				931B22D32C3B64C5003A6436 /* Access in Frameworks */,
+				936392502C54E40400EFF9AB /* Luminare in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -235,6 +237,7 @@
 				931B22DA2C3B64C5003A6436 /* Output */,
 				93D7A4522C45131B0065186B /* GoogleGenerativeAI */,
 				9397F82A2C4BC5CB00A8BAC1 /* HandsBot */,
+				9363924F2C54E40400EFF9AB /* Luminare */,
 			);
 			productName = BeMyHands;
 			productReference = 931B22BD2C3B6392003A6436 /* BeMyHands.app */;
@@ -266,6 +269,7 @@
 			mainGroup = 931B22B42C3B6391003A6436;
 			packageReferences = (
 				93D7A4512C45131B0065186B /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
+				9363924E2C54E40400EFF9AB /* XCRemoteSwiftPackageReference "Luminare" */,
 			);
 			productRefGroup = 931B22BE2C3B6392003A6436 /* Products */;
 			projectDirPath = "";
@@ -547,6 +551,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		9363924E2C54E40400EFF9AB /* XCRemoteSwiftPackageReference "Luminare" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MrKai77/Luminare";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		93D7A4512C45131B0065186B /* XCRemoteSwiftPackageReference "generative-ai-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google/generative-ai-swift";
@@ -573,6 +585,11 @@
 		931B22DA2C3B64C5003A6436 /* Output */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Output;
+		};
+		9363924F2C54E40400EFF9AB /* Luminare */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9363924E2C54E40400EFF9AB /* XCRemoteSwiftPackageReference "Luminare" */;
+			productName = Luminare;
 		};
 		9397F82A2C4BC5CB00A8BAC1 /* HandsBot */ = {
 			isa = XCSwiftPackageProductDependency;

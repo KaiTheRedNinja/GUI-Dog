@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Luminare
 
 struct SetupHomeView: View {
     @Binding var stage: SetupStage
@@ -25,6 +26,8 @@ struct SetupHomeView: View {
             Button("Lets Go!") {
                 stage = .blindOrNot
             }
+            .frame(width: 150, height: 60)
+            .buttonStyle(LuminareCompactButtonStyle())
         }
     }
 }

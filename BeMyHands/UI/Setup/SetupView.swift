@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Luminare
 import Element
 
 struct SetupView: View {
@@ -24,6 +25,22 @@ struct SetupView: View {
     var body: some View {
         ZStack {
             Color.clear
+                .overlay(alignment: .topLeading) {
+                    if stage != .home {
+                        Button("Previous Page") {
+                            stage = switch stage {
+                            case .blindOrNot: .home
+                            case .setupAccessManager: .blindOrNot
+                            case .finish: .setupAccessManager
+                            default: fatalError()
+                            }
+                        }
+                        .frame(width: 120, height: 40)
+                        .buttonStyle(LuminareCompactButtonStyle())
+                        .padding(10)
+                    }
+                }
+
             switch stage {
             case .home:
                 SetupHomeView(stage: $stage)
@@ -35,19 +52,6 @@ struct SetupView: View {
                 SetupFinishView(stage: $stage)
             }
         }
-        .overlay(alignment: .topLeading) {
-            if stage != .home {
-                Button("Previous Page") {
-                    stage = switch stage {
-                    case .blindOrNot: .home
-                    case .setupAccessManager: .blindOrNot
-                    case .finish: .setupAccessManager
-                    default: fatalError()
-                    }
-                }
-                .padding(10)
-            }
-        }
         .padding()
         .padding(.bottom, 30)
         .onAppear {
@@ -56,7 +60,7 @@ struct SetupView: View {
                 dismissWindow()
             }
         }
-        .frame(width: 720, height: 500)
+        .frame(minWidth: 720, minHeight: 500)
         .animation(.default, value: stage)
     }
 }

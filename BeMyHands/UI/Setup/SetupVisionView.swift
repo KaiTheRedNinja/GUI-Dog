@@ -6,9 +6,46 @@
 //
 
 import SwiftUI
+import Luminare
 
 struct SetupVisionView: View {
     @Binding var stage: SetupStage
+
+    @State var userVisionStatus: UserVisionStatus = .sighted
+
+    enum UserVisionStatus: CaseIterable {
+        case sighted
+        case mildlyImpaired
+        case impaired
+        case blind
+
+        var description: String {
+            switch self {
+            case .sighted: "Sighted"
+            case .mildlyImpaired: "Mildly Impaired"
+            case .impaired: "Impaired"
+            case .blind: "Blind"
+            }
+        }
+
+        var icon: String {
+            switch self {
+            case .sighted: "eye"
+            case .mildlyImpaired: "eyeglasses"
+            case .impaired: "eye.trianglebadge.exclamationmark"
+            case .blind: "eye.slash"
+            }
+        }
+
+        var color: Color {
+            switch self {
+            case .sighted: .blue
+            case .mildlyImpaired: .green
+            case .impaired: .orange
+            case .blind: .indigo
+            }
+        }
+    }
 
     var body: some View {
         VStack(spacing: 10) {
@@ -28,56 +65,27 @@ that are tedious to do with accessibility tech
             Spacer()
                 .frame(height: 30)
 
-            HStack {
-                Button {
-                    stage = .setupAccessManager
-                } label: {
-                    Text("Sighted 👁️")
-                        .frame(width: 100, height: 40)
-                        .padding(4)
-                        .background {
-                            RoundedRectangle(cornerRadius: 5)
-                                .fill(Color.blue.opacity(0.7))
-                        }
+            LuminarePicker(elements: UserVisionStatus.allCases, selection: $userVisionStatus) { status in
+                VStack {
+                    Image(systemName: status.icon)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 50, height: 50)
+                        .foregroundStyle(status.color)
+                    Text(status.description)
                 }
-
-                Button {
-                    stage = .setupAccessManager
-                } label: {
-                    Text("Mildly visually impaired 👓")
-                        .frame(width: 100, height: 40)
-                        .padding(4)
-                        .background {
-                            RoundedRectangle(cornerRadius: 5)
-                                .fill(Color.green.opacity(0.7))
-                        }
-                }
-
-                Button {
-                    stage = .setupAccessManager
-                } label: {
-                    Text("Visually impaired 🕶️")
-                        .frame(width: 100, height: 40)
-                        .padding(4)
-                        .background {
-                            RoundedRectangle(cornerRadius: 5)
-                                .fill(Color.orange.opacity(0.7))
-                        }
-                }
-
-                Button {
-                    stage = .setupAccessManager
-                } label: {
-                    Text("Fully blind ❌")
-                        .frame(width: 100, height: 40)
-                        .padding(4)
-                        .background {
-                            RoundedRectangle(cornerRadius: 5)
-                                .fill(Color.indigo.opacity(0.7))
-                        }
-                }
+                .frame(height: 100)
             }
-            .buttonStyle(.plain)
+            .padding(.horizontal, 30)
+
+            Spacer()
+                .frame(height: 30)
+
+            Button("Confirm") {
+                stage = .setupAccessManager
+            }
+            .frame(width: 150, height: 60)
+            .buttonStyle(LuminareCompactButtonStyle())
         }
         .multilineTextAlignment(.center)
     }

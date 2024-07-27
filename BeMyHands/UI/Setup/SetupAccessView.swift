@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Luminare
 import Element
 import OSLog
 
@@ -34,42 +35,39 @@ BeMyHands uses macOS's Accessibility API to interact with items on your screen.
             )
             .frame(width: 300)
             .font(.caption)
+            .multilineTextAlignment(.center)
 
             Spacer()
                 .frame(height: 30)
 
             VStack(alignment: .leading) {
-                HStack {
-                    Text("1. ")
-                    Button("Request permission") {
-                        permissionGranted = Element.confirmProcessTrustedStatus()
-                    }
-                }
-
-                Text("2. Go to Privacy and Security in System Preferences")
+                Text("1. Go to Privacy and Security in System Preferences")
                 Text("2. Open the Accessibility tab")
                 Text("3. Switch on the toggle for BeMyHands")
             }
-            .foregroundStyle(permissionGranted ? .gray : .black)
+            .opacity(permissionGranted ? 0.5 : 1)
+            .font(.title2)
 
             Spacer()
                 .frame(height: 30)
 
-            Button {
-                stage = .finish
-            } label: {
-                Text("Finished!")
-                    .padding(20)
-                    .background {
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(Color.accentColor.opacity(0.7))
-                    }
+            HStack {
+                Button("Request permission") {
+                    permissionGranted = Element.confirmProcessTrustedStatus()
+                }
+                .frame(width: 150, height: 60)
+                .buttonStyle(LuminareCompactButtonStyle())
+
+                Button("Finished!") {
+                    stage = .finish
+                }
+                .frame(width: 150, height: 60)
+                .buttonStyle(LuminareCompactButtonStyle())
+                .foregroundStyle(Color.accentColor)
+                .disabled(!permissionGranted)
             }
-            .buttonStyle(.plain)
-            .disabled(!permissionGranted)
         }
         .onReceive(timer) { _ in
-            logger.info("Checking if permission granted")
             permissionGranted = Element.checkProcessTrustedStatus()
         }
         .onAppear {
