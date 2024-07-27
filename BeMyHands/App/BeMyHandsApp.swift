@@ -25,7 +25,12 @@ struct BeMyHandsApp: App {
 
     var body: some Scene {
         WindowGroup(id: "setupWindow") {
-            Text("Setting Up")
+            SetupView(setupCallback: { Task { await setup() } })
+        }
+        .windowStyle(HiddenTitleBarWindowStyle())
+
+        Settings {
+            Text("Not Done Yet")
         }
 
         MenuBarExtra {
@@ -34,16 +39,18 @@ struct BeMyHandsApp: App {
             Image(systemName: "hand.wave.fill")
                 .task {
                     accessManager.uiDelegate = overlayManager
-
-                    guard Element.confirmProcessTrustedStatus() else {
-                        logger.info("No permissions!")
-                        openWindow(id: "setupWindow")
-                        return
-                    }
-
-                    await accessManager.setup()
+                    await setup()
                 }
         }
+    }
+
+    func setup() async {
+        guard Element.checkProcessTrustedStatus() else {
+            logger.info("No permissions!")
+            return
+        }
+
+        await accessManager.setup()
     }
 
     func triggerLLM() {

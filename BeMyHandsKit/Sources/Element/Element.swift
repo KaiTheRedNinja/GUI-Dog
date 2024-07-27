@@ -152,6 +152,14 @@ public struct Element {
             [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
         )
     }
+
+    /// Checks whether this process is trusted. Use ``confirmProcessTrustedStatus()`` to prompt the user to
+    /// grant privileges.
+    /// - Returns: Whether this process has accessibility privileges.
+    @MainActor
+    public static func checkProcessTrustedStatus() -> Bool {
+        return AXIsProcessTrusted()
+    }
 }
 
 extension Element: Hashable {

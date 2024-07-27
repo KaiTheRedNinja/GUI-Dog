@@ -17,6 +17,11 @@
 		931B22DB2C3B64C5003A6436 /* Output in Frameworks */ = {isa = PBXBuildFile; productRef = 931B22DA2C3B64C5003A6436 /* Output */; };
 		933E522E2C47370F00879AE1 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 933E522D2C47370F00879AE1 /* KeyboardShortcuts */; };
 		936392402C54A0D100EFF9AB /* StatusWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9363923F2C54A0CE00EFF9AB /* StatusWindow.swift */; };
+		936392432C54C52500EFF9AB /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936392422C54C52500EFF9AB /* SetupView.swift */; };
+		936392472C54D4EB00EFF9AB /* SetupHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936392462C54D4EB00EFF9AB /* SetupHomeView.swift */; };
+		936392492C54D4F700EFF9AB /* SetupVisionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936392482C54D4F700EFF9AB /* SetupVisionView.swift */; };
+		9363924B2C54D50600EFF9AB /* SetupAccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9363924A2C54D50600EFF9AB /* SetupAccessView.swift */; };
+		9363924D2C54D50D00EFF9AB /* SetupFinishView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9363924C2C54D50D00EFF9AB /* SetupFinishView.swift */; };
 		936F3EEC2C3BE541006FC333 /* GoalsWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EEB2C3BE53B006FC333 /* GoalsWindow.swift */; };
 		936F3EEE2C3BE5E9006FC333 /* OverlayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */; };
 		936F3EF02C3BE688006FC333 /* FramesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EEF2C3BE688006FC333 /* FramesViewController.swift */; };
@@ -46,6 +51,11 @@
 		931B22D02C3B64BE003A6436 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		931B22DC2C3B76A3003A6436 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9363923F2C54A0CE00EFF9AB /* StatusWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusWindow.swift; sourceTree = "<group>"; };
+		936392422C54C52500EFF9AB /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
+		936392462C54D4EB00EFF9AB /* SetupHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupHomeView.swift; sourceTree = "<group>"; };
+		936392482C54D4F700EFF9AB /* SetupVisionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupVisionView.swift; sourceTree = "<group>"; };
+		9363924A2C54D50600EFF9AB /* SetupAccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupAccessView.swift; sourceTree = "<group>"; };
+		9363924C2C54D50D00EFF9AB /* SetupFinishView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupFinishView.swift; sourceTree = "<group>"; };
 		936F3EEB2C3BE53B006FC333 /* GoalsWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsWindow.swift; sourceTree = "<group>"; };
 		936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayManager.swift; sourceTree = "<group>"; };
 		936F3EEF2C3BE688006FC333 /* FramesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramesViewController.swift; sourceTree = "<group>"; };
@@ -138,9 +148,22 @@
 			path = App;
 			sourceTree = "<group>";
 		};
+		936392452C54C8FF00EFF9AB /* Setup */ = {
+			isa = PBXGroup;
+			children = (
+				936392422C54C52500EFF9AB /* SetupView.swift */,
+				936392462C54D4EB00EFF9AB /* SetupHomeView.swift */,
+				936392482C54D4F700EFF9AB /* SetupVisionView.swift */,
+				9363924A2C54D50600EFF9AB /* SetupAccessView.swift */,
+				9363924C2C54D50D00EFF9AB /* SetupFinishView.swift */,
+			);
+			path = Setup;
+			sourceTree = "<group>";
+		};
 		936F3EEA2C3BE535006FC333 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				936392452C54C8FF00EFF9AB /* Setup */,
 				9397F8372C4CA72E00A8BAC1 /* Status */,
 				9397F8362C4CA71E00A8BAC1 /* Frames */,
 				9397F8382C4CA73800A8BAC1 /* Goals */,
@@ -300,6 +323,10 @@
 				93D7A4502C450F7B0065186B /* Secrets.swift in Sources */,
 				931B22C32C3B6392003A6436 /* MenuExtraView.swift in Sources */,
 				9397F8352C4CA71400A8BAC1 /* GoalViewController.swift in Sources */,
+				9363924B2C54D50600EFF9AB /* SetupAccessView.swift in Sources */,
+				9363924D2C54D50D00EFF9AB /* SetupFinishView.swift in Sources */,
+				936392432C54C52500EFF9AB /* SetupView.swift in Sources */,
+				936392472C54D4EB00EFF9AB /* SetupHomeView.swift in Sources */,
 				939488622C537E8F0052FBBF /* AppOpen.swift in Sources */,
 				936F3EEC2C3BE541006FC333 /* GoalsWindow.swift in Sources */,
 				9397F8332C4CA3AC00A8BAC1 /* StatusViewController.swift in Sources */,
@@ -310,6 +337,7 @@
 				939488642C537EBD0052FBBF /* GeminiLLMProvider.swift in Sources */,
 				936F3EF02C3BE688006FC333 /* FramesViewController.swift in Sources */,
 				9397F83A2C4CA77400A8BAC1 /* GoalsView.swift in Sources */,
+				936392492C54D4F700EFF9AB /* SetupVisionView.swift in Sources */,
 				936392402C54A0D100EFF9AB /* StatusWindow.swift in Sources */,
 				93D7A4552C45140E0065186B /* AccessManager+LLM.swift in Sources */,
 				9397F8292C4BC3A600A8BAC1 /* FramesWindow.swift in Sources */,
