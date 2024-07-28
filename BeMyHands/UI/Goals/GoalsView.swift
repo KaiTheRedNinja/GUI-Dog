@@ -23,13 +23,20 @@ struct GoalsView: View {
             .overlay {
                 content
             }
+            .frame(width: size.width, height: size.height)
             .onAppear {
+                // focus text field on appear
                 textFieldFocus = true
             }
             .onDisappear {
+                // trigger empty callback on disappear
                 callback?("")
             }
-            .frame(width: size.width, height: size.height)
+            .onKeyPress(.escape) {
+                // trigger empty callback when escape pressed
+                callback?("")
+                return .handled
+            }
     }
 
     var content: some View {

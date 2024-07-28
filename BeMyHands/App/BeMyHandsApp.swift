@@ -64,6 +64,7 @@ struct BeMyHandsApp: App {
         await accessManager.setup()
 
         Input.shared.browseModeEnabled = true
+        Input.shared.swallowTapEvents = false
 
         Input.shared.bindKey(
             browseMode: true,

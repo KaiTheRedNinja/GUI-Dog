@@ -40,6 +40,12 @@ public final class Input {
         set { state.browseModeEnabled = newValue }
     }
 
+    /// Swallow mode state.
+    public var swallowTapEvents: Bool {
+        get { state.swallowTapEvents }
+        set { state.swallowTapEvents = newValue }
+    }
+
     /// Creates a new input handler.
     private init() {
         // create streams
@@ -94,10 +100,11 @@ public final class Input {
                 return nil
             }
             this.keyboardTapContinuation.yield(event)
-            guard this.state.capsLockPressed || this.state.browseModeEnabled else {
-                return Unmanaged.passUnretained(event)
+            // if caps or browse is on and tap events are to be swallowed, return nil
+            if (this.state.capsLockPressed || this.state.browseModeEnabled) && this.state.swallowTapEvents {
+                return nil
             }
-            return nil
+            return Unmanaged.passUnretained(event)
         }
 
         // Set event of interest
@@ -249,6 +256,8 @@ public final class Input {
     private final class State {
         /// Whether browse mode is enabled.
         var browseModeEnabled = false
+        /// Whether keyboard tap events are "swallowed" when caps is pressed, or browse mode is on
+        var swallowTapEvents = false
         /// Mach timestamp of the last CapsLock key press event.
         var lastCapsLockEvent = UInt64(0)
         /// Whether CapsLock is enabled.
