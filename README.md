@@ -51,21 +51,24 @@ Accessibility API capabilities:
 - [ ] Other capabilities
     - [x] Focusing apps
     - [ ] Clicking menu bar items
+    - [ ] Typing
 
 Gemini API capabilities:
 - [x] Trigger API calling (a shortcut probably)
 - [x] Obtain goal from user
-- [x] First stage
-    - [x] Obtain user instruction, focused application, window title
+- [ ] Determine if the action is too complex
+    - [ ] Prompt engineering
+    - [x] Fail graciously if the goal cannot be achieved
+- [x] Gather accessibility context
+- [x] Determine which tool to use, or if the goal is impossible/complete
     - [x] Prompt engineering
-    - [x] Parse response into list of steps
-    - [x] Fail graciously if the action is too complex
-- [x] Second stage
+    - [x] Parse response
+- [x] Use the tool
     - [x] Function calling definitions
-    - [x] Obtain interactable and contextual elements on screen
     - [x] Prompt engineering
-    - [x] Response parsing and iterative process
+    - [x] Parse response
     - [x] Fail graciously if the action cannot be completed
+- [x] Repeatedly execute actions until done
 - [x] Interrupt AI midway through
 
 App Capabilities:
