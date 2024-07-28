@@ -54,13 +54,25 @@ To work towards this goal, select one of the following tools:
 
 Respond in text with one of the following:
 - The name of ONLY ONE of the tools: \(stepCapabilityProviders.map { $0.name }), followed by a colon, and \
-what you intend to do with the tool. For example, "ActionName: Verb Noun".
+a human-readable description of what you intend to do with the tool. For example, "ActionName: Readable \
+description about what you want to use the tool for".
 - "NO TOOL" if the step requires an action that none of the tools provide.
 - "DONE" if the goal has already been satisfied. You may determine this from the context, or from the \
 list of past steps.
 
 Note that your action does not need to achieve the goal, it just needs to get closer.
+
 """
+
+            // must be >= 1 steps, because `chooseProvider` may be called with 0 steps
+            if state.steps.count >= 1 {
+                "You have already done the following previous actions. Do NOT repeat them:"
+                for action in state.steps {
+                    " - " + action.step
+                }
+            } else {
+                "No previous actions have been executed."
+            }
         }
 
         let result = try await llmProvider?.generateResponse(prompt: prompt, functions: nil)
@@ -121,14 +133,35 @@ Note that your action does not need to achieve the goal, it just needs to get cl
 
             """
             Call the function exactly ONCE. Respond with a FUNCTION CALL, NOT a code block.
+
+            If you cannot use the tool to \(providerChoice.intention), reply with "CANNOT EXECUTE".
             """
+
+            // must have more than one step, because `executeStep` will always be called with one step
+            // (the current step)
+            if state.steps.count > 1 {
+                "You have already done the following previous actions:"
+                for action in state.steps.dropLast() {
+                    " - " + action.step
+                }
+            } else {
+                "No previous actions have been executed."
+            }
         }
 
         let result = try await llmProvider?.generateResponse(prompt: prompt, functions: [
             provider.functionDeclaration
         ])
 
-        guard let result, let functionCall = result.functionCalls.first, functionCall.name == provider.name else {
+        guard let result else {
+            throw LLMCommunicationError.invalidFunctionCall
+        }
+
+        guard !(result.text?.contains("CANNOT EXECUTE") ?? false) else {
+            throw LLMCommunicationError.actionNotFound
+        }
+
+        guard let functionCall = result.functionCalls.first, functionCall.name == provider.name else {
             provider.functionFailed()
             throw LLMCommunicationError.invalidFunctionCall
         }
@@ -147,16 +180,6 @@ Note that your action does not need to achieve the goal, it just needs to get cl
 
             "Goal: \(state.goal)"
             ""
-
-            if state.steps.count > 1 {
-                "Previous actions:"
-                for action in state.steps.dropLast() {
-                    " - " + action.step
-                }
-                ""
-            } else {
-                "No actions have been executed."
-            }
         }
     }
 }

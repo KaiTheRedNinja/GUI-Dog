@@ -112,12 +112,12 @@ public class HandsBot {
     }
 
     private func phaseOne(goal: String) async -> Bool {
-        do {
-            try await determineGoalFeasibility(goal: goal)
-        } catch {
-            updateState(toError: .init(error))
-            return false
-        }
+//        do {
+//            try await determineGoalFeasibility(goal: goal)
+//        } catch {
+//            updateState(toError: .init(error))
+//            return false
+//        }
 
         return true
     }

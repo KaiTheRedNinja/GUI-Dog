@@ -11,6 +11,7 @@ extension HandsBot {
     /// Sets `state` to `.step`, starting at step zero for steps. Should only be called ONCE, and will
     /// fatal error if called multiple times on the same instance.
     internal func addStep(_ step: String) {
+        state.overallState = .working
         state.steps.append(.init(step: step))
     }
 

@@ -43,23 +43,41 @@ class GeminiLLMProvider: LLMProvider {
             )
         )
 
-        let rawResponse: GenerateContentResponse
-        do {
-            rawResponse = try await model.generateContent(prompt)
-        } catch {
-            if let error = error as? GenerateContentError {
+        var rawResponse: GenerateContentResponse?
+        var failedAttempts = 0
+        // allow up to 3 failed attempts due to internal 500 errors
+        while failedAttempts < 3 && rawResponse == nil {
+            do {
+                rawResponse = try await model.generateContent(prompt)
+            } catch {
+                guard let error = error as? GenerateContentError else {
+                    logger.error("Other error: \(error)")
+                    throw error
+                }
+
                 switch error {
+                case .internalError(let underlying):
+                    if underlying.localizedDescription.contains("500") {
+                        failedAttempts += 1
+                        logger.warning("Internal server error, retrying...")
+                        // wait for a while before retrying.
+                        // 0.4, 0.8, 1.2 seconds between each wait
+                        try await Task.sleep(for: .milliseconds(400 * (failedAttempts + 1)))
+                        continue
+                    }
                 case let .responseStoppedEarly(reason, response):
                     let errorMsg = "Response stopped early: \(reason), \(response)"
                     logger.error("\(errorMsg)")
                 default:
                     logger.error("Other google error: \(error)")
                 }
-            } else {
-                logger.error("Other error: \(error)")
-            }
 
-            throw error
+                throw error
+            }
+        }
+
+        guard let rawResponse else {
+            throw LLMCommunicationError.emptyResponse
         }
 
         let rawResponseDesc = "Raw response: \(dumpDescription(of: rawResponse))"
