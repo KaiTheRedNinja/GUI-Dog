@@ -15,6 +15,8 @@ public struct LLMState: Equatable {
     public var steps: [LLMStep]
     /// The current step. Nil if `steps` is empty
     public var currentStepIndex: Int!
+    /// Whether the LLM's execution has been cancelled or not
+    public var cancelled: Bool = false
 
     /// Creates an LLM state
     public init(goal: String = "", steps: [LLMStep] = [], currentStepIndex: Int! = nil) {

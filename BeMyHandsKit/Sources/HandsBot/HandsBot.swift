@@ -34,6 +34,16 @@ public class HandsBot {
     /// Creates a blank ``HandsBot``
     public init() {}
 
+    /// Cancels an LLM request
+    public func cancel() {
+        state = .zero
+        state.cancelled = true
+        discoveryContentProviders = []
+        stepCapabilityProviders = []
+        uiDelegate = nil
+        llmProvider = nil
+    }
+
     /// Requests actions from the Gemini API based on a request and the current `accessSnapshot`
     public func requestLLMAction(goal: String) async {
         guard state == .zero else {
@@ -60,34 +70,12 @@ public class HandsBot {
         }
 
         // update the capability providers
-        do {
-            for stepCapabilityProvider in stepCapabilityProviders {
-                try await stepCapabilityProvider.updateContext()
-            }
-        } catch {
-            logger.error("Could not update capabilities")
-            updateState(toError: .init(error))
-            return
-        }
+        if await updateCapabilityProviders() == false { return }
 
         // Phase 1: Ask for list of steps
-        let steps: [String]
-        do {
-            steps = try await getStepsFromLLM(goal: goal)
-        } catch {
-            logger.error("Could not get steps from LLM")
-            updateState(toError: .init(error))
-            return
-        }
+        if await phaseOne(goal: goal) == false { return }
 
-        guard !steps.isEmpty else {
-            logger.error("No steps given")
-            updateState(toError: .emptyResponse)
-            return
-        }
-
-        setup(withGoal: goal, steps: steps.filter { !$0.isEmpty })
-
+        // update the state
         await uiDelegate?.update(state: state)
 
         // Phase 2: Satisfy the steps one by one
@@ -102,51 +90,86 @@ public class HandsBot {
             }
             if isDone { break }
 
-            // obtain information about the current step
-            let currentStep = state.currentStep
+            // execute phase two
+            if await phaseTwo() == false { return }
 
-            let stepContext = switch currentStep.state {
-            case .working(let actionStepContext):
-                actionStepContext
-            default:
-                // TODO: fail elegantly here
-                fatalError("Internal inconsistency")
-            }
-
-            // update the capability providers
-            do {
-                for stepCapabilityProvider in stepCapabilityProviders {
-                    try await stepCapabilityProvider.updateContext()
-                }
-            } catch {
-                logger.error("Could not update capabilities")
-                updateState(toError: .init(error))
-                return
-            }
-
-            // note that this MAY result in infinite loops. The new context may still be
-            // targeting the same step, because a single step may require multiple `executeStep`
-            // calls
-            let actionStatus: StepExecutionStatus
-            do {
-                actionStatus = try await executeStep(state: state, context: stepContext)
-            } catch {
-                logger.error("Could not execute the step")
-                updateState(toError: .init(error))
-                return
-            }
-
-            // update the steps
-            switch actionStatus {
-            case .incomplete(let newContext):
-                updateState(toStep: newContext)
-            case .complete:
-                updateStateToNextStep()
-            }
+            // update the state
             await uiDelegate?.update(state: state)
         }
 
         // Done!
+    }
+
+    private func updateCapabilityProviders() async -> Bool {
+        do {
+            for stepCapabilityProvider in stepCapabilityProviders {
+                try await stepCapabilityProvider.updateContext()
+            }
+            return true
+        } catch {
+            logger.error("Could not update capabilities")
+            updateState(toError: .init(error))
+            return false
+        }
+    }
+
+    private func phaseOne(goal: String) async -> Bool {
+        let steps: [String]
+        do {
+            steps = try await getStepsFromLLM(goal: goal)
+        } catch {
+            logger.error("Could not get steps from LLM")
+            updateState(toError: .init(error))
+            return false
+        }
+
+        guard !steps.isEmpty else {
+            logger.error("No steps given")
+            updateState(toError: .emptyResponse)
+            return false
+        }
+
+        setup(withGoal: goal, steps: steps.filter { !$0.isEmpty })
+
+        return true
+    }
+
+    private func phaseTwo() async -> Bool {
+        // obtain information about the current step
+        let currentStep = state.currentStep
+
+        let stepContext = switch currentStep.state {
+        case .working(let actionStepContext):
+            actionStepContext
+        default:
+            // TODO: fail elegantly here
+            fatalError("Internal inconsistency")
+        }
+
+        // update the capability providers
+        if await updateCapabilityProviders() == false { return false }
+
+        // note that this MAY result in infinite loops. The new context may still be
+        // targeting the same step, because a single step may require multiple `executeStep`
+        // calls
+        let actionStatus: StepExecutionStatus
+        do {
+            actionStatus = try await executeStep(state: state, context: stepContext)
+        } catch {
+            logger.error("Could not execute the step")
+            updateState(toError: .init(error))
+            return false
+        }
+
+        // update the steps
+        switch actionStatus {
+        case .incomplete(let newContext):
+            updateState(toStep: newContext)
+        case .complete:
+            updateStateToNextStep()
+        }
+
+        return true
     }
 }
 

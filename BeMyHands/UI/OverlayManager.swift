@@ -80,6 +80,13 @@ class OverlayManager: LLMDisplayDelegate, AccessDisplayDelegate {
         }
     }
 
+    func abortGoalRequest() async {
+        // Goal window must be open
+        guard goalWindowController.window?.isVisible ?? false else { return }
+        // Trigger its request
+        goalController.goalsView.rootView.callback?("")
+    }
+
     func update(actionableElements: [ActionableElement]) async {
         // Obtain the size of the screen
         guard let screenSize = NSScreen.main?.frame.size else {

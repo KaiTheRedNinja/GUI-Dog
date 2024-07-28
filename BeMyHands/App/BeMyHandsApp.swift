@@ -28,6 +28,7 @@ struct BeMyHandsApp: App {
     @NSApplicationDelegateAdaptor var appDelegate: AppDelegate
 
     @State var handsBot: HandsBot?
+    @State var llmInProgress: Bool = false
     @State var accessManager: AccessManager = .init()
     @State var overlayManager: OverlayManager = .init()
 
@@ -77,10 +78,22 @@ struct BeMyHandsApp: App {
     }
 
     func triggerLLM() {
-        // create the hands bot if it doesn't exist
-        guard handsBot == nil else { return }
+        // if llm is in progress, abort it and return
+        guard llmInProgress == false else {
+            Task {
+                await overlayManager.abortGoalRequest()
+            }
+            handsBot?.cancel()
+            handsBot = nil
+            overlayManager.hide()
+
+            llmInProgress = false
+            return
+        }
 
         Task {
+            llmInProgress = true
+
             let goal = await overlayManager.requestGoal()
 
             guard let goal else {
@@ -98,6 +111,8 @@ struct BeMyHandsApp: App {
             await llmManager.requestLLMAction(goal: goal)
             // remove the manager
             self.handsBot = nil
+
+            llmInProgress = false
         }
     }
 }
