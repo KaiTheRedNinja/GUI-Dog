@@ -10,6 +10,7 @@ import Access
 import Element
 import HandsBot
 import GoogleGenerativeAI
+import Input
 import OSLog
 
 private let logger = Logger(subsystem: #fileID, category: "BeMyHands")
@@ -61,6 +62,17 @@ struct BeMyHandsApp: App {
         }
 
         await accessManager.setup()
+
+        Input.shared.browseModeEnabled = true
+
+        Input.shared.bindKey(
+            browseMode: true,
+            controlModifier: true,
+            optionModifier: true,
+            commandModifier: true,
+            key: .keyboardL,
+            action: triggerLLM
+        )
     }
 
     func triggerLLM() {

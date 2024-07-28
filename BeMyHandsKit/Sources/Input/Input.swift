@@ -35,22 +35,32 @@ public final class Input {
     public static let shared = Input()
 
     /// Browse mode state.
-    public var browseModeEnabled: Bool {get {state.browseModeEnabled} set {state.browseModeEnabled = newValue}}
+    public var browseModeEnabled: Bool {
+        get { state.browseModeEnabled }
+        set { state.browseModeEnabled = newValue }
+    }
 
     /// Creates a new input handler.
     private init() {
+        // create streams
         let (capsLockStream, capsLockContinuation) = AsyncStream<(timestamp: UInt64, isDown: Bool)>.makeStream()
         let (modifierStream, modifierContinuation) = AsyncStream<(key: InputModifierKeyCode, isDown: Bool)>.makeStream()
         let (keyboardTapStream, keyboardTapContinuation) = AsyncStream<CGEvent>.makeStream()
+
+        // assign continuations
         self.capsLockContinuation = capsLockContinuation
         self.modifierContinuation = modifierContinuation
         self.keyboardTapContinuation = keyboardTapContinuation
+
+        // create Human Interface Device manager
         hidManager = IOHIDManagerCreate(kCFAllocatorDefault, IOOptionBits(kIOHIDOptionsTypeNone))
         let matches = [
             [kIOHIDDeviceUsagePageKey: kHIDPage_GenericDesktop, kIOHIDDeviceUsageKey: kHIDUsage_GD_Keyboard],
             [kIOHIDDeviceUsagePageKey: kHIDPage_GenericDesktop, kIOHIDDeviceUsageKey: kHIDUsage_GD_Keypad]
         ]
         IOHIDManagerSetDeviceMatchingMultiple(hidManager, matches as CFArray)
+
+        // Set caps lock callback
         let capsLockCallback: IOHIDValueCallback = {(this, _, _, value) in
             let this = Unmanaged<Input>.fromOpaque(this!).takeUnretainedValue()
             let isDown = IOHIDValueGetIntegerValue(value) != 0
@@ -66,11 +76,17 @@ public final class Input {
             this.modifierContinuation.yield((key: modifierKeyCode, isDown: isDown))
         }
         IOHIDManagerRegisterInputValueCallback(hidManager, capsLockCallback, Unmanaged.passUnretained(self).toOpaque())
+
+        // Schedule run loop
         IOHIDManagerScheduleWithRunLoop(hidManager, CFRunLoopGetMain(), CFRunLoopMode.defaultMode.rawValue)
         IOHIDManagerOpen(hidManager, IOOptionBits(kIOHIDOptionsTypeNone))
+
+        // Open service
         let service = IOServiceGetMatchingService(kIOMainPortDefault, IOServiceMatching(kIOHIDSystemClass))
         IOServiceOpen(service, mach_task_self_, UInt32(kIOHIDParamConnectType), &connect)
         IOHIDGetModifierLockState(connect, Int32(kIOHIDCapsLockState), &state.capsLockEnabled)
+
+        // Set keyboard callback
         let keyboardTapCallback: CGEventTapCallBack = {(_, _, event, this) in
             let this = Unmanaged<Input>.fromOpaque(this!).takeUnretainedValue()
             guard event.type != CGEventType.tapDisabledByTimeout else {
@@ -84,10 +100,12 @@ public final class Input {
             return nil
         }
 
+        // Set event of interest
         let eventOfInterest: CGEventMask = (
             1 << CGEventType.keyDown.rawValue | 1 << CGEventType.keyUp.rawValue | 1 << CGEventType.flagsChanged.rawValue
         )
 
+        // Create tap event
         guard let eventTap = CGEvent.tapCreate(
             tap: .cghidEventTap,
             place: .tailAppendEventTap,
@@ -99,6 +117,7 @@ public final class Input {
             fatalError("Failed to create a keyboard event tap")
         }
 
+        // Assign tap events
         let eventRunLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, eventTap, 0)
         CFRunLoopAddSource(CFRunLoopGetMain(), eventRunLoopSource, CFRunLoopMode.defaultMode)
         capsLockTask = Task(operation: { [unowned self] in await handleCapsLockStream(capsLockStream) })
