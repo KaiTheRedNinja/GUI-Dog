@@ -19,16 +19,15 @@ BeMyHands relies on three components: the Accessibility API, and the Gemini API.
 The Accessibility API is based on https://github.com/Xce-PT/Vosh , while the Gemini API is Google's own
 Gemini swift SDK. The Bridge is completely original.
 
-Interactions with the Gemini API are defined in two stages:
-
-1. First stage: Discovery and planning
-    a. Receive the user request, focused application, and window title
-    b. Respond with clarification request, or list of steps
-2. Second stage: Detailed execution
-    a. Receive the current step, plus interactable and contextual elements on the screen
-    b. Use function calling to respond with a list of interactions, and if the step is complete after the actions are done
-    c. If the step is not complete, the second stage is re-run with the list of past actions, and the current elements
-    d. If the step is complete, the second stage is re-run with the next step
+Interactions with the Gemini API follow this process:
+1. Decide if the goal is feasible
+2. Gather context
+3. Decide one of the following:
+    - Which tool to use
+    - The goal is complete
+    - The goal cannot be achieved
+4. Use the tool, while indicating if the goal has been achieved or not
+4. Repeat 2-4 until the LLM indicates that the goal has been achieved
 
 ## Roadmap
 
@@ -58,7 +57,7 @@ Gemini API capabilities:
 - [x] Obtain goal from user
 - [x] First stage
     - [x] Obtain user instruction, focused application, window title
-    - [x] Prompt engineering 
+    - [x] Prompt engineering
     - [x] Parse response into list of steps
     - [x] Fail graciously if the action is too complex
 - [x] Second stage

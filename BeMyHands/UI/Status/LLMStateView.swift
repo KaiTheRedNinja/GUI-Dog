@@ -23,14 +23,14 @@ struct LLMStateView: View {
                 }
 
                 switch state.overallState {
-                case .stepsNotLoaded:
+                case .checkingFeasibility:
                     Section {
                         VStack {
                             ContentUnavailableView("Loading", systemImage: "checklist.unchecked")
                         }
                         .frame(height: size.width*3/4)
                     }
-                case .working, .complete, .error:
+                default:
                     Section("Steps") {
                         stepsSection
                     }
@@ -54,29 +54,36 @@ struct LLMStateView: View {
     }
 
     var stepsSection: some View {
-        ForEach(state.steps, id: \.step) { step in
+        ForEach(Array(state.steps.enumerated()), id: \.1.step) { (index, step) in
             HStack(spacing: 12) {
                 Group {
-                    switch step.state {
-                    case .notReached:
-                        Image(systemName: "circle")
-                            .resizable()
-                            .scaledToFit()
-                            .foregroundStyle(.gray)
-                    case .working:
-                        ProgressView()
-                            .progressViewStyle(.circular)
-                            .scaleEffect(.init(0.8)) // make it look the same size as the images
-                    case .complete:
+                    if index+1 == state.steps.count { // current step
+                        switch state.overallState {
+                        case .working: // current step in progress
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                                .scaleEffect(.init(0.8)) // make it look the same size as the images
+                        case .complete: // current step complete
+                            Image(systemName: "checkmark.circle")
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundStyle(.green)
+                        case .cancelled, .error: // issue with current step
+                            Image(systemName: "exclamationmark.triangle")
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundStyle(.red)
+                        default: // this should never occur
+                            Image(systemName: "circle")
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundStyle(.gray)
+                        }
+                    } else {
                         Image(systemName: "checkmark.circle")
                             .resizable()
                             .scaledToFit()
                             .foregroundStyle(.green)
-                    case .error:
-                        Image(systemName: "exclamationmark.triangle")
-                            .resizable()
-                            .scaledToFit()
-                            .foregroundStyle(.red)
                     }
                 }
                 .frame(width: 25, height: 25)
@@ -100,14 +107,9 @@ private struct ViewPreview: View {
                     goal: "Working Goal",
                     steps: (0..<5).map {
                         .init(
-                            step: "Step \($0)",
-                            state: (
-                                $0 < 2 ? .complete :
-                                    $0 > 2 ? .notReached : .working(.init())
-                            )
+                            step: "Step \($0)"
                         )
-                    },
-                    currentStepIndex: 2
+                    }
                 ),
                 size: .init(width: 373, height: 373),
                 isShown: shown

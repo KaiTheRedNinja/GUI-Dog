@@ -141,24 +141,18 @@ class OverlayManager: LLMDisplayDelegate, AccessDisplayDelegate {
     private func announceStateChange(_ state: LLMState) {
         // if state is an error, announce it
         switch state.overallState {
-        case .stepsNotLoaded:
+        case .checkingFeasibility:
             Output.shared.announce("Starting goal: \(state.goal)")
         case .complete:
             Output.shared.announce("Goal complete")
+        case .cancelled:
+            Output.shared.announce("BeMyHands was cancelled")
         case .error(let lLMCommunicationError):
             Output.shared.announce("BeMyHands encountered an error: \(lLMCommunicationError.description)")
         default:
-            // figure out which step we're on
-            // the step we're on will be the first step that is not "not reached"
-            if let step = state.steps.first(where: {
-                // the state is not .notReached or .complete
-                ![LLMStepState.notReached, .complete].contains($0.state)
-            }) {
-                // step.step has a prefix of the number, so we don't need to duplicate it
-                Output.shared.announce("Step \(step.step)")
+            if let step = state.steps.last {
+                Output.shared.announce("Current action: \(step)")
             }
-            // if none of the steps are "not reached", that means that we're supposed to be complete
-            // but for some reason we aren't. Don't say anything.
         }
     }
 }

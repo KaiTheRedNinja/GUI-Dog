@@ -11,39 +11,14 @@ import OSLog
 private let logger = Logger(subsystem: #fileID, category: "HandsBot")
 
 extension HandsBot {
-    func executeStep(state: LLMState, context: ActionStepContext) async throws -> StepExecutionStatus {
-        guard !stepCapabilityProviders.isEmpty else {
-            fatalError("No step capability providers!")
-        }
-
-        // Allow the LLM to pick which provider to use
-        let (provider, relevantContext) = try await chooseProvider(
-            state: state,
-            context: context
-        )
-
-        // Execute the step
-        try await executeStep(
-            withProvider: provider,
-            state: state,
-            context: context,
-            relevantContext: relevantContext
-        )
-
-        // If the AI says that the step has not been completed, then recurse
-        // TODO: get recursing working again. I currently assume every action completes its step.
-        return .complete
-    }
-
     /// Chooses a provider
     /// - Parameters:
     ///   - state: The LLM state
     ///   - context: The LLM context
     /// - Returns: The provider and its context, to be reused if it exists
-    private func chooseProvider(
-        state: LLMState,
-        context: ActionStepContext
-    ) async throws -> (any StepCapabilityProvider, String?) {
+    func chooseProvider(
+        state: LLMState
+    ) async throws -> ProviderChoice {
         // Gather context
         var contexts: [String] = []
         var contextMap: [String: String] = [:]
@@ -58,7 +33,7 @@ extension HandsBot {
 
         // Prepare the prompt
         let prompt = String.build {
-            stepStateDescription(state: state, context: context)
+            stepStateDescription(state: state)
 
             for itemContext in contexts {
                 itemContext
@@ -67,7 +42,7 @@ extension HandsBot {
 
             """
 
-To achieve this goal, select one of the following tools:
+To work towards this goal, select one of the following tools:
 """
 
             for stepCapabilityProvider in self.stepCapabilityProviders {
@@ -77,8 +52,14 @@ To achieve this goal, select one of the following tools:
 
             """
 
-Respond in text with the names of THE NAME OF ONLY ONE of the tools: \(stepCapabilityProviders.map { $0.name }), or \
-"NO TOOL" if the step requires an action that none of the tools provide.
+Respond in text with one of the following:
+- The name of ONLY ONE of the tools: \(stepCapabilityProviders.map { $0.name }), followed by a colon, and \
+what you intend to do with the tool. For example, "ActionName: Verb Noun".
+- "NO TOOL" if the step requires an action that none of the tools provide.
+- "DONE" if the goal has already been satisfied. You may determine this from the context, or from the \
+list of past steps.
+
+Note that your action does not need to achieve the goal, it just needs to get closer.
 """
         }
 
@@ -89,33 +70,51 @@ Respond in text with the names of THE NAME OF ONLY ONE of the tools: \(stepCapab
         }
 
         guard !text.contains("NO TOOL") else {
-            throw LLMCommunicationError.insufficientInformation
+            throw LLMCommunicationError.goalImpossible(reason: "No Tool")
         }
 
-        // TODO: use UUIDs instead of their names
-        guard let provider = stepCapabilityProviders.first(where: { text.contains($0.name) }) else {
+        guard !text.contains("DONE") else {
+            return .init(providerName: "DONE", intention: "")
+        }
+
+        let components = text.components(separatedBy: ":")
+        guard components.count >= 2 else {
+            throw LLMCommunicationError.emptyResponse
+        }
+
+        let provider = components.first!.trimmingCharacters(in: .whitespacesAndNewlines)
+        let reason = components.dropFirst().joined(separator: ":").trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard let provider = stepCapabilityProviders.first(where: { provider.contains($0.name) }) else {
             throw LLMCommunicationError.invalidFunctionCall
         }
 
-        return (provider, contextMap[provider.name])
+        return .init(
+            providerName: provider.name,
+            intention: reason,
+            context: contextMap[provider.name]
+        )
     }
 
-    private func executeStep(
-        withProvider provider: any StepCapabilityProvider,
+    func executeStep(
         state: LLMState,
-        context: ActionStepContext,
-        relevantContext: String?
+        providerChoice: ProviderChoice
     ) async throws {
+        guard let provider = stepCapabilityProviders.first(where: { $0.name == providerChoice.providerName }) else {
+            throw LLMCommunicationError.invalidFunctionCall
+        }
+
         // Prepare the prompt
         let prompt = String.build {
-            stepStateDescription(state: state, context: context)
+            stepStateDescription(state: state)
 
-            if let relevantContext {
+            if let relevantContext = providerChoice.context {
                 relevantContext
             }
 
             """
-            To achieve this goal, follow these instructions and call the \(provider.name) tool function:
+            To achieve this goal, follow these instructions and call the \(provider.name) tool function \
+            to \(providerChoice.intention)
             """
 
             provider.instructions
@@ -137,37 +136,33 @@ Respond in text with the names of THE NAME OF ONLY ONE of the tools: \(stepCapab
         try await provider.execute(function: functionCall)
     }
 
-    private func stepStateDescription(state: LLMState, context: ActionStepContext) -> String {
+    private func stepStateDescription(state: LLMState) -> String {
         String.build {
             """
             You are my hands. I want to \(state.goal). You will be given the following:
             - a goal
-            - the step that I want you to execute
-            - actions to achieve said step that have already been executed, if any
+            - actions to achieve that goal that have already been executed, if any
 
             """
 
             "Goal: \(state.goal)"
             ""
 
-            "Current step: " + state.currentStep.step
-            ""
-
-            if let actions = context.pastActions, !actions.isEmpty {
-                "Actions taken to achieve the step:"
-                for action in actions {
-                    " - " + action
+            if state.steps.count > 1 {
+                "Previous actions:"
+                for action in state.steps.dropLast() {
+                    " - " + action.step
                 }
                 ""
+            } else {
+                "No actions have been executed."
             }
         }
     }
 }
 
-/// Represents the execution result of a step
-enum StepExecutionStatus {
-    /// The step is not complete, with a status
-    case incomplete(ActionStepContext)
-    /// The step has completed
-    case complete
+struct ProviderChoice {
+    var providerName: String
+    var intention: String
+    var context: String?
 }
