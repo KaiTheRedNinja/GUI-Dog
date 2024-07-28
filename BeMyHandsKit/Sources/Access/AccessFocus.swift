@@ -3,11 +3,11 @@ import Output
 
 /// User focus state.
 @AccessActor
-struct AccessFocus {
+public struct AccessFocus {
     /// Focused entity.
     let entity: AccessEntity
     /// Reader for the focused entity.
-    let reader: AccessReader
+    public let reader: AccessReader
 
     /// Creates a new focus on the specified element.
     /// - Parameter element: Element to focus.

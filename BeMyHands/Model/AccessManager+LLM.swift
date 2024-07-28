@@ -63,7 +63,12 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
     @_implements(DiscoveryContextProvider, getContext())
     func getDiscoveryContext() async throws -> String? {
         let appName = accessSnapshot?.focusedAppName
-        let focusedDescription = try? await accessSnapshot?.focus?.getComprehensiveDescription()
+        let focusedDescription = try? await accessSnapshot?.focus?.reader.read()
+            .compactMap { semantic in
+                let desc = semantic.description
+                return desc.isEmpty ? nil : desc
+            }
+            .joined(separator: ", ")
 
         return String.build {
             if let appName, !appName.isEmpty {
@@ -163,9 +168,16 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
         for element in screenElements {
             // get info about the element, verify it exists
             let role = try await element.element.getAttribute(ElementAttribute.roleDescription) as? String
-            let description = try await element.element.getDescription()
+            guard let role else { continue }
+
+            let description = try await AccessReader(for: element.element).read()
+                .compactMap { semantic in
+                    let desc = semantic.description
+                    return desc.isEmpty ? nil : desc
+                }
+                .joined(separator: ", ")
+
             let actions = element.actions
-            guard let role, let description else { continue }
 
             // store it and the ID
             let uuid = UUID()

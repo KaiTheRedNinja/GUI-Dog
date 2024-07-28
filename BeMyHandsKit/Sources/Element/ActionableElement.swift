@@ -22,9 +22,6 @@ public struct ActionableElement {
     /// immediate parent, and the last item is the Application element.
     public var ancestorDescriptions: [String]
 
-    /// The attributes of the element
-    public var attributes: [String: String]
-
     /// If this element was determined to be a menu bar item
     public var isMenuBarItem: Bool
 
@@ -33,34 +30,19 @@ public struct ActionableElement {
         element: Element,
         actions: [String],
         frame: NSRect?,
-        attributes: [String: String],
         ancestorDescriptions: [String]
     ) {
         self.element = element
         self.actions = actions
         self.frame = frame
-        self.attributes = attributes
         self.ancestorDescriptions = ancestorDescriptions
 
-        self.isMenuBarItem = [
+        self.isMenuBarItem = (try? element.roleMatches(oneOf: [
             ElementRole.menu,
             .menuBar,
             .menuItem,
             .menuButton,
             .menuBarItem
-        ]
-        .map { $0.rawValue }
-        .contains(attributes["AXRole"])
-    }
-
-    /// A description of this actionable element
-    public var description: String {
-        """
-        ActionableElement {
-            actions: [\(actions.joined(separator: ", "))],
-            frame: \(frame?.debugDescription ?? "nil"),
-            attributes: \(attributes)
-        }
-        """
+        ])) ?? false
     }
 }

@@ -97,31 +97,11 @@ Unexpected error performing accessibility element action \(action): \(error.loca
         guard !actions.isEmpty else { return nil }
 
         // if it is valid actionable, add it and its description
-        let attributes = try listAttributes()
-        var attributeValues = [String: Any]()
-        for attribute in attributes {
-            guard let value = try getAttribute(attribute) else {
-                continue
-            }
-            attributeValues[attribute] = encode(value: value)
-        }
-
-        // if this item has a titleElement attribute, get the title from it
-        if let title = try getTitleElementTitle() {
-            attributeValues[ElementAttribute.title.rawValue] = title
-        }
-
-        // convert the attributes to string representations
-        // NOTE: we may want to consider adding other primatives for flexibility
-        var stringAttributes: [String: String] = [:]
-
-        for (key, value) in attributeValues {
-            stringAttributes[key] = value as? String
-        }
+        let frameAttribute = try getAttribute(.frame)
 
         // obtain the frame of the actionable element
         let frame: NSRect?
-        if let rawFrame = attributeValues["AXFrame"] as? [String: CGFloat],
+        if let rawFrame = frameAttribute as? [String: CGFloat],
            let x = rawFrame["x"],
            let y = rawFrame["y"],
            let height = rawFrame["height"],
@@ -136,7 +116,6 @@ Unexpected error performing accessibility element action \(action): \(error.loca
             element: self,
             actions: actions,
             frame: frame,
-            attributes: stringAttributes,
             ancestorDescriptions: []
         )
     }
@@ -153,7 +132,9 @@ Unexpected error performing accessibility element action \(action): \(error.loca
                 elements.append(selfAction)
             }
 
-            let description = try self.getComprehensiveDescription()
+            // TODO: fix description, make it dependent on AccessReader
+            let description = ""
+//            let description = try self.getComprehensiveDescription()
 
             // get the children's actionable items
             guard let children = try getAttribute("AXChildren") as? [Any?] else {

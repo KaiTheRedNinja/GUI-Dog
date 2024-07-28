@@ -33,79 +33,11 @@ public extension Element {
         return processIdentifier
     }
 
-    /// Returns the title of the `titleElement`, if it exists
-    func getTitleElementTitle() throws -> String? {
-        // if this item has a titleElement attribute, get the title from it
-        if let titleElement = try getAttribute(.titleElement) as? Element,
-           let title = try titleElement.getAttribute(.value) as? String {
-            return title
-        }
-
-        return nil
-    }
-
-    /// Returns the role of the element
-    func getRole() throws -> ElementRole? {
-        try self.getAttribute(.roleDescription) as? ElementRole
-    }
-
-    /// Returns the description of the element
-    func getDescription() throws -> String? {
-        var descriptions = try [
-            ElementAttribute.help,
-            .title,
-            .description,
-            .value,
-            .minValue,
-            .maxValue,
-            .valueIncrement,
-            .allowedValues,
-            .menuItemCmdChar,
-            .valueDescription
-        ].compactMap { item in
-            try self.getAttribute(item) as? String
-        }
-
-        // if this item has a titleElement attribute, get the title from it
-        if let title = try getTitleElementTitle() {
-            descriptions.append(title)
-        }
-
-        let descriptionString: String?
-
-        if descriptions.contains(where: { $0 != "" }) {
-            descriptionString = descriptions.joined(separator: " ")
-        } else {
-            descriptionString = nil
-        }
-
-        return descriptionString
-    }
-
     /// Returns the descriptions of the actions that this element supports
     func getActionDescriptions() throws -> [String] {
         let actions = try self.listActions()
         return try actions.compactMap {
             try self.describeAction($0)
         }
-    }
-
-    /// Obtains a comprehensive description of this element. It groups them into three categories:
-    /// - The role and subrole of the item
-    /// - The descriptions, identifier, or value of the item
-    /// - The available actions, if any
-    func getComprehensiveDescription() throws -> String {
-        let roleString = try getRole()?.rawValue
-        let descriptionString = try getDescription()
-        let actionsString = try self.getActionDescriptions().joined(separator: " ")
-
-        let descriptionItems = [
-            roleString,
-            descriptionString,
-            actionsString.isEmpty ? nil : actionsString
-        ]
-        .compactMap { $0 }
-
-        return descriptionItems.joined(separator: ", ")
     }
 }

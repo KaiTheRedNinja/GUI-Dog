@@ -67,8 +67,6 @@ public final class Access {
     @MainActor
     public func actionableElements() async throws -> [ActionableElement]? {
         guard let application = await application else {
-            let content = [OutputSemantic.noFocus]
-            Output.shared.convey(content)
             return nil
         }
         return try await application.getActionableElements()
@@ -85,52 +83,14 @@ public final class Access {
             return nil
         }
 
-        // Only show the following data, if they exist:
-        let items = [
-            kAXRoleAttribute,
-            kAXSubroleAttribute,
-            kAXHelpAttribute,
-            kAXTitleAttribute,
-            kAXRoleDescriptionAttribute,
-            kAXIdentifierAttribute,
-            kAXDescriptionAttribute,
-            kAXValueAttribute,
-            kAXMinValueAttribute,
-            kAXMaxValueAttribute,
-            kAXValueIncrementAttribute,
-            kAXAllowedValuesAttribute,
-            kAXMenuItemCmdCharAttribute,
-            "AXAttributedDescription",
-            "AXFrame"
-        ]
-
-        // Reduce the number of attributes they have, for pretty printing
-        let concise = elements.compactMap { element in
-            var attributes: [String: String] = [:]
-
-            for item in items {
-                attributes[item] = element.attributes[item]
-            }
-
-            let conciseAncestors = element.ancestorDescriptions.filter { $0.contains(", ") }
-
-            return ActionableElement(
-                element: element.element,
-                actions: element.actions,
-                frame: element.frame,
-                attributes: attributes,
-                ancestorDescriptions: conciseAncestors
-            )
-        }
-
         // Get the app name and focused element
         let appName = try await application?.getAttribute(.title) as? String
-        let focusElement = await focus?.entity.element
+        let focusElement = await focus
 
         return AccessSnapshot(
             focusedAppName: appName,
             focus: focusElement,
-            actionableItems: concise
+            actionableItems: elements
         )
     }
 
@@ -141,7 +101,7 @@ public final class Access {
             switch event.notification {
             case .applicationDidAnnounce:
                 if let announcement = event.payload?[.announcement] as? String {
-                    await Output.shared.announce(announcement)
+                    logger.info("Application announced: \(announcement)")
                 }
             case .elementDidAppear:
                 guard focus == nil else {
@@ -172,7 +132,7 @@ public final class Access {
                     break
                 }
                 self.focus = newFocus
-                await readFocus()
+//                await readFocus()
             default:
                 fatalError("Received an unexpected event notification \(event.notification)")
             }

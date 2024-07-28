@@ -17,13 +17,13 @@ public struct AccessSnapshot {
     public var focusedAppName: String?
 
     /// The currently focused element
-    public var focus: Element?
+    public var focus: AccessFocus?
 
     /// The actionable items visible on screen
     public var actionableItems: [ActionableElement]
 
     /// Creates an AccessSnapshot from its base attributes
-    public init(focusedAppName: String?, focus: Element? = nil, actionableItems: [ActionableElement]) {
+    public init(focusedAppName: String?, focus: AccessFocus? = nil, actionableItems: [ActionableElement]) {
         self.focusedAppName = focusedAppName
         self.focus = focus
         self.actionableItems = actionableItems

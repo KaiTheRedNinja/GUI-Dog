@@ -18,8 +18,6 @@ public extension Access {
     @MainActor
     func focusedWindow() async throws -> Element? {
         guard let application = await application else {
-            let content = [OutputSemantic.noFocus]
-            Output.shared.convey(content)
             return nil
         }
         let focusedWindow = try await application.getAttribute(.focusedWindow)
@@ -29,6 +27,7 @@ public extension Access {
         return nil
     }
 
+    /*
     /// Reads the accessibility contents of the element with user focus.
     func readFocus() async {
         do {
@@ -120,6 +119,7 @@ public extension Access {
             await handleError(error)
         }
     }
+    */
 
     /// Resets the user focus to the system keyboard focusor the first interesting child of the
     /// focused window.
@@ -130,8 +130,6 @@ public extension Access {
                 self.processIdentifier = 0
                 observer = nil
                 focus = nil
-                let content = [OutputSemantic.noFocus]
-                await Output.shared.convey(content)
                 return
             }
 
