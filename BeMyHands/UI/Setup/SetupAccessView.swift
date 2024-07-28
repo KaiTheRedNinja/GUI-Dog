@@ -57,14 +57,15 @@ BeMyHands uses macOS's Accessibility API to interact with items on your screen.
                 }
                 .frame(width: 150, height: 60)
                 .buttonStyle(LuminareCompactButtonStyle())
-                .foregroundStyle(!permissionGranted ? Color.accentColor : .clear)
+                .foregroundStyle(!permissionGranted ? Color.accentColor : .gray)
+                .disabled(permissionGranted)
 
-                Button("Finished!") {
+                Button("Finish") {
                     stage = .finish
                 }
                 .frame(width: 150, height: 60)
                 .buttonStyle(LuminareCompactButtonStyle())
-                .foregroundStyle(permissionGranted ? Color.accentColor : .clear)
+                .foregroundStyle(permissionGranted ? Color.accentColor : .gray)
                 .disabled(!permissionGranted)
             }
         }

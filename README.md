@@ -74,7 +74,7 @@ App Capabilities:
 - [x] Clean up steps UI
 - [x] Add animations (for sighted people's sake. Make sure it stays accessibility friendly.)
 - [ ] Onboarding
-    - [ ] Obtain accessibility permissions easily
+    - [x] Obtain accessibility permissions easily
     - [ ] Customise trigger shortcut
 
 ## Secrets

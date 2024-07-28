@@ -23,6 +23,9 @@ struct SetupHomeView: View {
                 .font(.title)
                 .bold()
 
+            Spacer()
+                .frame(height: 20)
+
             Button("Lets Go!") {
                 stage = .blindOrNot
             }

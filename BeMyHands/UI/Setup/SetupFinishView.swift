@@ -100,6 +100,9 @@ BeMyHands will not be able to satisfy actions that are too complex, or require o
             }
             .font(.title2)
             .bold()
+            .accessibilityRepresentation {
+                Text(title)
+            }
 
             Text(subtitle)
                 .font(.caption)
@@ -116,8 +119,11 @@ BeMyHands will not be able to satisfy actions that are too complex, or require o
                                 Spacer()
                             }
                         }
+                        .accessibilityElement(children: .combine)
                         Spacer()
                     }
+                    .accessibilityElement(children: .contain)
+                    .accessibilityLabel(Text("Examples of \(title)"))
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .safeAreaPadding(.vertical, 10)
@@ -125,6 +131,7 @@ BeMyHands will not be able to satisfy actions that are too complex, or require o
             }
             .multilineTextAlignment(.leading)
         }
+        .accessibilityElement(children: .contain)
     }
 }
 
