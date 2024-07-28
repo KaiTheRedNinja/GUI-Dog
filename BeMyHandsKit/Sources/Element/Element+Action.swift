@@ -100,16 +100,7 @@ Unexpected error performing accessibility element action \(action): \(error.loca
         let frameAttribute = try getAttribute(.frame)
 
         // obtain the frame of the actionable element
-        let frame: NSRect?
-        if let rawFrame = frameAttribute as? [String: CGFloat],
-           let x = rawFrame["x"],
-           let y = rawFrame["y"],
-           let height = rawFrame["height"],
-           let width = rawFrame["width"] {
-            frame = NSRect(x: x, y: y, width: width, height: height)
-        } else {
-            frame = nil
-        }
+        let frame = frameAttribute as? NSRect
 
         // create the element
         return .init(
