@@ -60,7 +60,7 @@ struct SetupView: View {
                 dismissWindow()
             }
         }
-        .frame(minWidth: 720, minHeight: 500)
+        .frame(minWidth: 720, minHeight: 560)
         .animation(.default, value: stage)
     }
 }

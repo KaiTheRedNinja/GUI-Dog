@@ -28,7 +28,7 @@ Selecting "impaired" or "blind" will activate audio cues.
 """
             )
             .frame(width: 300)
-            .font(.caption)
+            .font(.subheadline)
 
             Spacer()
                 .frame(height: 30)
@@ -54,6 +54,7 @@ Selecting "impaired" or "blind" will activate audio cues.
             }
             .frame(width: 150, height: 60)
             .buttonStyle(LuminareCompactButtonStyle())
+            .foregroundStyle(Color.accentColor)
         }
         .multilineTextAlignment(.center)
     }

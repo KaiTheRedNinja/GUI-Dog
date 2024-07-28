@@ -28,6 +28,7 @@ struct SetupHomeView: View {
             }
             .frame(width: 150, height: 60)
             .buttonStyle(LuminareCompactButtonStyle())
+            .foregroundStyle(Color.accentColor)
         }
     }
 }

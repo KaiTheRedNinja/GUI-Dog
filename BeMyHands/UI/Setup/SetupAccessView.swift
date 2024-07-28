@@ -34,7 +34,7 @@ BeMyHands uses macOS's Accessibility API to interact with items on your screen.
 """
             )
             .frame(width: 300)
-            .font(.caption)
+            .font(.subheadline)
             .multilineTextAlignment(.center)
 
             Spacer()
@@ -57,13 +57,14 @@ BeMyHands uses macOS's Accessibility API to interact with items on your screen.
                 }
                 .frame(width: 150, height: 60)
                 .buttonStyle(LuminareCompactButtonStyle())
+                .foregroundStyle(!permissionGranted ? Color.accentColor : .clear)
 
                 Button("Finished!") {
                     stage = .finish
                 }
                 .frame(width: 150, height: 60)
                 .buttonStyle(LuminareCompactButtonStyle())
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(permissionGranted ? Color.accentColor : .clear)
                 .disabled(!permissionGranted)
             }
         }
