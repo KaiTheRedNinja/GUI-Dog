@@ -83,6 +83,7 @@ struct BeMyHandsApp: App {
             Task {
                 await overlayManager.abortGoalRequest()
             }
+
             handsBot?.cancel()
             handsBot = nil
             overlayManager.hide()

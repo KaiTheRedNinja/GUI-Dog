@@ -26,7 +26,7 @@ public class HandsBot {
     public weak var uiDelegate: LLMDisplayDelegate?
 
     /// The LLM provider, which provides access to the chatbot
-    public weak var llmProvider: LLMProvider!
+    public weak var llmProvider: LLMProvider?
 
     /// The current state
     var state: LLMState = .zero
@@ -34,7 +34,11 @@ public class HandsBot {
     /// Creates a blank ``HandsBot``
     public init() {}
 
-    /// Cancels an LLM request
+    /// Cancels an LLM request. Note that HandsBot _may_ continue to execute ``requestLLMAction(goal:)`` due to
+    /// how memory retention works.
+    ///
+    /// This function simply cuts off its access to its providers and delegates, so when it tries to reach for one of them it will
+    /// be denied, causing an error to be thrown. This error is then swallowed, as the ``uiDelegate`` is no longer available.
     public func cancel() {
         state = .zero
         state.cancelled = true

@@ -64,9 +64,9 @@ If not, respond with the list of steps.
 
         logger.info("Prompt: \(prompt)")
 
-        let response = try await llmProvider.generateResponse(prompt: prompt, functions: nil)
+        let response = try await llmProvider?.generateResponse(prompt: prompt, functions: nil)
 
-        if let text = response.text {
+        if let response, let text = response.text {
             logger.info("Response text: \(text)")
             if text.lowercased().contains("insufficient information") {
                 throw LLMCommunicationError.insufficientInformation

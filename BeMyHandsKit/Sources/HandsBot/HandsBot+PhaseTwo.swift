@@ -84,10 +84,9 @@ Respond in text with the names of THE NAME OF ONLY ONE of the tools: \(stepCapab
 
         logger.info("Choose prompt: \(prompt)")
 
-        let result: LLMResponse
-        result = try await llmProvider.generateResponse(prompt: prompt, functions: nil)
+        let result = try await llmProvider?.generateResponse(prompt: prompt, functions: nil)
 
-        guard let text = result.text else {
+        guard let result, let text = result.text else {
             throw LLMCommunicationError.emptyResponse
         }
 
@@ -132,13 +131,13 @@ Respond in text with the names of THE NAME OF ONLY ONE of the tools: \(stepCapab
 
         logger.info("Result prompt: \(prompt)")
 
-        let result = try await llmProvider.generateResponse(prompt: prompt, functions: [
+        let result = try await llmProvider?.generateResponse(prompt: prompt, functions: [
             provider.functionDeclaration
         ])
 
         logger.info("Response: \(String(describing: result))")
 
-        guard let functionCall = result.functionCalls.first, functionCall.name == provider.name else {
+        guard let result, let functionCall = result.functionCalls.first, functionCall.name == provider.name else {
             provider.functionFailed()
             throw LLMCommunicationError.invalidFunctionCall
         }
