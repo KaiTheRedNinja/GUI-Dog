@@ -14,8 +14,18 @@ import OSLog
 
 private let logger = Logger(subsystem: #fileID, category: "BeMyHands")
 
+class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationWillTerminate(_ notification: Notification) {
+        // save preferences
+        PreferencesManager.global.save()
+        logger.info("Saved preferences")
+    }
+}
+
 @main
 struct BeMyHandsApp: App {
+    @NSApplicationDelegateAdaptor var appDelegate: AppDelegate
+
     @State var handsBot: HandsBot?
     @State var accessManager: AccessManager = .init()
     @State var overlayManager: OverlayManager = .init()

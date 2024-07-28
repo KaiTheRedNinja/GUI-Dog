@@ -72,11 +72,6 @@ enum SetupStage {
     case finish
 }
 
-enum UserVisionStatus {
-    case sighted
-    case blind
-}
-
 #Preview {
     SetupView(setupCallback: {})
 }

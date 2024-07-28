@@ -11,41 +11,7 @@ import Luminare
 struct SetupVisionView: View {
     @Binding var stage: SetupStage
 
-    @State var userVisionStatus: UserVisionStatus = .sighted
-
-    enum UserVisionStatus: CaseIterable {
-        case sighted
-        case mildlyImpaired
-        case impaired
-        case blind
-
-        var description: String {
-            switch self {
-            case .sighted: "Sighted"
-            case .mildlyImpaired: "Mildly Impaired"
-            case .impaired: "Impaired"
-            case .blind: "Blind"
-            }
-        }
-
-        var icon: String {
-            switch self {
-            case .sighted: "eye"
-            case .mildlyImpaired: "eyeglasses"
-            case .impaired: "eye.trianglebadge.exclamationmark"
-            case .blind: "eye.slash"
-            }
-        }
-
-        var color: Color {
-            switch self {
-            case .sighted: .blue
-            case .mildlyImpaired: .green
-            case .impaired: .orange
-            case .blind: .indigo
-            }
-        }
-    }
+    @State var userVisionStatus: UserVisionStatus = PreferencesManager.global.userVisionStatus ?? .sighted
 
     var body: some View {
         VStack(spacing: 10) {
@@ -57,6 +23,8 @@ struct SetupVisionView: View {
 """
 BeMyHands is built for the visually impaired, to automate simple actions \
 that are tedious to do with accessibility tech
+
+Selecting "impaired" or "blind" will activate audio cues.
 """
             )
             .frame(width: 300)
@@ -82,15 +50,41 @@ that are tedious to do with accessibility tech
                 .frame(height: 30)
 
             Button("Confirm") {
-                stage = .setupAccessManager
+                confirm()
             }
             .frame(width: 150, height: 60)
             .buttonStyle(LuminareCompactButtonStyle())
         }
         .multilineTextAlignment(.center)
     }
+
+    func confirm() {
+        stage = .setupAccessManager
+        PreferencesManager.global.userVisionStatus = userVisionStatus
+        PreferencesManager.global.save()
+    }
 }
 
 #Preview {
     SetupVisionView(stage: .constant(.blindOrNot))
+}
+
+extension UserVisionStatus {
+    var icon: String {
+        switch self {
+        case .sighted: "eye"
+        case .mildlyImpaired: "eyeglasses"
+        case .impaired: "eye.trianglebadge.exclamationmark"
+        case .blind: "eye.slash"
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .sighted: .blue
+        case .mildlyImpaired: .green
+        case .impaired: .orange
+        case .blind: .indigo
+        }
+    }
 }
