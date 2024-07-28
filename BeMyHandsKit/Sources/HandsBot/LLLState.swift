@@ -52,7 +52,7 @@ public struct LLMState: Equatable {
     }
 
     /// The default LLM state
-    public static let zero = LLMState()
+    public static var zero: LLMState { LLMState() }
 }
 
 /// A single step

@@ -35,6 +35,9 @@ let package = Package(
             dependencies: [
                 .byName(name: "Access"),
                 .byName(name: "Element")
+            ],
+            swiftSettings: [
+                .swiftLanguageVersion(.v5)
             ]
         ),
 
@@ -45,13 +48,31 @@ let package = Package(
                 .byName(name: "Input"),
                 .byName(name: "Output"),
                 .byName(name: "Element")
+            ],
+            swiftSettings: [
+                .swiftLanguageVersion(.v5)
             ]
         ),
         .target(
             name: "Input",
-            dependencies: [.byName(name: "Output")]
+            dependencies: [
+                .byName(name: "Output")
+            ],
+            swiftSettings: [
+                .swiftLanguageVersion(.v5)
+            ]
         ),
-        .target(name: "Output"),
-        .target(name: "Element")
+        .target(
+            name: "Output",
+            swiftSettings: [
+                .swiftLanguageVersion(.v5)
+            ]
+        ),
+        .target(
+            name: "Element",
+            swiftSettings: [
+                .swiftLanguageVersion(.v5)
+            ]
+        )
     ]
 )
