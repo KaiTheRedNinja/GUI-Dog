@@ -16,8 +16,8 @@ extension HandsBot {
         var context: [String] = []
 
         for discoveryContentProvider in self.discoveryContentProviders {
-            try await discoveryContentProvider.updateContext()
-            let itemContext = try await discoveryContentProvider.getContext()
+            try await discoveryContentProvider.updateDiscoveryContext()
+            let itemContext = try await discoveryContentProvider.getDiscoveryContext()
             if let itemContext {
                 context.append(itemContext)
             }

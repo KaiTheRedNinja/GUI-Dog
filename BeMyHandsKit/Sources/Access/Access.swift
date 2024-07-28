@@ -74,11 +74,11 @@ public final class Access {
 
     /// Returns a snapshot of the current accessibility state
     @MainActor
-    public func takeAccessSnapshot() async throws -> AccessSnapshot? {
+    public func takeAccessSnapshot(includeElements: Bool = false) async throws -> AccessSnapshot? {
         // TODO: consider using AccessGenericReader to get extra context for elements
 
         // Get actionable elements
-        guard let elements = try await actionableElements() else {
+        guard let elements = includeElements ? try await actionableElements() : [] else {
             logger.warning("No elements found")
             return nil
         }

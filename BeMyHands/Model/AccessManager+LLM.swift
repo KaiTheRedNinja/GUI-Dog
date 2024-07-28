@@ -53,14 +53,17 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
         )
     }
 
-    func updateContext() async throws {
-        logger.info("Updating context!")
-        try await takeAccessSnapshot()
-        await uiDelegate?.update(actionableElements: accessSnapshot?.actionableItems ?? [])
-        logger.info("Context updated!")
+    func updateDiscoveryContext() async throws {
+        // don't include elements, just to be faster
+        try await takeAccessSnapshot(includeElements: false)
+        await uiDelegate?.update(actionableElements: [])
     }
 
-    @_implements(DiscoveryContextProvider, getContext())
+    func updateContext() async throws {
+        try await takeAccessSnapshot(includeElements: true)
+        await uiDelegate?.update(actionableElements: accessSnapshot?.actionableItems ?? [])
+    }
+
     func getDiscoveryContext() async throws -> String? {
         let appName = accessSnapshot?.focusedAppName
         let focusedDescription = try? await accessSnapshot?.focus?.reader.read()
@@ -87,8 +90,7 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
         }
     }
 
-    @_implements(StepCapabilityProvider, getContext())
-    func getStepContext() async throws -> String? {
+    func getContext() async throws -> String? {
         let discovery = try await getDiscoveryContext()!
         let descriptions = try await generateElementDescriptions()
 

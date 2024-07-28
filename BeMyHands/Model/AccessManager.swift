@@ -63,10 +63,11 @@ class AccessManager {
     }
 
     /// Takes an access snapshot, and updates the overlay
-    public func takeAccessSnapshot() async throws {
+    /// - Parameter includeElements: Whether or not interactable elements should be included
+    public func takeAccessSnapshot(includeElements: Bool) async throws {
         guard let access else { return }
 
-        let snapshot = try await access.takeAccessSnapshot()
+        let snapshot = try await access.takeAccessSnapshot(includeElements: includeElements)
 
         self.accessSnapshot = snapshot
 

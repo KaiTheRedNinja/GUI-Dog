@@ -87,7 +87,7 @@ enum Secrets {
     /// API key for the Gemini Large Language Model
     static var geminiKey: String = "MY_API_KEY_HERE"
 }
-``` 
+```
 
 ## Credits and Implementation Details
 
