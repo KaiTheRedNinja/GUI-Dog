@@ -6,12 +6,19 @@
 //
 
 import Foundation
+import Output
 import OSLog
 
 private let logger = Logger(subsystem: #fileID, category: "BeMyHands")
 
 final class PreferencesManager {
-    var userVisionStatus: UserVisionStatus?
+    var userVisionStatus: UserVisionStatus? {
+        didSet {
+            Task { @MainActor in
+                Output.shared.isEnabled = userVisionStatus?.useAudioCues ?? false
+            }
+        }
+    }
 
     private init() {}
 

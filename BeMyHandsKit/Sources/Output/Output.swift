@@ -1,5 +1,8 @@
 import AVFoundation
 import ApplicationServices
+import OSLog
+
+private let logger = Logger(subsystem: #fileID, category: "Output")
 
 /// Output conveyer.
 @MainActor
@@ -10,6 +13,8 @@ public final class Output: NSObject {
     private var queued = [OutputSemantic]()
     /// Whether the synthesizer is currently announcing something.
     private var isAnnouncing = false
+    /// Whether output is enabled or not
+    public var isEnabled: Bool = true
     /// Shared singleton.
     public static let shared = Output()
 
@@ -22,10 +27,9 @@ public final class Output: NSObject {
     /// Announces a high priority event.
     /// - Parameter announcement: Event to announce.
     public func announce(_ announcement: String) {
-        let announcement = AVSpeechUtterance(string: announcement)
         synthesizer.stopSpeaking(at: .immediate)
         isAnnouncing = true
-        synthesizer.speak(announcement)
+        synthesize(announcement)
     }
 
     /// Conveys the semantic accessibility output to the user.
@@ -41,8 +45,7 @@ public final class Output: NSObject {
             let description = expression.description
             guard !description.isEmpty else { continue }
 
-            let utterance = AVSpeechUtterance(string: description)
-            synthesizer.speak(utterance)
+            synthesize(description)
         }
     }
 
@@ -51,6 +54,15 @@ public final class Output: NSObject {
         isAnnouncing = false
         queued = []
         synthesizer.stopSpeaking(at: .immediate)
+    }
+
+    /// Speaks something through the synthesizer
+    private func synthesize(_ string: String) {
+        logger.info("\(self.isEnabled ? "Synthesizing" : "Quietly synthesizing"): \(string)")
+
+        guard isEnabled else { return }
+        let utterance = AVSpeechUtterance(string: string)
+        synthesizer.speak(utterance)
     }
 }
 

@@ -67,10 +67,10 @@ Gemini API capabilities:
     - [x] Prompt engineering
     - [x] Response parsing and iterative process
     - [x] Fail graciously if the action cannot be completed
-- [ ] Interrupt AI midway through
+- [x] Interrupt AI midway through
 
 App Capabilities:
-- [ ] Announce when the AI is doing things
+- [x] Announce when the AI is doing things
 - [x] Clean up steps UI
 - [x] Add animations (for sighted people's sake. Make sure it stays accessibility friendly.)
 - [ ] Onboarding

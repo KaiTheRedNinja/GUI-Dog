@@ -11,6 +11,7 @@ import Element
 import HandsBot
 import GoogleGenerativeAI
 import Input
+import Output
 import OSLog
 
 private let logger = Logger(subsystem: #fileID, category: "BeMyHands")
@@ -57,6 +58,8 @@ struct BeMyHandsApp: App {
     }
 
     func setup() async {
+        Output.shared.isEnabled = PreferencesManager.global.userVisionStatus?.useAudioCues ?? false
+
         guard Element.checkProcessTrustedStatus() else {
             logger.info("No permissions!")
             return
@@ -89,6 +92,9 @@ struct BeMyHandsApp: App {
             overlayManager.hide()
 
             llmInProgress = false
+
+            Output.shared.announce("LLM operation cancelled")
+
             return
         }
 

@@ -82,15 +82,11 @@ Respond in text with the names of THE NAME OF ONLY ONE of the tools: \(stepCapab
 """
         }
 
-        logger.info("Choose prompt: \(prompt)")
-
         let result = try await llmProvider?.generateResponse(prompt: prompt, functions: nil)
 
         guard let result, let text = result.text else {
             throw LLMCommunicationError.emptyResponse
         }
-
-        logger.info("Response: \(text)")
 
         guard !text.contains("NO TOOL") else {
             throw LLMCommunicationError.insufficientInformation
@@ -129,13 +125,9 @@ Respond in text with the names of THE NAME OF ONLY ONE of the tools: \(stepCapab
             """
         }
 
-        logger.info("Result prompt: \(prompt)")
-
         let result = try await llmProvider?.generateResponse(prompt: prompt, functions: [
             provider.functionDeclaration
         ])
-
-        logger.info("Response: \(String(describing: result))")
 
         guard let result, let functionCall = result.functionCalls.first, functionCall.name == provider.name else {
             provider.functionFailed()
@@ -150,7 +142,6 @@ Respond in text with the names of THE NAME OF ONLY ONE of the tools: \(stepCapab
             """
             You are my hands. I want to \(state.goal). You will be given the following:
             - a goal
-            - a list of steps to achieve the goal that have already been completed, if any
             - the step that I want you to execute
             - actions to achieve said step that have already been executed, if any
 
@@ -158,14 +149,6 @@ Respond in text with the names of THE NAME OF ONLY ONE of the tools: \(stepCapab
 
             "Goal: \(state.goal)"
             ""
-
-            if state.currentStepIndex > 0 {
-                "Completed steps:"
-                for step in state.steps[0..<state.currentStepIndex] {
-                    "   " + step.step
-                }
-                ""
-            }
 
             "Current step: " + state.currentStep.step
             ""
