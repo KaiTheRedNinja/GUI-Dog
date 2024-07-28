@@ -6,6 +6,9 @@
 //
 
 import SwiftUI
+import OSLog
+
+private let logger = Logger(subsystem: #fileID, category: "BeMyHands")
 
 struct GoalsView: View {
     var size: NSSize
@@ -22,6 +25,9 @@ struct GoalsView: View {
             }
             .onAppear {
                 textFieldFocus = true
+            }
+            .onDisappear {
+                callback?("")
             }
             .frame(width: size.width, height: size.height)
     }
@@ -40,6 +46,7 @@ struct GoalsView: View {
                 .textFieldStyle(.plain)
                 .onSubmit {
                     callback?(text)
+                    textFieldFocus = false
                 }
         }
     }

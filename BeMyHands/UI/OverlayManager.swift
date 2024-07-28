@@ -8,6 +8,9 @@
 import AppKit
 import Element
 import HandsBot
+import OSLog
+
+private let logger = Logger(subsystem: #fileID, category: "BeMyHands")
 
 @MainActor
 class OverlayManager: LLMDisplayDelegate, AccessDisplayDelegate {
@@ -60,7 +63,10 @@ class OverlayManager: LLMDisplayDelegate, AccessDisplayDelegate {
         goalWindowController.window?.orderFrontRegardless()
 
         let value = await withCheckedContinuation { cont in
+            var triggered: Bool = false
             goalController.setCallback { value in
+                guard !triggered else { return }
+                triggered = true
                 cont.resume(returning: value)
             }
         }
