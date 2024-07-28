@@ -32,10 +32,6 @@ let package = Package(
     targets: [
         .target(
             name: "HandsBot",
-            dependencies: [
-                .byName(name: "Access"),
-                .byName(name: "Element")
-            ],
             swiftSettings: [
                 .swiftLanguageVersion(.v5)
             ]

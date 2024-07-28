@@ -158,7 +158,8 @@ Note that your action does not need to achieve the goal, it just needs to get cl
         }
 
         guard !(result.text?.contains("CANNOT EXECUTE") ?? false) else {
-            throw LLMCommunicationError.actionNotFound
+            // TODO: get a reason
+            throw LLMCommunicationError.goalImpossible(reason: "NOT YET DETERMINED")
         }
 
         guard let functionCall = result.functionCalls.first, functionCall.name == provider.name else {

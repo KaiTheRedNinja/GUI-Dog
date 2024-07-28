@@ -5,8 +5,6 @@
 //  Created by Kai Quan Tay on 16/7/24.
 //
 
-import Element
-
 /// Represents the data of an LLM communication
 public struct LLMState: Equatable {
     /// The goal
@@ -57,8 +55,6 @@ public enum LLMOverallState: Equatable {
 /// An error in LLM communication
 public enum LLMCommunicationError: Error, Equatable {
     // Missing Info
-    /// The accessibility snapshot does not exist
-    case accessSnapshotNotFound
     /// The LLM did not supply text when text was requested
     case textNotProvided
     /// The LLM gave an empty response
@@ -71,31 +67,21 @@ public enum LLMCommunicationError: Error, Equatable {
     // Phase Two
     /// The LLM responded with an invalid function call
     case invalidFunctionCall
-    /// The action is not formatted properly
-    case actionFormatInvalid
-    /// Element was not found in the ``LLMCommunication`` instance
-    case elementNotFound
-    /// Action is not a valid action on the `Element` instance
-    case actionNotFound
 
     // Other
-    /// Element error
-    case element(ElementError)
+    /// Other error
+    case other(any LLMOtherError)
     /// Unknown error
     case unknown(any Error)
 
     /// Description of this error
     public var description: String {
         switch self {
-        case .accessSnapshotNotFound: "The interactable UI elements are not available"
         case .textNotProvided: "The LLM did not respond with text when it was expected to"
         case .emptyResponse: "The LLM responded with an empty response"
         case .goalImpossible(let reason): "The goal cannot be achieved because \(reason)"
         case .invalidFunctionCall: "The LLM responded with an invalid function call"
-        case .actionFormatInvalid: "The LLM responded with an invalid action on an element"
-        case .elementNotFound: "The LLM responded with a nonexistent element"
-        case .actionNotFound: "The LLM responded with an action that the specified element does not support"
-        case .element(let error): "Element error: \(error)"
+        case .other(let error): error.description
         case .unknown(let error): "Unknown error: \(error)"
         }
     }
@@ -107,10 +93,14 @@ public enum LLMCommunicationError: Error, Equatable {
     public init(_ baseError: any Error) {
         if let baseError = baseError as? LLMCommunicationError {
             self = baseError
-        } else if let baseError = baseError as? ElementError {
-            self = .element(baseError)
+        } else if let baseError = baseError as? LLMOtherError {
+            self = .other(baseError)
         } else {
             self = .unknown(baseError)
         }
     }
+}
+
+public protocol LLMOtherError: Error {
+    var description: String { get }
 }

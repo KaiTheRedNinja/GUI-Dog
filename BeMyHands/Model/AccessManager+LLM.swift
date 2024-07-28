@@ -130,15 +130,15 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
         }
 
         guard actionName.hasPrefix("AX") && !actionName.contains(" ") else {
-            throw LLMCommunicationError.actionFormatInvalid
+            throw AccessError.actionFormatInvalid
         }
 
         guard let element = elementMap[uuid] else {
-            throw LLMCommunicationError.elementNotFound
+            throw AccessError.elementNotFound
         }
 
         guard element.actions.contains(actionName) else {
-            throw LLMCommunicationError.actionNotFound
+            throw AccessError.actionNotFound
         }
 
         try await element.element.performAction(actionName)
@@ -148,7 +148,7 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
 
     public func generateElementDescriptions() async throws -> [ActionableElementDescription] {
         guard let accessSnapshot else {
-            throw LLMCommunicationError.accessSnapshotNotFound
+            throw AccessError.accessSnapshotNotFound
         }
 
         let screenElements = accessSnapshot.actionableItems.filter { !$0.isMenuBarItem }
@@ -215,3 +215,21 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
         return descriptions
     }
 }
+
+enum AccessError: LLMOtherError {
+    case actionFormatInvalid
+    case elementNotFound
+    case actionNotFound
+    case accessSnapshotNotFound
+
+    var description: String {
+        switch self {
+        case .actionFormatInvalid: "LLM provided an invalid action format"
+        case .elementNotFound: "LLM specified a nonexistent element"
+        case .actionNotFound: "LLM tried to perform an unsupported action"
+        case .accessSnapshotNotFound: "BeMyHands could not obtain information about the current state of the screen"
+        }
+    }
+}
+
+extension ElementError: @retroactive LLMOtherError {}
