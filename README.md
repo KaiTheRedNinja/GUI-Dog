@@ -51,7 +51,6 @@ Accessibility API capabilities:
 - [ ] Other capabilities
     - [x] Focusing apps
     - [ ] Clicking menu bar items
-    - [ ] Typing
 
 Gemini API capabilities:
 - [x] Trigger API calling (a shortcut probably)

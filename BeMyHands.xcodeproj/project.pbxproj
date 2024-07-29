@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9319508C2C57C271006BF984 /* GoogleGenerativeAI+Private.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9319508B2C57C26C006BF984 /* GoogleGenerativeAI+Private.swift */; };
 		931B22C12C3B6392003A6436 /* BeMyHandsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 931B22C02C3B6392003A6436 /* BeMyHandsApp.swift */; };
 		931B22C32C3B6392003A6436 /* MenuExtraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 931B22C22C3B6392003A6436 /* MenuExtraView.swift */; };
 		931B22C52C3B6393003A6436 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 931B22C42C3B6393003A6436 /* Assets.xcassets */; };
@@ -45,6 +46,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9319508B2C57C26C006BF984 /* GoogleGenerativeAI+Private.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GoogleGenerativeAI+Private.swift"; sourceTree = "<group>"; };
 		931B22BD2C3B6392003A6436 /* BeMyHands.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeMyHands.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		931B22C02C3B6392003A6436 /* BeMyHandsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeMyHandsApp.swift; sourceTree = "<group>"; };
 		931B22C22C3B6392003A6436 /* MenuExtraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuExtraView.swift; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 				936392512C55E8AA00EFF9AB /* PreferencesManager.swift */,
 				936392532C55EA0300EFF9AB /* FileSystem.swift */,
 				939488632C537EBA0052FBBF /* GeminiLLMProvider.swift */,
+				9319508B2C57C26C006BF984 /* GoogleGenerativeAI+Private.swift */,
 				9397F82C2C4BE63900A8BAC1 /* AccessManager.swift */,
 				93D7A4542C4514090065186B /* AccessManager+LLM.swift */,
 				939488612C537E8F0052FBBF /* AppOpen.swift */,
@@ -342,6 +345,7 @@
 				936392472C54D4EB00EFF9AB /* SetupHomeView.swift in Sources */,
 				939488622C537E8F0052FBBF /* AppOpen.swift in Sources */,
 				936F3EEC2C3BE541006FC333 /* GoalsWindow.swift in Sources */,
+				9319508C2C57C271006BF984 /* GoogleGenerativeAI+Private.swift in Sources */,
 				9397F8332C4CA3AC00A8BAC1 /* StatusViewController.swift in Sources */,
 				9382F3F72C4630CD00B4A1EA /* FramesView.swift in Sources */,
 				93F519232C5764BE00E7E799 /* BeMyHandsApp+LLM.swift in Sources */,

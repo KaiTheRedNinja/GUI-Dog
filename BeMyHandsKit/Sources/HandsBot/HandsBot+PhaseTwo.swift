@@ -56,7 +56,7 @@ Respond in text with one of the following:
 - The name of ONLY ONE of the tools: \(stepCapabilityProviders.map { $0.name }), followed by a colon, and \
 a human-readable description of what you intend to do with the tool. For example, "ActionName: Readable \
 description about what you want to use the tool for".
-- "NO TOOL" if the step requires an action that none of the tools provide.
+- "NO TOOL" if the step requires an action that none of the tools provide, such as dragging, typing, or copy-paste
 - "DONE" if the goal has already been satisfied. You may determine this from the context, or from the \
 list of past steps.
 

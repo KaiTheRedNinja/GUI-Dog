@@ -57,12 +57,12 @@ class GeminiLLMProvider: LLMProvider {
 
                 switch error {
                 case .internalError(let underlying):
-                    if underlying.localizedDescription.contains("500") {
+                    if let underlying = underlying as? RPCError, underlying.httpResponseCodePublic == 500 {
                         failedAttempts += 1
                         logger.warning("Internal server error, retrying...")
                         // wait for a while before retrying.
-                        // 0.4, 0.8, 1.2 seconds between each wait
-                        try await Task.sleep(for: .milliseconds(400 * (failedAttempts + 1)))
+                        // 1, 2, 3 seconds between each wait
+                        try await Task.sleep(for: .seconds(failedAttempts + 1))
                         continue
                     }
                 case let .responseStoppedEarly(reason, response):

@@ -72,8 +72,8 @@ extension BeMyHandsApp {
             llmManager.discoveryContentProviders = [accessManager]
             llmManager.stepCapabilityProviders = [
                 accessManager,
-                AppOpen.global,
-                KeyboardProvider.global
+                AppOpen.global
+//                KeyboardProvider.global
             ]
             llmManager.uiDelegate = overlayManager
             llmManager.llmProvider = GeminiLLMProvider.global

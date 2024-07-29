@@ -42,7 +42,7 @@ public final class Access {
         }
         await refocus(processIdentifier: NSWorkspace.shared.frontmostApplication?.processIdentifier)
         refocusTrigger = NSWorkspace.shared.observe(\.frontmostApplication, options: .new) {[weak self] (_, value) in
-            logger.info("Refocused!")
+//            logger.info("Refocused!")
             guard let runningApplication = value.newValue, let runningApplication else {
                 return
             }

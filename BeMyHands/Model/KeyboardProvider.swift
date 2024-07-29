@@ -9,10 +9,17 @@ import HandsBot
 import Cocoa
 import GoogleGenerativeAI
 
+@available(swift, deprecated: 5.0, obsoleted: 5.0, message: "KeyboardProvider is nonfunctional")
 class KeyboardProvider: StepCapabilityProvider {
     var name: String { "keyboardType" }
 
-    var description: String { "Simulate typing a given text using the keyboard" }
+    var description: String {
+        """
+        Simulate typing a given text using the keyboard. Can only be called if the focused \
+        element is a text field. Before selecting this action, make sure `executeAction` is called \
+        to focus the text field.
+        """
+    }
 
     var instructions: String {
         """
@@ -60,5 +67,5 @@ class KeyboardProvider: StepCapabilityProvider {
     func getContext() async throws -> String? { nil }
     func functionFailed() {}
 
-    static let global: KeyboardProvider = .init()
+//    static let global: KeyboardProvider = .init()
 }
