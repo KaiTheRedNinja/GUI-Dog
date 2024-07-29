@@ -115,7 +115,7 @@ Unexpected error performing accessibility element action \(action): \(error.loca
     /// - Parameter maxChildren: The maximum number of children to explore. Generally, they are explored left-to-right,
     /// top-to-bottom, though this is not guarenteed.
     /// - Returns: An array of actionable elements, if it worked
-    func getActionableElements(maxChildren: Int = 60) async throws -> [ActionableElement]? {
+    func getActionableElements(maxChildren: Int = 20) async throws -> [ActionableElement]? {
         do {
             var elements: [ActionableElement] = []
 
