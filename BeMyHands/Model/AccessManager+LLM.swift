@@ -137,6 +137,13 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
             throw AccessError.elementNotFound
         }
 
+        // if its focus, then do it manually
+        guard ![CustomAction.resignFocus, .becomeFocus].map({ $0.rawValue }).contains(actionName) else {
+            let newFocusState = actionName == "AXBecomeFocus"
+            try await element.element.setAttribute(.isFocused, value: newFocusState)
+            return
+        }
+
         guard element.actions.contains(actionName) else {
             throw AccessError.actionNotFound
         }
@@ -199,6 +206,23 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
                 ))
             }
 
+            // describe the focus/unfocus action, if it exists
+            if let focus = try await element.element.getAttribute(.isFocused) as? Bool {
+                let focusActionDescription: ActionableElementDescription.ActionDescription = if focus {
+                    .init(
+                        actionName: CustomAction.resignFocus.rawValue,
+                        description: "Removes focus from this element."
+                    )
+                } else {
+                    .init(
+                        actionName: CustomAction.becomeFocus.rawValue,
+                        description: "Sets focus to this element."
+                    )
+                }
+
+                actionDescriptions.append(focusActionDescription)
+            }
+
             // append it
             descriptions.append(
                 .init(
@@ -214,6 +238,15 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
 
         return descriptions
     }
+}
+
+/// A custom version of `ElementAction`, which defines actions that don't exist.
+///
+/// We just use this to pretend it exists, to perform actions that the element doesn't support as actions but instead
+/// exposes as mutable parameters.
+enum CustomAction: String {
+    case becomeFocus = "AXBecomeFocus"
+    case resignFocus = "AXResignFocus"
 }
 
 enum AccessError: LLMOtherError {
