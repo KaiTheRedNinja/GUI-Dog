@@ -47,7 +47,7 @@ to explain how to achieve the goal.
 If the goal is not hypothetically possible, respond with "Not Possible: ", followed by an explanation for why it is \
 not possible to do with the given actions. Note that a goal is only not hypothetically possible if and only if it \
 explicitly requires:
-- Executing an action that cannot possibly be performed using the actions above, such as typing
+- Executing an action that cannot possibly be performed using the actions above, such as dragging or copy-pasting
 - Context that is not available to you, such as "my phone number" or "alice's address"
 - Reading text that is not a part of a button or clickable item like a tab, such as text from a label
 

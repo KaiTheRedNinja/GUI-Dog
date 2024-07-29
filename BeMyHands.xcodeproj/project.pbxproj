@@ -24,6 +24,7 @@
 		936392502C54E40400EFF9AB /* Luminare in Frameworks */ = {isa = PBXBuildFile; productRef = 9363924F2C54E40400EFF9AB /* Luminare */; };
 		936392522C55E8AF00EFF9AB /* PreferencesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936392512C55E8AA00EFF9AB /* PreferencesManager.swift */; };
 		936392542C55EA0400EFF9AB /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936392532C55EA0300EFF9AB /* FileSystem.swift */; };
+		936392582C5715EC00EFF9AB /* KeyboardProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936392572C5715E200EFF9AB /* KeyboardProvider.swift */; };
 		936F3EEC2C3BE541006FC333 /* GoalsWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EEB2C3BE53B006FC333 /* GoalsWindow.swift */; };
 		936F3EEE2C3BE5E9006FC333 /* OverlayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */; };
 		936F3EF02C3BE688006FC333 /* FramesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EEF2C3BE688006FC333 /* FramesViewController.swift */; };
@@ -40,6 +41,7 @@
 		93D7A4502C450F7B0065186B /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7A44F2C450F770065186B /* Secrets.swift */; };
 		93D7A4532C45131B0065186B /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 93D7A4522C45131B0065186B /* GoogleGenerativeAI */; };
 		93D7A4552C45140E0065186B /* AccessManager+LLM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7A4542C4514090065186B /* AccessManager+LLM.swift */; };
+		93F519232C5764BE00E7E799 /* BeMyHandsApp+LLM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F519222C5764B800E7E799 /* BeMyHandsApp+LLM.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +62,7 @@
 		9363924C2C54D50D00EFF9AB /* SetupFinishView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupFinishView.swift; sourceTree = "<group>"; };
 		936392512C55E8AA00EFF9AB /* PreferencesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesManager.swift; sourceTree = "<group>"; };
 		936392532C55EA0300EFF9AB /* FileSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSystem.swift; sourceTree = "<group>"; };
+		936392572C5715E200EFF9AB /* KeyboardProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardProvider.swift; sourceTree = "<group>"; };
 		936F3EEB2C3BE53B006FC333 /* GoalsWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsWindow.swift; sourceTree = "<group>"; };
 		936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayManager.swift; sourceTree = "<group>"; };
 		936F3EEF2C3BE688006FC333 /* FramesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramesViewController.swift; sourceTree = "<group>"; };
@@ -74,6 +77,7 @@
 		9397F8392C4CA77400A8BAC1 /* GoalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsView.swift; sourceTree = "<group>"; };
 		93D7A44F2C450F770065186B /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		93D7A4542C4514090065186B /* AccessManager+LLM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AccessManager+LLM.swift"; sourceTree = "<group>"; };
+		93F519222C5764B800E7E799 /* BeMyHandsApp+LLM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeMyHandsApp+LLM.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +147,7 @@
 			children = (
 				93D7A44F2C450F770065186B /* Secrets.swift */,
 				931B22C02C3B6392003A6436 /* BeMyHandsApp.swift */,
+				93F519222C5764B800E7E799 /* BeMyHandsApp+LLM.swift */,
 				931B22C22C3B6392003A6436 /* MenuExtraView.swift */,
 				931B22C42C3B6393003A6436 /* Assets.xcassets */,
 				931B22D02C3B64BE003A6436 /* Info.plist */,
@@ -179,6 +184,7 @@
 		936F3EF22C3CA4E9006FC333 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				936392572C5715E200EFF9AB /* KeyboardProvider.swift */,
 				936392512C55E8AA00EFF9AB /* PreferencesManager.swift */,
 				936392532C55EA0300EFF9AB /* FileSystem.swift */,
 				939488632C537EBA0052FBBF /* GeminiLLMProvider.swift */,
@@ -328,6 +334,7 @@
 				936F3EEE2C3BE5E9006FC333 /* OverlayManager.swift in Sources */,
 				93D7A4502C450F7B0065186B /* Secrets.swift in Sources */,
 				931B22C32C3B6392003A6436 /* MenuExtraView.swift in Sources */,
+				936392582C5715EC00EFF9AB /* KeyboardProvider.swift in Sources */,
 				9397F8352C4CA71400A8BAC1 /* GoalViewController.swift in Sources */,
 				9363924B2C54D50600EFF9AB /* SetupAccessView.swift in Sources */,
 				9363924D2C54D50D00EFF9AB /* SetupFinishView.swift in Sources */,
@@ -337,6 +344,7 @@
 				936F3EEC2C3BE541006FC333 /* GoalsWindow.swift in Sources */,
 				9397F8332C4CA3AC00A8BAC1 /* StatusViewController.swift in Sources */,
 				9382F3F72C4630CD00B4A1EA /* FramesView.swift in Sources */,
+				93F519232C5764BE00E7E799 /* BeMyHandsApp+LLM.swift in Sources */,
 				9397F82D2C4BE63900A8BAC1 /* AccessManager.swift in Sources */,
 				931B22C12C3B6392003A6436 /* BeMyHandsApp.swift in Sources */,
 				9382F3F92C4631DB00B4A1EA /* LLMStateView.swift in Sources */,
