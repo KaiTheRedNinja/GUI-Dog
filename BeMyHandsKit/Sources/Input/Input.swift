@@ -149,22 +149,9 @@ public final class Input {
     ///   - key: Key to bind.
     ///   - action: Action to perform when the key combination is pressed.
     public func bindKey(
-        browseMode: Bool = false,
-        controlModifier: Bool = false,
-        optionModifier: Bool = false,
-        commandModifier: Bool = false,
-        shiftModifier: Bool = false,
-        key: InputKeyCode,
+        _ keyBinding: KeyBinding,
         action: @escaping () async -> Void
     ) {
-        let keyBinding = KeyBinding(
-            browseMode: browseMode,
-            controlModifier: controlModifier,
-            optionModifier: optionModifier,
-            commandModifier: commandModifier,
-            shiftModifier: shiftModifier,
-            key: key
-        )
         guard state.keyBindings.updateValue(action, forKey: keyBinding) == nil else {
             fatalError("Attempted to bind the same key combination twice")
         }
@@ -269,20 +256,37 @@ public final class Input {
         /// Whether the user wants to interrupt speech.
         var shouldInterrupt = false
     }
+}
 
-    /// Key to the key bindings map.
-    private struct KeyBinding: Hashable {
-        /// Whether browse mode is required.
-        let browseMode: Bool
-        /// Whether the Control key modifier is required.
-        let controlModifier: Bool
-        /// Whether the Option key modifier is required.
-        let optionModifier: Bool
-        /// Whether the Command key modifier is required.
-        let commandModifier: Bool
-        /// Whether the Shift key modifier is required.
-        let shiftModifier: Bool
-        /// Bound key.
-        let key: InputKeyCode
+/// Key to the key bindings map.
+public struct KeyBinding: Hashable, Codable {
+    /// Whether browse mode is required.
+    public let browseMode: Bool
+    /// Whether the Control key modifier is required.
+    public let controlModifier: Bool
+    /// Whether the Option key modifier is required.
+    public let optionModifier: Bool
+    /// Whether the Command key modifier is required.
+    public let commandModifier: Bool
+    /// Whether the Shift key modifier is required.
+    public let shiftModifier: Bool
+    /// Bound key.
+    public let key: InputKeyCode
+
+    /// Creates a key binding
+    public init(
+        browseMode: Bool = false,
+        controlModifier: Bool = false,
+        optionModifier: Bool = false,
+        commandModifier: Bool = false,
+        shiftModifier: Bool = false,
+        key: InputKeyCode
+    ) {
+        self.browseMode = browseMode
+        self.controlModifier = controlModifier
+        self.optionModifier = optionModifier
+        self.commandModifier = commandModifier
+        self.shiftModifier = shiftModifier
+        self.key = key
     }
 }

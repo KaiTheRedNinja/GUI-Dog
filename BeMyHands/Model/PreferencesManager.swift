@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Input
 import Output
 import OSLog
 
@@ -19,6 +20,8 @@ final class PreferencesManager {
             }
         }
     }
+
+    var keyboardShortcut: KeyBinding?
 
     private init() {}
 
@@ -44,17 +47,20 @@ final class PreferencesManager {
 extension PreferencesManager: Codable {
     enum Keys: CodingKey {
         case userVisionStatus
+        case keyboardShortcut
     }
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: Keys.self)
         try container.encode(userVisionStatus, forKey: .userVisionStatus)
+        try container.encode(keyboardShortcut, forKey: .keyboardShortcut)
     }
 
     public convenience init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: Keys.self)
         self.init()
         self.userVisionStatus = try container.decodeIfPresent(UserVisionStatus.self, forKey: .userVisionStatus)
+        self.keyboardShortcut = try container.decodeIfPresent(KeyBinding.self, forKey: .keyboardShortcut)
     }
 }
 

@@ -171,6 +171,27 @@
 			path = Setup;
 			sourceTree = "<group>";
 		};
+		936948D82C590E2400EB37B6 /* LLM */ = {
+			isa = PBXGroup;
+			children = (
+				936948D92C590E3B00EB37B6 /* Providers */,
+				939488632C537EBA0052FBBF /* GeminiLLMProvider.swift */,
+				9319508B2C57C26C006BF984 /* GoogleGenerativeAI+Private.swift */,
+			);
+			path = LLM;
+			sourceTree = "<group>";
+		};
+		936948D92C590E3B00EB37B6 /* Providers */ = {
+			isa = PBXGroup;
+			children = (
+				9397F82C2C4BE63900A8BAC1 /* AccessManager.swift */,
+				93D7A4542C4514090065186B /* AccessManager+LLM.swift */,
+				936392572C5715E200EFF9AB /* KeyboardProvider.swift */,
+				939488612C537E8F0052FBBF /* AppOpen.swift */,
+			);
+			path = Providers;
+			sourceTree = "<group>";
+		};
 		936F3EEA2C3BE535006FC333 /* UI */ = {
 			isa = PBXGroup;
 			children = (
@@ -186,14 +207,9 @@
 		936F3EF22C3CA4E9006FC333 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				936392572C5715E200EFF9AB /* KeyboardProvider.swift */,
+				936948D82C590E2400EB37B6 /* LLM */,
 				936392512C55E8AA00EFF9AB /* PreferencesManager.swift */,
 				936392532C55EA0300EFF9AB /* FileSystem.swift */,
-				939488632C537EBA0052FBBF /* GeminiLLMProvider.swift */,
-				9319508B2C57C26C006BF984 /* GoogleGenerativeAI+Private.swift */,
-				9397F82C2C4BE63900A8BAC1 /* AccessManager.swift */,
-				93D7A4542C4514090065186B /* AccessManager+LLM.swift */,
-				939488612C537E8F0052FBBF /* AppOpen.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";

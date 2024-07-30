@@ -29,12 +29,16 @@ extension BeMyHandsApp {
         Input.shared.browseModeEnabled = true
         Input.shared.swallowTapEvents = false
 
-        Input.shared.bindKey(
+        let key = PreferencesManager.global.keyboardShortcut ?? .init(
             browseMode: true,
             controlModifier: true,
             optionModifier: true,
             commandModifier: true,
-            key: .keyboardL,
+            key: .keyboardL
+        )
+
+        Input.shared.bindKey(
+            key,
             action: triggerLLM
         )
     }
