@@ -12,10 +12,12 @@ import Input
 struct ShortcutCaptureView: View {
     @Binding var shortcut: KeyBinding
 
+    var large: Bool = false
+
     @State var changingShortcut: Bool = false
 
     var body: some View {
-        HStack {
+        HStack(spacing: large ? 10 : 3) {
             if shortcut.commandModifier { shortcutComponentView(symbol: "command") }
             if shortcut.optionModifier { shortcutComponentView(symbol: "option") }
             if shortcut.controlModifier { shortcutComponentView(symbol: "control") }
@@ -29,7 +31,7 @@ struct ShortcutCaptureView: View {
                 shortcutComponentView(text: shortcut.key.description)
             }
         }
-        .padding(10)
+        .padding(large ? 10 : 3)
         .overlay {
             Button {
                 changeShortcut()
@@ -63,17 +65,18 @@ struct ShortcutCaptureView: View {
             Image(systemName: symbol)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 40, height: 40)
-                .padding(10)
+                .padding(large ? 10 : 0)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .aspectRatio(1, contentMode: .fit)
     }
 
     func shortcutComponentView(text: String) -> some View {
         Text(text)
             .font(.system(size: 100))
             .minimumScaleFactor(0.1)
-            .frame(height: 60)
-            .padding(.horizontal, 15)
+            .frame(maxHeight: .infinity)
+            .padding(.horizontal, large ? 15 : 5)
     }
 
     func changeShortcut() {

@@ -37,9 +37,11 @@ struct BeMyHandsApp: App {
         }
         .windowStyle(HiddenTitleBarWindowStyle())
 
-        Settings {
-            Text("Not Done Yet")
+        WindowGroup(id: "settingsWindow") {
+            SettingsView()
         }
+        .windowStyle(HiddenTitleBarWindowStyle())
+        .windowResizability(.contentSize)
 
         MenuBarExtra {
             MenuExtraView(triggerLLM: triggerLLM)

@@ -11,7 +11,7 @@ import Luminare
 struct SetupVisionView: View {
     @Binding var stage: SetupStage
 
-    @State var userVisionStatus: UserVisionStatus = PreferencesManager.global.userVisionStatus ?? .sighted
+    @State var userVisionStatus: UserVisionStatus = PreferencesManager.global.userVisionStatus
 
     var body: some View {
         VStack(spacing: 10) {

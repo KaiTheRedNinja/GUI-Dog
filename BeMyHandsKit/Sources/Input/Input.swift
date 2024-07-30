@@ -141,12 +141,7 @@ public final class Input {
 
     /// Binds a key to an action with optional modifiers.
     /// - Parameters:
-    ///   - browseMode: Requires browse mode.
-    ///   - controlModifier: Requires the Control modifier key to be pressed.
-    ///   - optionModifier: Requires the Option modifier key to be pressed.
-    ///   - commandModifier: Requires the Command modifier key to be pressed.
-    ///   - shiftModifier: Requires the Shift modifier key to be pressed.
-    ///   - key: Key to bind.
+    ///   - keyBinding: The key binding to bind to
     ///   - action: Action to perform when the key combination is pressed.
     public func bindKey(
         _ keyBinding: KeyBinding,
@@ -155,6 +150,21 @@ public final class Input {
         guard state.keyBindings.updateValue(action, forKey: keyBinding) == nil else {
             fatalError("Attempted to bind the same key combination twice")
         }
+    }
+
+    /// Removes a key bind
+    /// - Parameter keyBinding: The key to unbind
+    public func unbindKey(_ keyBinding: KeyBinding) {
+        state.keyBindings[keyBinding] = nil
+    }
+
+    /// Changes the key binding for an action. This action fails silently if the original key binding does not have an
+    /// associated action.
+    /// - Parameters:
+    ///   - originalBinding: The original key binding
+    ///   - newBinding: The new key binding
+    public func rebindKey(from originalBinding: KeyBinding, to newBinding: KeyBinding) {
+        state.keyBindings[newBinding] = state.keyBindings[originalBinding]
     }
 
     /// Detects and executes a callback on the next key event

@@ -12,13 +12,7 @@ import Input
 struct SetupShortcutView: View {
     @Binding var stage: SetupStage
 
-    @State var keyboardShortcut: KeyBinding = PreferencesManager.global.keyboardShortcut ?? .init(
-        browseMode: true,
-        controlModifier: true,
-        optionModifier: true,
-        commandModifier: true,
-        key: .keyboardL
-    )
+    @State var keyboardShortcut: KeyBinding = PreferencesManager.global.keyboardShortcut
 
     var body: some View {
         VStack(spacing: 10) {
@@ -41,7 +35,8 @@ You can customise the trigger shortcut here, if you wish to use a different one.
                 .frame(height: 30)
 
             Text("Click below to change the shortcut")
-            ShortcutCaptureView(shortcut: $keyboardShortcut)
+            ShortcutCaptureView(shortcut: $keyboardShortcut, large: true)
+                .frame(height: 70)
 
             Spacer()
                 .frame(height: 30)

@@ -13,15 +13,21 @@ import OSLog
 private let logger = Logger(subsystem: #fileID, category: "BeMyHands")
 
 final class PreferencesManager {
-    var userVisionStatus: UserVisionStatus? {
+    var userVisionStatus: UserVisionStatus = .sighted {
         didSet {
             Task { @MainActor in
-                Output.shared.isEnabled = userVisionStatus?.useAudioCues ?? false
+                Output.shared.isEnabled = userVisionStatus.useAudioCues
             }
         }
     }
 
-    var keyboardShortcut: KeyBinding?
+    var keyboardShortcut: KeyBinding = .init(
+        browseMode: true,
+        controlModifier: true,
+        optionModifier: true,
+        commandModifier: true,
+        key: .keyboardL
+    )
 
     private init() {}
 
@@ -59,8 +65,8 @@ extension PreferencesManager: Codable {
     public convenience init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: Keys.self)
         self.init()
-        self.userVisionStatus = try container.decodeIfPresent(UserVisionStatus.self, forKey: .userVisionStatus)
-        self.keyboardShortcut = try container.decodeIfPresent(KeyBinding.self, forKey: .keyboardShortcut)
+        self.userVisionStatus = try container.decode(UserVisionStatus.self, forKey: .userVisionStatus)
+        self.keyboardShortcut = try container.decode(KeyBinding.self, forKey: .keyboardShortcut)
     }
 }
 

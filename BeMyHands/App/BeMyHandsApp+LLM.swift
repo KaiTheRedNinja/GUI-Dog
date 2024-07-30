@@ -17,7 +17,7 @@ private let logger = Logger(subsystem: #fileID, category: "BeMyHands")
 
 extension BeMyHandsApp {
     func setup() async {
-        Output.shared.isEnabled = PreferencesManager.global.userVisionStatus?.useAudioCues ?? false
+        Output.shared.isEnabled = PreferencesManager.global.userVisionStatus.useAudioCues
 
         guard Element.checkProcessTrustedStatus() else {
             logger.info("No permissions!")
@@ -29,16 +29,8 @@ extension BeMyHandsApp {
         Input.shared.browseModeEnabled = true
         Input.shared.swallowTapEvents = false
 
-        let key = PreferencesManager.global.keyboardShortcut ?? .init(
-            browseMode: true,
-            controlModifier: true,
-            optionModifier: true,
-            commandModifier: true,
-            key: .keyboardL
-        )
-
         Input.shared.bindKey(
-            key,
+            PreferencesManager.global.keyboardShortcut,
             action: triggerLLM
         )
     }

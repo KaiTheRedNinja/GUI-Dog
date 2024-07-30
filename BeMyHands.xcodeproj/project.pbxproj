@@ -28,6 +28,7 @@
 		936392582C5715EC00EFF9AB /* KeyboardProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936392572C5715E200EFF9AB /* KeyboardProvider.swift */; };
 		936948DB2C59175B00EB37B6 /* SetupShortcutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936948DA2C59175B00EB37B6 /* SetupShortcutView.swift */; };
 		936948E02C5922EC00EB37B6 /* ShortcutCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936948DF2C5922EC00EB37B6 /* ShortcutCaptureView.swift */; };
+		936948E22C59231700EB37B6 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936948E12C59231700EB37B6 /* SettingsView.swift */; };
 		936F3EEC2C3BE541006FC333 /* GoalsWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EEB2C3BE53B006FC333 /* GoalsWindow.swift */; };
 		936F3EEE2C3BE5E9006FC333 /* OverlayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */; };
 		936F3EF02C3BE688006FC333 /* FramesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F3EEF2C3BE688006FC333 /* FramesViewController.swift */; };
@@ -69,6 +70,7 @@
 		936392572C5715E200EFF9AB /* KeyboardProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardProvider.swift; sourceTree = "<group>"; };
 		936948DA2C59175B00EB37B6 /* SetupShortcutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupShortcutView.swift; sourceTree = "<group>"; };
 		936948DF2C5922EC00EB37B6 /* ShortcutCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutCaptureView.swift; sourceTree = "<group>"; };
+		936948E12C59231700EB37B6 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		936F3EEB2C3BE53B006FC333 /* GoalsWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsWindow.swift; sourceTree = "<group>"; };
 		936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayManager.swift; sourceTree = "<group>"; };
 		936F3EEF2C3BE688006FC333 /* FramesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramesViewController.swift; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 		936948DC2C5922C500EB37B6 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				936948E12C59231700EB37B6 /* SettingsView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -404,6 +407,7 @@
 				936392542C55EA0400EFF9AB /* FileSystem.swift in Sources */,
 				936392522C55E8AF00EFF9AB /* PreferencesManager.swift in Sources */,
 				936F3EF02C3BE688006FC333 /* FramesViewController.swift in Sources */,
+				936948E22C59231700EB37B6 /* SettingsView.swift in Sources */,
 				9397F83A2C4CA77400A8BAC1 /* GoalsView.swift in Sources */,
 				936392492C54D4F700EFF9AB /* SetupVisionView.swift in Sources */,
 				936392402C54A0D100EFF9AB /* StatusWindow.swift in Sources */,
