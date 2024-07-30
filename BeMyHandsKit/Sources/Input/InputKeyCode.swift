@@ -215,7 +215,7 @@ public enum InputKeyCode: Int64, Codable, Hashable {
 
     /// Symbol representations of the key code, such as `delete.left` for `Backspace` and `Delete` for
     /// codes that have it.
-    var symbol: String? {
+    public var symbol: String? {
         switch self {
         case .keyboardReturn: return "return"
         case .keyboardEscape: return "escape"
@@ -248,7 +248,7 @@ public enum InputKeyCode: Int64, Codable, Hashable {
     }
 
     /// Shortened representations of the key code, such as `(` for `Left Bracket`, for codes that have it.
-    var shortRepresentation: String? {
+    public var shortRepresentation: String? {
         switch self {
         case .keyboard1AndExclamation: return "!"
         case .keyboard2AndAtt: return "@"

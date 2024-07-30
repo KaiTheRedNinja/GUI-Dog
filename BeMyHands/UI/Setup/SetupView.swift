@@ -48,6 +48,8 @@ struct SetupView: View {
                 SetupVisionView(stage: $stage)
             case .setupAccessManager:
                 SetupAccessView(stage: $stage, setupCallback: setupCallback)
+            case .setupShortcut:
+                SetupShortcutView(stage: $stage)
             case .finish:
                 SetupFinishView(stage: $stage)
             }
@@ -69,6 +71,7 @@ enum SetupStage {
     case home
     case blindOrNot
     case setupAccessManager
+    case setupShortcut
     case finish
 }
 

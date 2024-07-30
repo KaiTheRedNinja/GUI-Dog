@@ -60,8 +60,8 @@ BeMyHands uses macOS's Accessibility API to interact with items on your screen.
                 .foregroundStyle(!permissionGranted ? Color.accentColor : .gray)
                 .disabled(permissionGranted)
 
-                Button("Finish") {
-                    stage = .finish
+                Button("Next") {
+                    stage = .setupShortcut
                 }
                 .frame(width: 150, height: 60)
                 .buttonStyle(LuminareCompactButtonStyle())
