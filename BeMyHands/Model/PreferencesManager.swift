@@ -27,7 +27,13 @@ final class PreferencesManager {
         optionModifier: true,
         commandModifier: true,
         key: .keyboardL
-    )
+    ) {
+        didSet {
+            Task { @MainActor in
+                Input.shared.rebindKey(from: oldValue, to: keyboardShortcut)
+            }
+        }
+    }
 
     private init() {}
 

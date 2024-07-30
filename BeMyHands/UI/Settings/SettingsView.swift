@@ -76,9 +76,8 @@ struct SettingsView: View {
         .onChange(of: userVisionStatus) { _, newValue in
             PreferencesManager.global.userVisionStatus = newValue
         }
-        .onChange(of: keyboardShortcut) { oldValue, newValue in
+        .onChange(of: keyboardShortcut) { _, newValue in
             PreferencesManager.global.keyboardShortcut = newValue
-            Input.shared.rebindKey(from: oldValue, to: newValue)
         }
     }
 
