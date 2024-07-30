@@ -74,9 +74,9 @@ App Capabilities:
 - [x] Announce when the AI is doing things
 - [x] Clean up steps UI
 - [x] Add animations (for sighted people's sake. Make sure it stays accessibility friendly.)
-- [ ] Onboarding
+- [x] Onboarding
     - [x] Obtain accessibility permissions easily
-    - [ ] Customise trigger shortcut
+    - [x] Customise trigger shortcut
 
 ## Secrets
 This project requires a `Secrets` object, which is gitignored by default. The file is meant to be at
