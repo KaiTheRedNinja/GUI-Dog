@@ -157,6 +157,14 @@ public final class Input {
         }
     }
 
+    /// Detects and executes a callback on the next key event
+    /// - Parameter callback: The key binding that was pressed
+    public func detectKeyEvent(
+        _ callback: @escaping (KeyBinding) -> Void
+    ) {
+        state.keyEventCallback = callback
+    }
+
     /// Handles the stream of CapsLock events.
     /// - Parameter capsLockStream: Stream of CapsLock events.
     private func handleCapsLockStream(_ capsLockStream: AsyncStream<(timestamp: UInt64, isDown: Bool)>) async {
@@ -206,19 +214,28 @@ public final class Input {
     /// - Parameter keyboardTapStream: Stream of keyboard tap events.
     private func handleKeyboardTapStream(_ keyboardTapStream: AsyncStream<CGEvent>) async {
         for await event in keyboardTapStream {
+            // cast the key code to an integer
             let keyCode = event.getIntegerValueField(.keyboardEventKeycode)
             guard let keyCode = InputKeyCode(rawValue: keyCode) else {
                 continue
             }
+
+            // if its a key up, remove it from regularKeys and proceed to the next
             state.shouldInterrupt = false
             guard event.type == .keyDown else {
                 regularKeys.remove(keyCode)
                 continue
             }
+
+            // insert this into regularKeys
             regularKeys.insert(keyCode)
+
+            // determine if we should execute an action
             guard state.capsLockPressed || state.browseModeEnabled else {
                 continue
             }
+
+            // create a binding
             let browseMode = state.browseModeEnabled && !state.capsLockPressed
             let controlModifier = event.flags.contains(.maskControl)
             let optionModifier = event.flags.contains(.maskAlternate)
@@ -232,10 +249,18 @@ public final class Input {
                 shiftModifier: shiftModifier,
                 key: keyCode
             )
-            guard let action = state.keyBindings[keyBinding] else {
+
+            // determine if we should call the keyEventCallback
+            if let keyEventCallback = state.keyEventCallback {
+                keyEventCallback(keyBinding)
+                state.keyEventCallback = nil
                 continue
             }
-            await action()
+
+            // execute the action
+            if let action = state.keyBindings[keyBinding] {
+                await action()
+            }
         }
     }
 
@@ -255,6 +280,9 @@ public final class Input {
         var keyBindings = [KeyBinding: () async -> Void]()
         /// Whether the user wants to interrupt speech.
         var shouldInterrupt = false
+        /// The callback that is set if we want to detect a shortcut triggered by the user. This will be called
+        /// when a key is pressed, then set to nil.
+        var keyEventCallback: ((KeyBinding) -> Void)?
     }
 }
 
