@@ -22,10 +22,29 @@ public struct AccessSnapshot {
     /// The actionable items visible on screen
     public var actionableItems: [ActionableElement]
 
+    /// The actionable items visible on screen, organised as a tree
+    public var actionTree: ActionableElementNode?
+
     /// Creates an AccessSnapshot from its base attributes
-    public init(focusedAppName: String?, focus: AccessFocus? = nil, actionableItems: [ActionableElement]) {
+    init(
+        focusedAppName: String? = nil,
+        focus: AccessFocus? = nil,
+        actionTree: ActionableElementNode? = nil
+    ) {
         self.focusedAppName = focusedAppName
         self.focus = focus
-        self.actionableItems = actionableItems
+        self.actionTree = actionTree
+
+        // bulid the actionable elements via depth-first-search
+        self.actionableItems = []
+        var nodes = [actionTree]
+        while !nodes.isEmpty {
+            guard let node = nodes.removeLast() else { break }
+            if let actionableElement = node.actionableElement {
+                self.actionableItems.append(actionableElement)
+            }
+            // reverse the children so that the first child is explored first
+            nodes.append(contentsOf: node.children.reversed())
+        }
     }
 }

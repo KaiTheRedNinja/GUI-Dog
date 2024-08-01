@@ -6,7 +6,7 @@
 //
 
 import Cocoa
-import Element
+import Access
 
 class FramesView: NSView {
     func setupView(with frame: NSRect, actionableElements: [ActionableElement]) {

@@ -87,27 +87,4 @@ Unexpected error performing accessibility element action \(action): \(error.loca
 """)
         }
     }
-
-    /// Converts this element into an ``ActionableElement``. Throws if any steps fail, returns nil if this
-    /// element is not actionable.
-    func createActionableElement() throws -> ActionableElement? {
-        let actions = try listActions()
-
-        // if this element is non-actionable, return
-        guard !actions.isEmpty else { return nil }
-
-        // if it is valid actionable, add it and its description
-        let frameAttribute = try getAttribute(.frame)
-
-        // obtain the frame of the actionable element
-        let frame = frameAttribute as? NSRect
-
-        // create the element
-        return .init(
-            element: self,
-            actions: actions,
-            frame: frame,
-            ancestorDescriptions: []
-        )
-    }
 }

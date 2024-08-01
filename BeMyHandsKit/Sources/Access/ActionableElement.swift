@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Element
 
 /// Defines the data of an element with actions
 public struct ActionableElement {
@@ -45,4 +46,14 @@ public struct ActionableElement {
             .menuBarItem
         ])) ?? false
     }
+}
+
+/// A node in a tree representing actionable elements
+public struct ActionableElementNode {
+    /// A description of this element
+    public var elementDescription: String
+    /// The actionable element of this element, if this element is actionable
+    public var actionableElement: ActionableElement?
+    /// The children of this element
+    public var children: [ActionableElementNode]
 }

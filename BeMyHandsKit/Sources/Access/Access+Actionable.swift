@@ -11,16 +11,14 @@ import OSLog
 private let logger = Logger(subsystem: #fileID, category: "Access")
 
 extension Access {
-    /// Returns all actionable elements of the focused application
+    /// Returns all actionable elements of the focused application, as a tree
     @MainActor
-    public func actionableElements() async throws -> [ActionableElement]? {
+    public func actionableElements() async throws -> ActionableElementNode? {
         guard let application = await application else {
             return nil
         }
         let actionable = try await treeActionableElements(application)
-//        let actionable = try await recursiveActionableElements(application)
-//        return actionable
-        fatalError()
+        return actionable
     }
 
     /// Returns a snapshot of the current accessibility state
@@ -29,9 +27,17 @@ extension Access {
         // TODO: consider using AccessGenericReader to get extra context for elements
 
         // Get actionable elements
-        guard let elements = includeElements ? try await actionableElements() : [] else {
-            logger.warning("No elements found")
-            return nil
+        let elements: ActionableElementNode?
+
+        if includeElements {
+            if let elem = try await actionableElements() {
+                elements = elem
+            } else {
+                logger.warning("No elements found")
+                return nil
+            }
+        } else {
+            elements = nil
         }
 
         // Get the app name and focused element
@@ -41,73 +47,8 @@ extension Access {
         return AccessSnapshot(
             focusedAppName: appName,
             focus: focusElement,
-            actionableItems: elements
+            actionTree: elements
         )
-    }
-
-    /// Returns all actionable elements within this element, including both children and itself.
-    /// - Parameters:
-    ///   - element: The root node of the element tree to search for actionable elements in
-    ///   - maxChildren: The maximum number of children to explore. Generally, they are explored left-to-right,
-    /// - Returns: Actionable elements under this element. If `element` is actionable, it will be the first item in the
-    /// returned array. It will return nil if the element is invalid.
-    @ElementActor
-    private func recursiveActionableElements(
-        _ element: Element,
-        maxChildren: Int = 30
-    ) async throws -> [ActionableElement]? {
-        do {
-            var elements: [ActionableElement] = []
-
-            if let selfAction = try element.createActionableElement() {
-                elements.append(selfAction)
-            }
-
-            // TODO: fix description, make it dependent on AccessReader
-            let reader = try await AccessReader(for: element)
-            let description = try await reader.read()
-                .compactMap { semantic in
-                    let desc = semantic.description
-                    return desc.isEmpty ? nil : desc
-                }
-                .joined(separator: ", ")
-
-            // get the children's actionable items
-            guard let children = try element.getAttribute(.childElements) as? [Any?] else {
-                return elements
-            }
-
-            var childrenActionableItems = [ActionableElement]()
-            for (index, child) in children.lazy.compactMap({ $0 as? Element }).enumerated() {
-                guard index < maxChildren else {
-                    logger.info("Hit children limit")
-                    break
-                }
-
-                guard let childActionableItems = try await recursiveActionableElements(
-                    child,
-                    maxChildren: maxChildren
-                ) else {
-                    continue
-                }
-
-                // add self's description as the latest ancestor of the children
-                let newChildActionableItems = childActionableItems.map {
-                    var newItem = $0
-                    newItem.ancestorDescriptions.append(description)
-                    return newItem
-                }
-
-                childrenActionableItems.append(contentsOf: newChildActionableItems)
-            }
-            elements.append(contentsOf: childrenActionableItems)
-
-            return elements
-        } catch ElementError.invalidElement, ElementError.timeout {
-            return nil
-        } catch {
-            throw error
-        }
     }
 
     /// Returns all actionable elements within this element, including both children and itself, as a tree
@@ -130,7 +71,7 @@ extension Access {
                     return desc.isEmpty ? nil : desc
                 }
                 .joined(separator: ", ")
-            let selfAction = try element.createActionableElement()
+            let selfAction = try createActionableElement(from: element)
 
             // create self node
             var elementNode: ActionableElementNode = .init(
@@ -180,14 +121,28 @@ extension Access {
             throw error
         }
     }
-}
 
-/// A node in a tree representing actionable elements
-struct ActionableElementNode {
-    /// A description of this element
-    var elementDescription: String
-    /// The actionable element of this element, if this element is actionable
-    var actionableElement: ActionableElement?
-    /// The children of this element
-    var children: [ActionableElementNode]
+    /// Converts this element into an ``ActionableElement``. Throws if any steps fail, returns nil if this
+    /// element is not actionable.
+    @ElementActor
+    private func createActionableElement(from element: Element) throws -> ActionableElement? {
+        let actions = try element.listActions()
+
+        // if this element is non-actionable, return
+        guard !actions.isEmpty else { return nil }
+
+        // if it is valid actionable, add it and its description
+        let frameAttribute = try element.getAttribute(.frame)
+
+        // obtain the frame of the actionable element
+        let frame = frameAttribute as? NSRect
+
+        // create the element
+        return .init(
+            element: element,
+            actions: actions,
+            frame: frame,
+            ancestorDescriptions: []
+        )
+    }
 }
