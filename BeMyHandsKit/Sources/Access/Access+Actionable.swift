@@ -141,8 +141,7 @@ extension Access {
         return .init(
             element: element,
             actions: actions,
-            frame: frame,
-            ancestorDescriptions: []
+            frame: frame
         )
     }
 }

@@ -19,32 +19,15 @@ public struct ActionableElement {
     /// The frame of the element, if it has one
     public var frame: NSRect?
 
-    /// Descriptions of the element's ancestors, where the first item in the array is the ActionableElement's
-    /// immediate parent, and the last item is the Application element.
-    public var ancestorDescriptions: [String]
-
-    /// If this element was determined to be a menu bar item
-    public var isMenuBarItem: Bool
-
     /// Creates an actionable element from its base attributes
     public init(
         element: Element,
         actions: [String],
-        frame: NSRect?,
-        ancestorDescriptions: [String]
+        frame: NSRect?
     ) {
         self.element = element
         self.actions = actions
         self.frame = frame
-        self.ancestorDescriptions = ancestorDescriptions
-
-        self.isMenuBarItem = (try? element.roleMatches(oneOf: [
-            ElementRole.menu,
-            .menuBar,
-            .menuItem,
-            .menuButton,
-            .menuBarItem
-        ])) ?? false
     }
 }
 

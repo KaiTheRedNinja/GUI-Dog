@@ -54,6 +54,21 @@ public extension String {
     static func build(@StringBuilder content: () async throws -> String) async throws -> String {
         return try await content()
     }
+
+    /// Adds a tab to every line
+    /// - Parameters:
+    ///   - useSpaces: Whether the tab should use spaces `" "` or tabs `"\t"`
+    ///   - count: The number of spaces or tabs to use
+    /// - Returns: A string, with the appropriate tabs prefixed to every line
+    func tab(useSpaces: Bool = true, count: Int = 2) -> String {
+        let prefix = String(repeating: useSpaces ?  " " : "\t", count: count)
+        return self
+            .split(separator: "\n")
+            .map {
+                prefix + $0
+            }
+            .joined(separator: "\n")
+    }
 }
 
 /// Uses `dump` from the swift standard library to dump the description of a value

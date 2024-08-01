@@ -92,7 +92,7 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
 
     func getContext() async throws -> String? {
         let discovery = try await getDiscoveryContext()!
-        let descriptions = try await generateElementDescriptions()
+        let description = try await generateElementDescriptions()
 
         return String.build {
             discovery
@@ -100,11 +100,7 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
             "\n"
 
             "The actionable elements are:"
-            for description in descriptions {
-                if let description = description.bulletPointDescription {
-                    description
-                }
-            }
+            description
         }
     }
 
@@ -153,90 +149,73 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
 
     func functionFailed() {}
 
-    public func generateElementDescriptions() async throws -> [ActionableElementDescription] {
-        guard let accessSnapshot else {
+    public func generateElementDescriptions() async throws -> String {
+        guard let accessSnapshot, let actionTree = accessSnapshot.actionTree else {
             throw AccessError.accessSnapshotNotFound
         }
 
-        let screenElements = accessSnapshot.actionableItems.filter { !$0.isMenuBarItem }
-        var menuBarItems: [ActionableElement] = []
-
-        for item in accessSnapshot.actionableItems {
-            guard item.isMenuBarItem else { continue }
-            guard try await item.element.roleMatches(oneOf: [
-                .menuItem,
-                .menuBarItem
-            ]) else { continue }
-
-            menuBarItems.append(item)
-        }
-
         var elementMap: [UUID: ActionableElement] = [:]
-        var descriptions: [ActionableElementDescription] = []
-
-        for element in screenElements {
-            // get info about the element, verify it exists
-            let role = try await element.element.getAttribute(ElementAttribute.roleDescription) as? String
-            guard let role else { continue }
-
-            let description = try await AccessReader(for: element.element).read()
-                .compactMap { semantic in
-                    let desc = semantic.description
-                    return desc.isEmpty ? nil : desc
-                }
-                .joined(separator: ", ")
-
-            let actions = element.actions
-
-            // store it and the ID
-            let uuid = UUID()
-            elementMap[uuid] = element
-
-            // describe its actions
-            var actionDescriptions: [ActionableElementDescription.ActionDescription] = []
-            for action in actions {
-                guard
-                    let description = try await element.element.describeAction(action),
-                    !description.isEmpty
-                else { continue }
-
-                actionDescriptions.append(.init(
-                    actionName: action,
-                    description: description
-                ))
-            }
-
-            // describe the focus/unfocus action, if it exists
-            if let focus = try await element.element.getAttribute(.isFocused) as? Bool {
-                let focusActionDescription: ActionableElementDescription.ActionDescription = if focus {
-                    .init(
-                        actionName: CustomAction.resignFocus.rawValue,
-                        description: "Removes focus from this element."
-                    )
-                } else {
-                    .init(
-                        actionName: CustomAction.becomeFocus.rawValue,
-                        description: "Sets focus to this element."
-                    )
-                }
-
-                actionDescriptions.append(focusActionDescription)
-            }
-
-            // append it
-            descriptions.append(
-                .init(
-                    id: uuid,
-                    role: role,
-                    givenDescription: description,
-                    actions: actionDescriptions
-                )
-            )
-        }
-
+        let description = try await describe(node: actionTree, elementMap: &elementMap)
         self.elementMap = elementMap
 
-        return descriptions
+        return description
+    }
+
+    func describe(node: ActionableElementNode, elementMap: inout [UUID: ActionableElement]) async throws -> String {
+        try await String.build {
+            if let actionableElement = node.actionableElement,
+               let actionDescription = try await describe(element: actionableElement, elementMap: &elementMap) {
+                " - " + node.elementDescription + ": " + actionDescription
+            } else {
+                " - " + node.elementDescription
+            }
+            if !node.children.isEmpty {
+                " - Children:"
+                    .tab()
+                for child in node.children {
+                    try await describe(node: child, elementMap: &elementMap)
+                        .tab(count: 4)
+                }
+            }
+        }
+    }
+
+    func describe(element: ActionableElement, elementMap: inout [UUID: ActionableElement]) async throws -> String? {
+        let actions = element.actions
+
+        // store it and the ID
+        let uuid = UUID()
+        elementMap[uuid] = element
+
+        // describe its actions
+        var actionDescriptions: [(actionName: String, description: String)] = []
+        for action in actions {
+            guard
+                let description = try await element.element.describeAction(action),
+                !description.isEmpty
+            else { continue }
+
+            actionDescriptions.append((
+                actionName: action,
+                description: description
+            ))
+        }
+
+        // return it
+        return String.build {
+            uuid.uuidString
+
+            for (actionName, actionDescription) in actionDescriptions where actionName != "AXCancel" {
+                (
+                    " - " + actionName + (
+                        actionDescription.isEmpty
+                        ? ""
+                        : ": " + actionDescription
+                    )
+                )
+                .tab()
+            }
+        }
     }
 }
 
