@@ -163,13 +163,16 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
 
     func describe(node: ActionableElementNode, elementMap: inout [UUID: ActionableElement]) async throws -> String {
         try await String.build {
-            if let actionableElement = node.actionableElement,
+            if let actionableElement = node.actionableElement, // theres an action to show
                let actionDescription = try await describe(element: actionableElement, elementMap: &elementMap) {
                 " - " + node.elementDescription + ": " + actionDescription
-            } else {
-                " - " + node.elementDescription
+            } else if node.children.count == 1 { // this has a single child
+                let childDesc = try await describe(node: node.children.first!, elementMap: &elementMap)
+                " - " + node.elementDescription + childDesc
             }
-            if !node.children.isEmpty {
+
+            // has multiple children
+            if node.children.count > 1 {
                 " - Children:"
                     .tab()
                 for child in node.children {

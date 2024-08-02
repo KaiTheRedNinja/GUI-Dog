@@ -93,7 +93,8 @@ extension Access {
 
             for (index, child) in children.lazy.compactMap({ $0 as? Element }).enumerated() {
                 guard index < maxChildren else {
-                    logger.info("Hit children limit")
+                    let desc = try child.getAttribute(.description) as? String
+                    logger.info("Hit children limit: \(desc ?? "no description")")
                     break
                 }
 
