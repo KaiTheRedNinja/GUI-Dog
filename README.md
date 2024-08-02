@@ -23,11 +23,11 @@ Interactions with the Gemini API follow this process:
 1. Decide if the goal is feasible
 2. Gather context
 3. Decide one of the following:
-    - Which tool to use
+    - A tool to use
+        - Uses function calling to use the tool
     - The goal is complete
     - The goal cannot be achieved
-4. Use the tool, while indicating if the goal has been achieved or not
-4. Repeat 2-4 until the LLM indicates that the goal has been achieved
+4. Repeat 2-3 until the LLM indicates that the goal has been achieved
 
 ## Roadmap
 
@@ -48,16 +48,13 @@ Accessibility API capabilities:
 - [x] Easy-to-use API for executing actions
     - [x] Make it possible to execute actions
     - [x] Create a clean API
-- [ ] Other capabilities
+- [x] Other capabilities
     - [x] Focusing apps
-    - [ ] Clicking menu bar items
+    - [x] Clicking menu bar items
 
 Gemini API capabilities:
 - [x] Trigger API calling (a shortcut probably)
 - [x] Obtain goal from user
-- [ ] Determine if the action is too complex
-    - [ ] Prompt engineering
-    - [x] Fail graciously if the goal cannot be achieved
 - [x] Gather accessibility context
 - [x] Determine which tool to use, or if the goal is impossible/complete
     - [x] Prompt engineering

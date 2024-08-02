@@ -59,7 +59,9 @@ Respond in text with one of the following:
 a HUMAN READABLE description of what you intend to do with the tool. For example, "ActionName: Readable \
 description about what you want to use the tool for". Do not include any UUIDs, and use actions' descriptions
 instead of names.
-- "NO TOOL" if the step requires an action that none of the tools provide, such as dragging, typing, or copy-paste
+- If the step requires an action that none of the tools provide, such as dragging, typing, or copy-paste, respond with
+"NO TOOL", followed by a colon, and a HUMAN READABLE explanation of why the goal cannot be achieved from the current
+state.
 - "DONE" if the goal has already been satisfied. You may determine this from the context, or from the \
 list of past steps.
 
@@ -92,12 +94,20 @@ Note that your action does not need to achieve the goal, it just needs to get cl
             throw LLMCommunicationError.emptyResponse
         }
 
-        guard !text.contains("NO TOOL") else {
-            throw LLMCommunicationError.goalImpossible(reason: "No Tool")
-        }
-
         guard !text.contains("DONE") else {
             return .goalFinished
+        }
+
+        // get the text components
+        let components = text.components(separatedBy: ":")
+        guard components.count >= 2 else {
+            throw LLMCommunicationError.emptyResponse
+        }
+
+        let reason = components.dropFirst().joined(separator: ":").trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !text.contains("NO TOOL") else {
+            throw LLMCommunicationError.goalImpossible(reason: reason)
         }
 
         // at this stage, it means that the AI is trying to call a function
@@ -105,13 +115,6 @@ Note that your action does not need to achieve the goal, it just needs to get cl
         guard let funcCall = functionCalls.first else {
             throw LLMCommunicationError.emptyResponse
         }
-
-        let components = text.components(separatedBy: ":")
-        guard components.count >= 2 else {
-            throw LLMCommunicationError.emptyResponse
-        }
-
-        let reason = components.dropFirst().joined(separator: ":").trimmingCharacters(in: .whitespacesAndNewlines)
 
         return .executeStep(call: funcCall, reason: reason)
     }
