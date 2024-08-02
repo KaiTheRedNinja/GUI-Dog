@@ -126,21 +126,20 @@ public class HandsBot {
         if await updateCapabilityProviders() == false { return false }
 
         do {
-            let providerChoice = try await chooseProvider(state: state)
+            let stepResult = try await determineFunction(state: state)
 
-            if providerChoice.providerName == "DONE" {
+            switch stepResult {
+            case .goalFinished:
                 updateStateToComplete()
                 return true
+            case let .executeStep(call, reason):
+                // update state and UI
+                addStep(reason)
+                await uiDelegate?.update(state: state)
+
+                // execute the call
+                try await executeFunction(state: state, function: call)
             }
-
-            // update the state and ui
-            addStep(providerChoice.intention)
-            await uiDelegate?.update(state: state)
-
-            try await executeStep(
-                state: state,
-                providerChoice: providerChoice
-            )
         } catch {
             logger.error("Could not execute the step")
             updateState(toError: .init(error))
