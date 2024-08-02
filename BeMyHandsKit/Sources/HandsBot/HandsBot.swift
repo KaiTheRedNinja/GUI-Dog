@@ -76,19 +76,16 @@ public class HandsBot {
         // update the capability providers
         if await updateCapabilityProviders() == false { return }
 
-        // Phase 1: Determine if the goal is possible
-        if await phaseOne(goal: goal) == false { return }
-
         // update the state
         await uiDelegate?.update(state: state)
 
-        // Phase 2: Satisfy the steps one by one
+        // Satisfy the steps one by one
 
         // note that this MAY result in infinite loops, if the AI doesn't ever say that
         // it is complete
         while state.overallState != .complete {
             // execute phase two
-            if await phaseTwo() == false { return }
+            if await takeStep() == false { return }
 
             // update the state
             await uiDelegate?.update(state: state)
@@ -110,18 +107,7 @@ public class HandsBot {
         }
     }
 
-    private func phaseOne(goal: String) async -> Bool {
-//        do {
-//            try await determineGoalFeasibility(goal: goal)
-//        } catch {
-//            updateState(toError: .init(error))
-//            return false
-//        }
-
-        return true
-    }
-
-    private func phaseTwo() async -> Bool {
+    private func takeStep() async -> Bool {
         // update the capability providers
         if await updateCapabilityProviders() == false { return false }
 
