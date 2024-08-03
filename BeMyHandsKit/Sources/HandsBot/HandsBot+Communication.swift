@@ -69,7 +69,7 @@ from the list of past steps.
 current
 state.
 
-If you respond with the name of a tool, use the tool in a function call by following its instructions.
+If you respond with the name of a tool, remember to USE THE TOOL in a FUNCTION CALL, following its instructions.
 
 Note that your action does not need to achieve the goal, it just needs to get closer.
 

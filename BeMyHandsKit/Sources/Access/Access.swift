@@ -21,6 +21,8 @@ public final class Access {
     internal var focus: AccessFocus?
     /// Trigger to refocus when the frontmost application changes.
     internal var refocusTrigger: NSKeyValueObservation?
+    /// Number of times refocus has failed. ``Access`` will stop trying after 5 tries
+    internal var refocusFailedCount: Int = 0
 
     /// The delegate to inform about important events
     public weak var delegate: (any AccessDelegate)?

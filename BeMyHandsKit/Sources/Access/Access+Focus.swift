@@ -165,9 +165,21 @@ public extension Access {
 
             // Inform the delegate
             delegate?.accessDidRefocus(success: true)
+            refocusFailedCount = 0
         } catch {
             logger.error("Failed: \(error)")
             await handleError(error)
+
+            // try again slightly later
+            let delay = 0.1*CGFloat(refocusFailedCount*refocusFailedCount)+0.05
+            refocusFailedCount += 1
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+                Task { @AccessActor [weak self] in
+                    guard let self, refocusFailedCount < 5 else { return }
+                    await refocus(processIdentifier: processIdentifier)
+                }
+            }
 
             delegate?.accessDidRefocus(success: false)
         }
