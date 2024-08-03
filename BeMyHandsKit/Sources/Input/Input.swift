@@ -1,8 +1,10 @@
 import Foundation
 import CoreGraphics
 import IOKit
-
 import Output
+import OSLog
+
+private let logger = Logger(subsystem: #fileID, category: "Input")
 
 /// Input handler.
 @MainActor
@@ -148,7 +150,8 @@ public final class Input {
         action: @escaping () async -> Void
     ) {
         guard state.keyBindings.updateValue(action, forKey: keyBinding) == nil else {
-            fatalError("Attempted to bind the same key combination twice")
+            logger.error("Attempted to bind the same key combination twice")
+            return
         }
     }
 

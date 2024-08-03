@@ -21,7 +21,7 @@
 		936392472C54D4EB00EFF9AB /* SetupHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936392462C54D4EB00EFF9AB /* SetupHomeView.swift */; };
 		936392492C54D4F700EFF9AB /* SetupVisionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936392482C54D4F700EFF9AB /* SetupVisionView.swift */; };
 		9363924B2C54D50600EFF9AB /* SetupAccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9363924A2C54D50600EFF9AB /* SetupAccessView.swift */; };
-		9363924D2C54D50D00EFF9AB /* SetupFinishView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9363924C2C54D50D00EFF9AB /* SetupFinishView.swift */; };
+		9363924D2C54D50D00EFF9AB /* SetupWarningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9363924C2C54D50D00EFF9AB /* SetupWarningView.swift */; };
 		936392502C54E40400EFF9AB /* Luminare in Frameworks */ = {isa = PBXBuildFile; productRef = 9363924F2C54E40400EFF9AB /* Luminare */; };
 		936392522C55E8AF00EFF9AB /* PreferencesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936392512C55E8AA00EFF9AB /* PreferencesManager.swift */; };
 		936392542C55EA0400EFF9AB /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936392532C55EA0300EFF9AB /* FileSystem.swift */; };
@@ -42,6 +42,7 @@
 		9397F8332C4CA3AC00A8BAC1 /* StatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F8322C4CA3A700A8BAC1 /* StatusViewController.swift */; };
 		9397F8352C4CA71400A8BAC1 /* GoalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F8342C4CA70F00A8BAC1 /* GoalViewController.swift */; };
 		9397F83A2C4CA77400A8BAC1 /* GoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9397F8392C4CA77400A8BAC1 /* GoalsView.swift */; };
+		93CE779D2C5E28E1006FF8AF /* SetupInstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CE779C2C5E28DC006FF8AF /* SetupInstructionView.swift */; };
 		93D7A4502C450F7B0065186B /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7A44F2C450F770065186B /* Secrets.swift */; };
 		93D7A4532C45131B0065186B /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 93D7A4522C45131B0065186B /* GoogleGenerativeAI */; };
 		93D7A4552C45140E0065186B /* AccessManager+LLM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7A4542C4514090065186B /* AccessManager+LLM.swift */; };
@@ -64,7 +65,7 @@
 		936392462C54D4EB00EFF9AB /* SetupHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupHomeView.swift; sourceTree = "<group>"; };
 		936392482C54D4F700EFF9AB /* SetupVisionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupVisionView.swift; sourceTree = "<group>"; };
 		9363924A2C54D50600EFF9AB /* SetupAccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupAccessView.swift; sourceTree = "<group>"; };
-		9363924C2C54D50D00EFF9AB /* SetupFinishView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupFinishView.swift; sourceTree = "<group>"; };
+		9363924C2C54D50D00EFF9AB /* SetupWarningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupWarningView.swift; sourceTree = "<group>"; };
 		936392512C55E8AA00EFF9AB /* PreferencesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesManager.swift; sourceTree = "<group>"; };
 		936392532C55EA0300EFF9AB /* FileSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSystem.swift; sourceTree = "<group>"; };
 		936392572C5715E200EFF9AB /* KeyboardProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardProvider.swift; sourceTree = "<group>"; };
@@ -83,6 +84,7 @@
 		9397F8322C4CA3A700A8BAC1 /* StatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusViewController.swift; sourceTree = "<group>"; };
 		9397F8342C4CA70F00A8BAC1 /* GoalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalViewController.swift; sourceTree = "<group>"; };
 		9397F8392C4CA77400A8BAC1 /* GoalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsView.swift; sourceTree = "<group>"; };
+		93CE779C2C5E28DC006FF8AF /* SetupInstructionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupInstructionView.swift; sourceTree = "<group>"; };
 		93D7A44F2C450F770065186B /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		93D7A4542C4514090065186B /* AccessManager+LLM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AccessManager+LLM.swift"; sourceTree = "<group>"; };
 		93F519222C5764B800E7E799 /* BeMyHandsApp+LLM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeMyHandsApp+LLM.swift"; sourceTree = "<group>"; };
@@ -173,7 +175,8 @@
 				936392482C54D4F700EFF9AB /* SetupVisionView.swift */,
 				9363924A2C54D50600EFF9AB /* SetupAccessView.swift */,
 				936948DA2C59175B00EB37B6 /* SetupShortcutView.swift */,
-				9363924C2C54D50D00EFF9AB /* SetupFinishView.swift */,
+				93CE779C2C5E28DC006FF8AF /* SetupInstructionView.swift */,
+				9363924C2C54D50D00EFF9AB /* SetupWarningView.swift */,
 			);
 			path = Setup;
 			sourceTree = "<group>";
@@ -391,7 +394,7 @@
 				9397F8352C4CA71400A8BAC1 /* GoalViewController.swift in Sources */,
 				9363924B2C54D50600EFF9AB /* SetupAccessView.swift in Sources */,
 				936948DB2C59175B00EB37B6 /* SetupShortcutView.swift in Sources */,
-				9363924D2C54D50D00EFF9AB /* SetupFinishView.swift in Sources */,
+				9363924D2C54D50D00EFF9AB /* SetupWarningView.swift in Sources */,
 				936392432C54C52500EFF9AB /* SetupView.swift in Sources */,
 				936392472C54D4EB00EFF9AB /* SetupHomeView.swift in Sources */,
 				939488622C537E8F0052FBBF /* AppOpen.swift in Sources */,
@@ -410,6 +413,7 @@
 				936948E22C59231700EB37B6 /* SettingsView.swift in Sources */,
 				9397F83A2C4CA77400A8BAC1 /* GoalsView.swift in Sources */,
 				936392492C54D4F700EFF9AB /* SetupVisionView.swift in Sources */,
+				93CE779D2C5E28E1006FF8AF /* SetupInstructionView.swift in Sources */,
 				936392402C54A0D100EFF9AB /* StatusWindow.swift in Sources */,
 				93D7A4552C45140E0065186B /* AccessManager+LLM.swift in Sources */,
 				9397F8292C4BC3A600A8BAC1 /* FramesWindow.swift in Sources */,

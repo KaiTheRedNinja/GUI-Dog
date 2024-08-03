@@ -1,5 +1,5 @@
 //
-//  SetupFinishView.swift
+//  SetupWarningView.swift
 //  BeMyHands
 //
 //  Created by Kai Quan Tay on 27/7/24.
@@ -8,7 +8,7 @@
 import SwiftUI
 import Luminare
 
-struct SetupFinishView: View {
+struct SetupWarningView: View {
     @Binding var stage: SetupStage
 
     @Environment(\.dismissWindow)
@@ -136,5 +136,5 @@ BeMyHands will not be able to satisfy actions that are too complex, or require o
 }
 
 #Preview {
-    SetupFinishView(stage: .constant(.finish))
+    SetupWarningView(stage: .constant(.warning))
 }

@@ -31,7 +31,7 @@ struct SetupView: View {
                             stage = switch stage {
                             case .blindOrNot: .home
                             case .setupAccessManager: .blindOrNot
-                            case .finish: .setupAccessManager
+                            case .instruction: .setupAccessManager
                             default: fatalError()
                             }
                         }
@@ -50,17 +50,19 @@ struct SetupView: View {
                 SetupAccessView(stage: $stage, setupCallback: setupCallback)
             case .setupShortcut:
                 SetupShortcutView(stage: $stage)
-            case .finish:
-                SetupFinishView(stage: $stage)
+            case .instruction:
+                SetupInstructionView(stage: $stage)
+            case .warning:
+                SetupWarningView(stage: $stage)
             }
         }
         .padding()
         .padding(.bottom, 30)
         .onAppear {
-            // if process is already trusted, we can close this window
-            if Element.checkProcessTrustedStatus() {
-                dismissWindow()
-            }
+//            // if process is already trusted, we can close this window
+//            if Element.checkProcessTrustedStatus() {
+//                dismissWindow()
+//            }
         }
         .frame(minWidth: 720, minHeight: 560)
         .animation(.default, value: stage)
@@ -72,7 +74,8 @@ enum SetupStage {
     case blindOrNot
     case setupAccessManager
     case setupShortcut
-    case finish
+    case instruction
+    case warning
 }
 
 #Preview {
