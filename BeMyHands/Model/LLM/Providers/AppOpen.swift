@@ -17,6 +17,9 @@ class AppOpen: StepCapabilityProvider {
     var instructions: String {
         """
         Call appOpen with the name of the app you want to open
+
+        To use this tool, use the `openApp` function call. When you call the function to open an app, provide \
+        the appName of the app using its NAME, without any .app suffix.
         """
     }
 

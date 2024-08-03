@@ -52,8 +52,8 @@ class AccessManager {
             return
         }
 
-        // Set the timeout to 0.5 seconds
-        await access.setTimeout(seconds: 0.5)
+        // Set the timeout to 5 seconds
+        await access.setTimeout(seconds: 5)
 
         // Save the Access instance
         self.access = access

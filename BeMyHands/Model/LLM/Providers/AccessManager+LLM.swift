@@ -29,9 +29,9 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
         - [description]: [UUID]
             - [action name]: [action description]
 
-        Use the `executeAction` function call. When you call the function to execute an action \
-        on the element, refer to the element by its `description` AND `UUID` EXACTLY as it is \
-        given in [description]: [UUID] and the action by its `action name`.
+        To use this tool, use the `executeAction` function call. When you call the function to execute an action \
+        on the element, refer to the element by its `description` AND `UUID` EXACTLY as it is given in \
+        [description]: [UUID] and the action by its `action name`.
         """
     }
 
@@ -60,8 +60,10 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
     }
 
     func updateContext() async throws {
+        logger.info("Updating context!")
         try await takeAccessSnapshot(includeElements: true)
         await uiDelegate?.update(actionableElements: accessSnapshot?.actionableItems ?? [])
+        logger.info("Updated context!")
     }
 
     func getDiscoveryContext() async throws -> String? {
@@ -105,8 +107,6 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
     }
 
     func execute(function: LLMFuncCall) async throws {
-        // validate the function call. TODO: allow multiple function calls
-
         guard let function = function as? FunctionCall,
               function.name == "executeAction" else {
             throw LLMCommunicationError.invalidFunctionCall
@@ -133,18 +133,11 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
             throw AccessError.elementNotFound
         }
 
-        // if its focus, then do it manually
-        guard ![CustomAction.resignFocus, .becomeFocus].map({ $0.rawValue }).contains(actionName) else {
-            let newFocusState = actionName == "AXBecomeFocus"
-            try await element.element.setAttribute(.isFocused, value: newFocusState)
-            return
-        }
-
         guard element.actions.contains(actionName) else {
             throw AccessError.actionNotFound
         }
 
-        try await element.element.performAction(actionName)
+        try? await element.element.performAction(actionName)
     }
 
     func functionFailed() {}
@@ -155,19 +148,28 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
         }
 
         var elementMap: [UUID: ActionableElement] = [:]
-        let description = try await describe(node: actionTree, elementMap: &elementMap)
+        let description = await describe(node: actionTree, elementMap: &elementMap)
         self.elementMap = elementMap
 
         return description
     }
 
-    func describe(node: ActionableElementNode, elementMap: inout [UUID: ActionableElement]) async throws -> String {
-        try await String.build {
-            if let actionableElement = node.actionableElement, // theres an action to show
-               let actionDescription = try await describe(element: actionableElement, elementMap: &elementMap) {
+    func describe(node: ActionableElementNode, elementMap: inout [UUID: ActionableElement]) async -> String {
+        var actionDescription: String?
+
+        if let actionableElement = node.actionableElement {
+            do {
+                actionDescription = try await describe(element: actionableElement, elementMap: &elementMap)
+            } catch {
+                logger.error("Could not get description for element: \(node.elementDescription)")
+            }
+        }
+
+        return await String.build {
+            if let actionDescription {
                 " - " + node.elementDescription + ": " + actionDescription
             } else if node.children.count == 1 { // this has a single child
-                let childDesc = try await describe(node: node.children.first!, elementMap: &elementMap)
+                let childDesc = await describe(node: node.children.first!, elementMap: &elementMap)
                 " - " + node.elementDescription + childDesc
             }
 
@@ -176,7 +178,7 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
                 " - Children:"
                     .tab()
                 for child in node.children {
-                    try await describe(node: child, elementMap: &elementMap)
+                    await describe(node: child, elementMap: &elementMap)
                         .tab(count: 4)
                 }
             }

@@ -41,29 +41,33 @@ extension HandsBot {
             """
 
 To work towards this goal, you have the following tools:
+
 """
 
             for stepCapabilityProvider in self.stepCapabilityProviders {
-                // TODO: use UUIDs instead of names for greater resillience
-                " - " + stepCapabilityProvider.name + ": " + stepCapabilityProvider.description
+                " - "
+                    + stepCapabilityProvider.name
                 (
-                    " - " + stepCapabilityProvider.instructions
+                    stepCapabilityProvider.description + ". "
+                    + stepCapabilityProvider.instructions
                 )
-                .tab()
+                .tab(count: 4)
+                ""
             }
 
             """
 
-Respond in text with one of the following:
+Respond with one of the following:
 - The name of ONLY ONE of the tools: \(stepCapabilityProviders.map { $0.name }), followed by a colon, and \
 a HUMAN READABLE description of what you intend to do with the tool. For example, "ActionName: Readable \
 description about what you want to use the tool for". Do not include any UUIDs, and use actions' descriptions
 instead of names.
+- If the goal has already been satisfied, respond with "DONE", in text. You may determine this from the context, or \
+from the list of past steps.
 - If the step requires an action that none of the tools provide, such as dragging, typing, or copy-paste, respond with
-"NO TOOL", followed by a colon, and a HUMAN READABLE explanation of why the goal cannot be achieved from the current
+"NO TOOL", in text, followed by a colon, and a HUMAN READABLE explanation of why the goal cannot be achieved from the \
+current
 state.
-- "DONE" if the goal has already been satisfied. You may determine this from the context, or from the \
-list of past steps.
 
 If you respond with the name of a tool, use the tool in a function call by following its instructions.
 
