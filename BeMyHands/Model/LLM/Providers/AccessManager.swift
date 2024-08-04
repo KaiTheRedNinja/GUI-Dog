@@ -57,9 +57,6 @@ class AccessManager {
 
         // Save the Access instance
         self.access = access
-
-        // Show the overlay, initially with no data
-        await uiDelegate?.show()
     }
 
     /// Takes an access snapshot, and updates the overlay

@@ -70,8 +70,12 @@ class StatusViewController: NSViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + stateObject.hideDelay) { [weak self] in
             guard let self else { return }
 
-            stateObject.isShown = false
-            setupState(with: stateObject.state)
+            hideNow()
         }
+    }
+
+    func hideNow() {
+        stateObject.isShown = false
+        setupState(with: stateObject.state)
     }
 }

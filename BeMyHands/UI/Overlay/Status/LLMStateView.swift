@@ -14,7 +14,7 @@ private let logger = Logger(subsystem: #fileID, category: "BeMyHands")
 class LLMStateObject: ObservableObject {
     @Published var state: LLMState = .zero
     @Published var isShown: Bool = false
-    @Published var size: NSSize = .init(width: 300, height: 300)
+    @Published var size: NSSize = .zero
 
     var hideDelay: TimeInterval = 3
 
