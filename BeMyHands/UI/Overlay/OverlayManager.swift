@@ -92,7 +92,7 @@ class OverlayManager: LLMDisplayDelegate, AccessDisplayDelegate {
 
     func update(actionableElements: [ActionableElement]) async {
         // Obtain the size of the screen
-        guard let screenSize = NSScreen.main?.frame.size else {
+        guard let screenSize = (framesWindowController.window?.screen ?? NSScreen.main)?.frame.size else {
             fatalError("Could not get screen size")
         }
 
@@ -111,15 +111,20 @@ class OverlayManager: LLMDisplayDelegate, AccessDisplayDelegate {
         announceStateChange(state)
 
         // Obtain the size of the screen
-        guard let screenSize = NSScreen.main?.frame.size else {
+        guard let screenFrame = NSScreen.main?.frame else {
             fatalError("Could not get screen size")
         }
 
         self.statusController.setupFrames(
-            with: .init(origin: .zero, size: screenSize)
+            with: .init(origin: .zero, size: screenFrame.size)
         )
         self.statusController.setupState(with: state)
-        statusWindowController.window?.setFrameOrigin(.init(x: 0, y: 0))
+        statusWindowController.window?.setFrameOrigin(
+            .init(
+                x: screenFrame.minX,
+                y: screenFrame.minY
+            )
+        )
     }
 
     func show() {

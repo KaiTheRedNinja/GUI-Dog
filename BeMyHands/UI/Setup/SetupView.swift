@@ -59,10 +59,10 @@ struct SetupView: View {
         .padding()
         .padding(.bottom, 30)
         .onAppear {
-//            // if process is already trusted, we can close this window
-//            if Element.checkProcessTrustedStatus() {
-//                dismissWindow()
-//            }
+            // if process is already trusted, we can close this window
+            if Element.checkProcessTrustedStatus() {
+                dismissWindow()
+            }
         }
         .frame(minWidth: 720, minHeight: 560)
         .animation(.default, value: stage)
