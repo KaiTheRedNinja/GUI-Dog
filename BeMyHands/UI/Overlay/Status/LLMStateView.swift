@@ -14,39 +14,45 @@ struct LLMStateView: View {
     var isShown: Bool
 
     var body: some View {
-        VStack {
-            Spacer()
-            List {
-                Section {
-                    Text(state.goal)
-                        .font(.title)
-                }
+        ScrollView {
+            VStack(alignment: .leading, spacing: 14) {
+                Spacer()
 
-                switch state.overallState {
-                case .checkingFeasibility:
-                    Section {
-                        VStack {
-                            ContentUnavailableView("Loading", systemImage: "checklist.unchecked")
-                        }
-                        .frame(height: size.width*3/4)
+                pillBackground(
+                    text: state.goal,
+                    backgroundColor: {
+                        Color(nsColor: .windowBackgroundColor)
+                    },
+                    icon: {
+                        Image(systemName: "flag.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundStyle(Color.accentColor)
                     }
-                default:
-                    Section("Steps") {
-                        stepsSection
-                    }
+                )
 
-                    if case let .error(lLMCommunicationError) = state.overallState {
-                        Section("Error") {
-                            Text(lLMCommunicationError.description)
+                stepsSection
+
+                if state.overallState == .complete {
+                    pillBackground(
+                        text: "Done!",
+                        backgroundColor: {
+                            mute(color: .green)
+                        },
+                        icon: {
+                            Image(systemName: "flag.pattern.checkered")
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundStyle(Color.green)
                         }
-                    }
+                    )
                 }
             }
-            .frame(height: size.width)
             .cornerRadius(10)
-            .shadow(radius: 10)
-            .padding(10)
+            .shadow(color: .black.opacity(0.3), radius: 6)
+            .padding(15)
         }
+        .defaultScrollAnchor(.bottom)
         .opacity(isShown ? 1 : 0)
         .frame(width: size.width, height: size.height)
         .animation(.default, value: state)
@@ -55,134 +61,134 @@ struct LLMStateView: View {
 
     var stepsSection: some View {
         ForEach(Array(state.steps.enumerated()), id: \.1.step) { (index, step) in
-            HStack(spacing: 12) {
-                Group {
-                    if index+1 == state.steps.count { // current step
-                        switch state.overallState {
-                        case .working: // current step in progress
-                            ProgressView()
-                                .progressViewStyle(.circular)
-                                .scaleEffect(.init(0.8)) // make it look the same size as the images
-                        case .complete: // current step complete
-                            Image(systemName: "checkmark.circle")
-                                .resizable()
-                                .scaledToFit()
-                                .foregroundStyle(.green)
-                        case .cancelled, .error: // issue with current step
-                            Image(systemName: "exclamationmark.triangle")
-                                .resizable()
-                                .scaledToFit()
-                                .foregroundStyle(.red)
-                        default: // this should never occur
-                            Image(systemName: "circle")
-                                .resizable()
-                                .scaledToFit()
-                                .foregroundStyle(.gray)
-                        }
-                    } else {
+            pillBackground(
+                text: step.step
+            ) {
+                if index+1 == state.steps.count { // must be current step
+                    switch state.overallState {
+                    case .cancelled, .error:
+                        mute(color: Color.red)
+                    default:
+                        Color(nsColor: .windowBackgroundColor)
+                    }
+                } else {
+                    Color(nsColor: .windowBackgroundColor)
+                }
+            } icon: {
+                if index+1 == state.steps.count { // current step
+                    switch state.overallState {
+                    case .working: // current step in progress
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                            .scaleEffect(.init(0.8)) // make it look the same size as the images
+                    case .complete: // current step complete
                         Image(systemName: "checkmark.circle")
                             .resizable()
                             .scaledToFit()
                             .foregroundStyle(.green)
+                    case .cancelled, .error: // issue with current step
+                        Image(systemName: "exclamationmark.triangle")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundStyle(.red)
+                    default: // this should never occur
+                        Image(systemName: "circle")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundStyle(.gray)
                     }
+                } else {
+                    Image(systemName: "checkmark.circle")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(.green)
                 }
-                .frame(width: 25, height: 25)
-
-                Text(step.step)
-                    .font(.title2)
-
-                Spacer()
             }
         }
     }
-}
 
-private struct ViewPreview: View {
-    @State var shown: Bool = true
+    func pillBackground<B: View, I: View>(
+        text: String,
+        @ViewBuilder backgroundColor: () -> B,
+        @ViewBuilder icon: () -> I
+    ) -> some View {
+        HStack {
+            icon()
+                .frame(width: 20, height: 20)
+                .padding(.trailing, 3)
+            Text(text)
+                .font(.title2)
+            Spacer()
+        }
+        .frame(maxWidth: .infinity)
+        .padding(15)
+        .background {
+            backgroundColor()
+                .mask {
+                    RoundedRectangle(cornerRadius: 18)
+                }
+        }
+    }
 
-    var body: some View {
-        VStack {
-            LLMStateView(
-                state: .init(
-                    goal: "Working Goal",
-                    steps: (0..<5).map {
-                        .init(
-                            step: "Step \($0)"
-                        )
-                    }
-                ),
-                size: .init(width: 373, height: 373),
-                isShown: shown
-            )
-            Toggle("Shown?", isOn: $shown)
+    func mute(color: Color) -> some View {
+        ZStack {
+            Color(nsColor: .windowBackgroundColor)
+            color
+                .opacity(0.2)
         }
     }
 }
 
 #Preview {
-    ViewPreview()
-
-    /*
     LazyVGrid(columns: .init(repeating: .init(), count: 2)) {
+        let frame = CGSize(width: 373, height: 373)
+
+        let steps: [LLMStep] = (0..<6).map {
+            .init(step: "Step \($0)")
+        }
+
         LLMStateView(
             state: .init(
                 goal: "Non loaded goal",
                 steps: []
             ),
-            size: .init(width: 373, height: 373),
+            size: frame,
             isShown: true
         )
+        .frame(width: frame.width, height: frame.height)
 
         LLMStateView(
             state: .init(
                 goal: "Working Goal",
-                steps: (0..<5).map {
-                    .init(
-                        step: "Step \($0)",
-                        state: (
-                            $0 < 2 ? .complete :
-                                $0 > 2 ? .notReached : .working(.init())
-                        )
-                    )
-                },
-                currentStepIndex: 2
+                steps: steps,
+                overallState: .working
             ),
-            size: .init(width: 373, height: 373),
+            size: frame,
             isShown: true
         )
+        .frame(width: frame.width, height: frame.height)
 
         LLMStateView(
             state: .init(
-                goal: "Completed goal",
-                steps: (0..<5).map {
-                    .init(
-                        step: "Step \($0)",
-                        state: .complete
-                    )
-                },
-                currentStepIndex: 5
+                goal: "Completed Goal",
+                steps: steps,
+                overallState: .complete
             ),
-            size: .init(width: 373, height: 373),
+            size: frame,
             isShown: true
         )
+        .frame(width: frame.width, height: frame.height)
 
         LLMStateView(
             state: .init(
                 goal: "Failed goal",
-                steps: (0..<5).map {
-                    .init(
-                        step: "Step \($0)",
-                        state: (
-                            $0 < 4 ? .complete : .error(LLMCommunicationError.elementNotFound)
-                        )
-                    )
-                },
-                currentStepIndex: 5
+                steps: steps,
+                overallState: .error(.emptyResponse)
             ),
-            size: .init(width: 373, height: 373),
+            size: frame,
             isShown: true
         )
+        .frame(width: frame.width, height: frame.height)
     }
     .frame(width: 373*2, height: 373*2)
-     */
 }
