@@ -40,13 +40,11 @@ extension BeMyHandsApp {
         guard llmInProgress == false else {
             Task {
                 await overlayManager.abortGoalRequest()
+                await handsBot?.cancel()
+                handsBot = nil
+                llmInProgress = false
+                overlayManager.hide()
             }
-
-            handsBot?.cancel()
-            handsBot = nil
-            overlayManager.hide()
-
-            llmInProgress = false
 
             Output.shared.announce("LLM operation cancelled")
 

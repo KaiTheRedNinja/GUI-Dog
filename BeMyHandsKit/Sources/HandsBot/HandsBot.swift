@@ -39,9 +39,9 @@ public class HandsBot {
     /// This function simply cuts off its access to its providers and delegates, so when it tries to reach for one of
     /// them it will be denied, causing an error to be thrown. This error is then swallowed, as the ``uiDelegate``
     /// is no longer available.
-    public func cancel() {
-        state = .zero
+    public func cancel() async {
         state.overallState = .cancelled
+        await uiDelegate?.update(state: state)
         discoveryContentProviders = []
         stepCapabilityProviders = []
         uiDelegate = nil

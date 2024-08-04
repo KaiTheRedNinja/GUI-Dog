@@ -132,7 +132,7 @@ struct LLMStateView: View {
             )
         case .error(let lLMCommunicationError):
             pillBackground(
-                text: "Error: \(lLMCommunicationError.localizedDescription)",
+                text: "Error: \(lLMCommunicationError.description)",
                 backgroundColor: {
                     mute(color: .red)
                 },
