@@ -67,8 +67,11 @@ class StatusViewController: NSViewController {
         setupState(with: .zero)
     }
     func hide() {
-        stateObject.isShown = false
+        DispatchQueue.main.asyncAfter(deadline: .now() + stateObject.hideDelay) { [weak self] in
+            guard let self else { return }
 
-        setupState(with: stateObject.state)
+            stateObject.isShown = false
+            setupState(with: stateObject.state)
+        }
     }
 }

@@ -16,6 +16,8 @@ class LLMStateObject: ObservableObject {
     @Published var isShown: Bool = false
     @Published var size: NSSize = .init(width: 300, height: 300)
 
+    var hideDelay: TimeInterval = 3
+
     init(state: LLMState, isShown: Bool, size: NSSize) {
         self.state = state
         self.isShown = isShown
@@ -25,6 +27,8 @@ class LLMStateObject: ObservableObject {
 
 struct LLMStateView: View {
     @ObservedObject var stateObject: LLMStateObject
+
+    @State var isShown: Bool = false
 
     var body: some View {
         ScrollView {
@@ -46,20 +50,7 @@ struct LLMStateView: View {
 
                 stepsSection
 
-                if stateObject.state.overallState == .complete {
-                    pillBackground(
-                        text: "Done!",
-                        backgroundColor: {
-                            mute(color: .green)
-                        },
-                        icon: {
-                            Image(systemName: "flag.pattern.checkered")
-                                .resizable()
-                                .scaledToFit()
-                                .foregroundStyle(Color.green)
-                        }
-                    )
-                }
+                finishSection
             }
             .cornerRadius(10)
             .shadow(color: .black.opacity(0.3), radius: 6)
@@ -77,16 +68,7 @@ struct LLMStateView: View {
             pillBackground(
                 text: step.step
             ) {
-                if index+1 == stateObject.state.steps.count { // must be current step
-                    switch stateObject.state.overallState {
-                    case .cancelled, .error:
-                        mute(color: Color.red)
-                    default:
-                        Color(nsColor: .windowBackgroundColor)
-                    }
-                } else {
-                    Color(nsColor: .windowBackgroundColor)
-                }
+                Color(nsColor: .windowBackgroundColor)
             } icon: {
                 if index+1 == stateObject.state.steps.count { // current step
                     switch stateObject.state.overallState {
@@ -120,12 +102,58 @@ struct LLMStateView: View {
         }
     }
 
+    @ViewBuilder private var finishSection: some View {
+        switch stateObject.state.overallState {
+        case .complete:
+            pillBackground(
+                text: "Done!",
+                backgroundColor: {
+                    mute(color: .green)
+                },
+                icon: {
+                    Image(systemName: "flag.pattern.checkered")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(Color.green)
+                }
+            )
+        case .cancelled:
+            pillBackground(
+                text: "Cancelled",
+                backgroundColor: {
+                    Color(nsColor: .windowBackgroundColor)
+                },
+                icon: {
+                    Image(systemName: "xmark.app")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(Color.red)
+                }
+            )
+        case .error(let lLMCommunicationError):
+            pillBackground(
+                text: "Error: \(lLMCommunicationError.localizedDescription)",
+                backgroundColor: {
+                    mute(color: .red)
+                },
+                icon: {
+                    Image(systemName: "exclamationmark.triangle")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(.red)
+                }
+            )
+        default:
+            EmptyView()
+        }
+    }
+
     private func pillBackground<B: View, I: View>(
         text: String,
         @ViewBuilder backgroundColor: () -> B,
         @ViewBuilder icon: () -> I
     ) -> some View {
-        HStack {
+        HStack(alignment: .top) {
             icon()
                 .frame(width: 20, height: 20)
                 .padding(.trailing, 3)
