@@ -7,11 +7,24 @@
 
 import SwiftUI
 import HandsBot
+import OSLog
+
+private let logger = Logger(subsystem: #fileID, category: "BeMyHands")
+
+class LLMStateObject: ObservableObject {
+    @Published var state: LLMState = .zero
+    @Published var isShown: Bool = false
+    @Published var size: NSSize = .init(width: 300, height: 300)
+
+    init(state: LLMState, isShown: Bool, size: NSSize) {
+        self.state = state
+        self.isShown = isShown
+        self.size = size
+    }
+}
 
 struct LLMStateView: View {
-    var state: LLMState
-    var size: NSSize
-    var isShown: Bool
+    @ObservedObject var stateObject: LLMStateObject
 
     var body: some View {
         ScrollView {
@@ -19,7 +32,7 @@ struct LLMStateView: View {
                 Spacer()
 
                 pillBackground(
-                    text: state.goal,
+                    text: stateObject.state.goal,
                     backgroundColor: {
                         Color(nsColor: .windowBackgroundColor)
                     },
@@ -33,7 +46,7 @@ struct LLMStateView: View {
 
                 stepsSection
 
-                if state.overallState == .complete {
+                if stateObject.state.overallState == .complete {
                     pillBackground(
                         text: "Done!",
                         backgroundColor: {
@@ -53,19 +66,19 @@ struct LLMStateView: View {
             .padding(15)
         }
         .defaultScrollAnchor(.bottom)
-        .opacity(isShown ? 1 : 0)
-        .frame(width: size.width, height: size.height)
-        .animation(.default, value: state)
-        .animation(.default, value: isShown)
+        .opacity(stateObject.isShown ? 1 : 0)
+        .frame(width: stateObject.size.width, height: stateObject.size.height)
+        .animation(.default, value: stateObject.state)
+        .animation(.default, value: stateObject.isShown)
     }
 
-    var stepsSection: some View {
-        ForEach(Array(state.steps.enumerated()), id: \.1.step) { (index, step) in
+    private var stepsSection: some View {
+        ForEach(Array(stateObject.state.steps.enumerated()), id: \.1.step) { (index, step) in
             pillBackground(
                 text: step.step
             ) {
-                if index+1 == state.steps.count { // must be current step
-                    switch state.overallState {
+                if index+1 == stateObject.state.steps.count { // must be current step
+                    switch stateObject.state.overallState {
                     case .cancelled, .error:
                         mute(color: Color.red)
                     default:
@@ -75,8 +88,8 @@ struct LLMStateView: View {
                     Color(nsColor: .windowBackgroundColor)
                 }
             } icon: {
-                if index+1 == state.steps.count { // current step
-                    switch state.overallState {
+                if index+1 == stateObject.state.steps.count { // current step
+                    switch stateObject.state.overallState {
                     case .working: // current step in progress
                         ProgressView()
                             .progressViewStyle(.circular)
@@ -107,7 +120,7 @@ struct LLMStateView: View {
         }
     }
 
-    func pillBackground<B: View, I: View>(
+    private func pillBackground<B: View, I: View>(
         text: String,
         @ViewBuilder backgroundColor: () -> B,
         @ViewBuilder icon: () -> I
@@ -130,7 +143,7 @@ struct LLMStateView: View {
         }
     }
 
-    func mute(color: Color) -> some View {
+    private func mute(color: Color) -> some View {
         ZStack {
             Color(nsColor: .windowBackgroundColor)
             color
@@ -148,45 +161,53 @@ struct LLMStateView: View {
         }
 
         LLMStateView(
-            state: .init(
-                goal: "Non loaded goal",
-                steps: []
-            ),
-            size: frame,
-            isShown: true
+            stateObject: .init(
+                state: .init(
+                    goal: "Non loaded goal",
+                    steps: []
+                ),
+                isShown: true,
+                size: frame
+            )
         )
         .frame(width: frame.width, height: frame.height)
 
         LLMStateView(
+            stateObject: .init(
             state: .init(
                 goal: "Working Goal",
                 steps: steps,
                 overallState: .working
             ),
-            size: frame,
-            isShown: true
+            isShown: true,
+            size: frame
+            )
         )
         .frame(width: frame.width, height: frame.height)
 
         LLMStateView(
+            stateObject: .init(
             state: .init(
                 goal: "Completed Goal",
                 steps: steps,
                 overallState: .complete
             ),
-            size: frame,
-            isShown: true
+            isShown: true,
+            size: frame
+            )
         )
         .frame(width: frame.width, height: frame.height)
 
         LLMStateView(
+            stateObject: .init(
             state: .init(
                 goal: "Failed goal",
                 steps: steps,
                 overallState: .error(.emptyResponse)
             ),
-            size: frame,
-            isShown: true
+            isShown: true,
+            size: frame
+            )
         )
         .frame(width: frame.width, height: frame.height)
     }

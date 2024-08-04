@@ -65,11 +65,7 @@ public class HandsBot {
         defer {
             Task {
                 await self.uiDelegate?.update(state: state)
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) { @MainActor in
-                Task {
-                    await self.uiDelegate?.hide()
-                }
+                await self.uiDelegate?.hide()
             }
         }
 

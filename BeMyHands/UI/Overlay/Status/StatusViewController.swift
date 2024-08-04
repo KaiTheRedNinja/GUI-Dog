@@ -11,18 +11,14 @@ import Element
 import HandsBot
 
 class StatusViewController: NSViewController {
-    var stateView: NSHostingView<LLMStateView>
-    var visible: Bool
+    var stateView: NSHostingView<LLMStateView>!
+    var stateObject: LLMStateObject!
 
     init() {
+        self.stateObject = .init(state: .zero, isShown: false, size: .zero)
         self.stateView = .init(
-            rootView: .init(
-                state: LLMState.zero,
-                size: NSSize.zero,
-                isShown: false
-            )
+            rootView: .init(stateObject: self.stateObject)
         )
-        self.visible = false
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -52,53 +48,27 @@ class StatusViewController: NSViewController {
         )
 
         stateView.removeFromSuperview()
-        stateView = .init(
-            rootView: .init(
-                state: state,
-                size: stepsFrame.size,
-                isShown: visible
-            )
-        )
+        stateObject.size = stepsFrame.size
+        stateObject.state = state
         stateView.frame = stepsFrame
 
         let view = NSView()
         view.frame = self.view.frame
+        view.wantsLayer = true
         view.translatesAutoresizingMaskIntoConstraints = true
         view.addSubview(stateView)
 
         self.view = view
     }
 
-    func show() { changeVisibility(visible: true) }
-    func hide() { changeVisibility(visible: false) }
+    func show() {
+        stateObject.isShown = true
 
-    func changeVisibility(visible: Bool) {
-        self.visible = visible
+        setupState(with: .zero)
+    }
+    func hide() {
+        stateObject.isShown = false
 
-        stateView.removeFromSuperview()
-
-        let frame = self.view.frame
-        let stepsFrame: NSRect = .init(
-            x: frame.width*3/4,
-            y: 0,
-            width: frame.width/4,
-            height: frame.height
-        )
-
-        stateView = .init(
-            rootView: .init(
-                state: stateView.rootView.state,
-                size: stateView.rootView.size,
-                isShown: visible
-            )
-        )
-        stateView.frame = stepsFrame
-
-        let view = NSView()
-        view.frame = self.view.frame
-        view.translatesAutoresizingMaskIntoConstraints = true
-        view.addSubview(stateView)
-
-        self.view = view
+        setupState(with: stateObject.state)
     }
 }
