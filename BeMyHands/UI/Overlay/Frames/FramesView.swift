@@ -32,8 +32,11 @@ class FramesView: NSView {
             let elemView = NSView()
             elemView.translatesAutoresizingMaskIntoConstraints = true
             elemView.wantsLayer = true
-            elemView.layer?.borderWidth = 2
-            elemView.layer?.borderColor = .init(red: 1, green: 0, blue: 0, alpha: 0.5)
+            elemView.layer?.opacity = 0.2
+            elemView.layer?.borderWidth = 1
+            elemView.layer?.cornerRadius = 5
+            elemView.layer?.borderColor = NSColor.windowBackgroundColor.cgColor
+            elemView.layer?.backgroundColor = NSColor.controlAccentColor.cgColor
             elemView.toolTip = element.actions.joined(separator: ", ")
             elemView.frame = convertedFrame
 
