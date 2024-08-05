@@ -165,12 +165,19 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
             }
         }
 
+        // this has a single child, we can give an abridged version of the description
+        // even if it is actionable, we ignore the action because the lower child takes precedence.
+        if node.children.count == 1 {
+            let childDesc = await describe(node: node.children.first!, elementMap: &elementMap)
+            return " - " + node.elementDescription + childDesc
+        }
+
+        // else, it has either 0 or more than 1 child.
         return await String.build {
             if let actionDescription {
                 " - " + node.elementDescription + ": " + actionDescription
-            } else if node.children.count == 1 { // this has a single child
-                let childDesc = await describe(node: node.children.first!, elementMap: &elementMap)
-                " - " + node.elementDescription + childDesc
+            } else {
+                " - " + node.elementDescription
             }
 
             // has multiple children
