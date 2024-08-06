@@ -68,7 +68,8 @@ from the list of past steps.
 "NO TOOL", in text, followed by a colon, and a HUMAN READABLE explanation of why the goal cannot be achieved from the \
 current state.
 
-If you respond with the name of a tool, remember to USE THE TOOL in a FUNCTION CALL, following its instructions.
+If you respond with the name of a tool, remember to USE THE TOOL in a FUNCTION CALL, following its instructions. Do \
+NOT write in python.
 
 Note that your action does not need to achieve the goal, it just needs to get closer. If the action is complete, \
 respond with "DONE".

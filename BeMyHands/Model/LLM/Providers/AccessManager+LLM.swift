@@ -31,7 +31,8 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
 
         To use this tool, use the `executeAction` function call. When you call the function to execute an action \
         on the element, refer to the element by its `description` AND `UUID` EXACTLY as it is given in \
-        [description]: [UUID] and the action by its `action name`.
+        [description]: [UUID] and the action by its `action name`. You MUST include the UUID in the \
+        `itemDescription` field.
         """
     }
 
@@ -256,4 +257,8 @@ enum AccessError: LLMOtherError {
     }
 }
 
+#if hasFeature(RetroactiveAttribute)
 extension ElementError: @retroactive LLMOtherError {}
+#else
+extension ElementError: LLMOtherError {}
+#endif

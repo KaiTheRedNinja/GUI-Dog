@@ -81,13 +81,15 @@ struct ShortcutCaptureView: View {
 
     func changeShortcut() {
         changingShortcut = true
-        Input.shared.detectKeyEvent { newShortcut in
-            changingShortcut = false
-            guard newShortcut.commandModifier || newShortcut.controlModifier || newShortcut.optionModifier else {
-                // shortcut needs at least one modifier
-                return
+        DispatchQueue.main.async {
+            Input.shared.detectKeyEvent { newShortcut in
+                changingShortcut = false
+                guard newShortcut.commandModifier || newShortcut.controlModifier || newShortcut.optionModifier else {
+                    // shortcut needs at least one modifier
+                    return
+                }
+                shortcut = newShortcut
             }
-            shortcut = newShortcut
         }
     }
 }

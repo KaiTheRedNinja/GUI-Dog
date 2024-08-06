@@ -1,4 +1,4 @@
-// swift-tools-version: 6.0
+// swift-tools-version:5.10
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -31,10 +31,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "HandsBot",
-            swiftSettings: [
-                .swiftLanguageVersion(.v5)
-            ]
+            name: "HandsBot"
         ),
 
         // CREDIT: João Santos, https://github.com/Xce-PT/Vosh/
@@ -44,31 +41,19 @@ let package = Package(
                 .byName(name: "Input"),
                 .byName(name: "Output"),
                 .byName(name: "Element")
-            ],
-            swiftSettings: [
-                .swiftLanguageVersion(.v5)
             ]
         ),
         .target(
             name: "Input",
             dependencies: [
                 .byName(name: "Output")
-            ],
-            swiftSettings: [
-                .swiftLanguageVersion(.v5)
             ]
         ),
         .target(
-            name: "Output",
-            swiftSettings: [
-                .swiftLanguageVersion(.v5)
-            ]
+            name: "Output"
         ),
         .target(
-            name: "Element",
-            swiftSettings: [
-                .swiftLanguageVersion(.v5)
-            ]
+            name: "Element"
         )
     ]
 )

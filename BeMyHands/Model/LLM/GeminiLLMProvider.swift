@@ -89,5 +89,10 @@ class GeminiLLMProvider: LLMProvider {
     static let global = GeminiLLMProvider()
 }
 
+#if hasFeature(RetroactiveAttribute)
 extension FunctionCall: @retroactive LLMFuncCall {}
 extension FunctionDeclaration: @retroactive LLMFuncDecl {}
+#else
+extension FunctionCall: LLMFuncCall {}
+extension FunctionDeclaration: LLMFuncDecl {}
+#endif
