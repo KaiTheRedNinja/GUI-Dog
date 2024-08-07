@@ -78,11 +78,11 @@ public enum LLMCommunicationError: Error, Equatable {
     public var description: String {
         switch self {
         case .textNotProvided: "The LLM did not respond with text when it was expected to"
-        case .emptyResponse: "The LLM responded with an empty response"
+        case .emptyResponse: "The LLM did not respond. Try again in a few seconds."
         case .goalImpossible(let reason): "The goal cannot be achieved because \(reason)"
-        case .invalidFunctionCall: "The LLM responded with an invalid function call"
+        case .invalidFunctionCall: "The LLM tried to do something that GUI Dog does not support"
         case .other(let error): error.description
-        case .unknown(let error): "Unknown error: \(error)"
+        case .unknown(let error): "Something else went wrong: \(error)"
         }
     }
 

@@ -249,16 +249,47 @@ enum AccessError: LLMOtherError {
 
     var description: String {
         switch self {
-        case .actionFormatInvalid: "LLM provided an invalid action format"
-        case .elementNotFound: "LLM specified a nonexistent element"
-        case .actionNotFound: "LLM tried to perform an unsupported action"
+        case .actionFormatInvalid: "The LLM's response was malformed"
+        case .elementNotFound: "The LLM mentioned a nonexistent item on screen"
+        case .actionNotFound: "The LLM tried to perform an unsupported action"
         case .accessSnapshotNotFound: "GUI Dog could not obtain information about the current state of the screen"
         }
     }
 }
 
 #if hasFeature(RetroactiveAttribute)
-extension ElementError: @retroactive LLMOtherError {}
+extension ElementError: @retroactive LLMOtherError {
+    @_implements(LLMOtherError, description)
+    public var otherErrorDescription: String {
+        elementErrorDescription(self)
+    }
+}
 #else
-extension ElementError: LLMOtherError {}
+extension ElementError: LLMOtherError {
+    @_implements(LLMOtherError, description)
+    public var otherErrorDescription: String {
+        elementErrorDescription(self)
+    }
+}
 #endif
+
+private func elementErrorDescription(_ error: ElementError) -> String {
+    switch error {
+    case .success: "Success"
+    case .systemFailure: "The accessibility system failed to respond"
+    case .illegalArgument: "GUI Dog incorrectly used the accessibility system"
+    case .invalidElement: "GUI Dog tried to perform an action on an on-screen item that doesn't exist"
+    case .invalidObserver: "GUI Dog referenced an observer that doesn't exist"
+    case .timeout: "The accessibility system took too long to respond to GUI Dog's request"
+    case .attributeUnsupported: "GUI Dog tried to access an unsupported attribute"
+    case .actionUnsupported: "GUI Dog tried to perform an unsupported action"
+    case .notificationUnsupported: "GUI Dog tried to watch for on-screen changes in something that does not exist"
+    case .notImplemented: "GUI Dog tried to do something that is not implemented by the accessibility system"
+    case .notificationAlreadyRegistered: "GUI Dog tried to watch for on-screen changes, but it is already watching"
+    case .notificationNotRegistered: "GUI Dog failed to watch for on-screen changes"
+    case .apiDisabled: "GUI Dog has not been granted accessibility permissions"
+    case .noValue: "GUI Dog tried to access an attribute that has no value"
+    case .parameterizedAttributeUnsupported: "GUI Dog tried to access a parameterized attribute that does not exist"
+    case .notEnoughPrecision: "GUI Dog tried to access an attribute with a precision that is too low"
+    }
+}
