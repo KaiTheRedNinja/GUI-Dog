@@ -41,7 +41,7 @@ struct GoalsView: View {
 
     var content: some View {
         HStack {
-            Image(systemName: "hand.wave")
+            Image(systemName: "pawprint")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 30, height: 30)

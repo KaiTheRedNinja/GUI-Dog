@@ -46,7 +46,7 @@ struct GUIDogApp: App {
         MenuBarExtra {
             MenuExtraView(triggerLLM: triggerLLM)
         } label: {
-            Image(systemName: "hand.wave.fill")
+            Image(systemName: "pawprint.fill")
                 .task {
                     accessManager.uiDelegate = overlayManager
                     await setup()
