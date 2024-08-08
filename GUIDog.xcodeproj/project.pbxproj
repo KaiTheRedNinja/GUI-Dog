@@ -75,6 +75,8 @@
 		936F3EEB2C3BE53B006FC333 /* GoalsWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsWindow.swift; sourceTree = "<group>"; };
 		936F3EED2C3BE5E9006FC333 /* OverlayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayManager.swift; sourceTree = "<group>"; };
 		936F3EEF2C3BE688006FC333 /* FramesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramesViewController.swift; sourceTree = "<group>"; };
+		937F36862C64CC25007714CA /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		937F36872C64CC25007714CA /* LICENSE_Explanation.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE_Explanation.md; sourceTree = "<group>"; };
 		9382F3F62C4630CD00B4A1EA /* FramesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramesView.swift; sourceTree = "<group>"; };
 		9382F3F82C4631D500B4A1EA /* LLMStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMStateView.swift; sourceTree = "<group>"; };
 		939488612C537E8F0052FBBF /* AppOpen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppOpen.swift; sourceTree = "<group>"; };
@@ -112,6 +114,8 @@
 			isa = PBXGroup;
 			children = (
 				931B22DC2C3B76A3003A6436 /* README.md */,
+				937F36862C64CC25007714CA /* LICENSE */,
+				937F36872C64CC25007714CA /* LICENSE_Explanation.md */,
 				931B22CF2C3B63DA003A6436 /* GUIDogKit */,
 				931B22BF2C3B6392003A6436 /* GUIDog */,
 				931B22BE2C3B6392003A6436 /* Products */,

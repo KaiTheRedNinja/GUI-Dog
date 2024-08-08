@@ -77,7 +77,7 @@ GUI Dog will not be able to satisfy actions that are too complex, or require out
                 emoji: "❌",
                 examples: [
                     "Buy me a coffee",
-                    "Mark my Buy Tissue reminder as done in Reminders"
+                    "Pay using my credit card"
                 ]
             )
         }
