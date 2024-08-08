@@ -131,6 +131,36 @@ enum Secrets {
 }
 ```
 
+### Structure
+
+- `GUIDogKit`: The Bridge and Accessibility API 
+    - `Access`: High-level Accessibility API interface
+    - `Element`: Low-level Accessibility API interface
+    - `Input`: IOKit to watch for keyboard shortcuts
+    - `Output`: Speech synthesizer
+    - `HandsBot`: Bridge, which defines the protocols for the Accessibility API and Gemini API to communicate with each other
+- `GUIDog`: The app itself
+    - `App`: Files pertaining to the app that isn't UI, model, or controller, such as Secrets
+    - `UI`: The UI of the app
+        - `Components`: Reusable UI components
+        - `Setup`: UI related to the setup process
+        - `Settings`: UI related to the settings window
+        - `Overlay`: UI that is overlayed over other macOS content
+            - `Status`: UI related to displaying GUI Dog's internal status to the user
+            - `Frames`: UI related to highlighting interactable elements on screen
+            - `Goals`: UI related to the task input text field, triggered when the keyboard shortcut is pressed
+    - `Model`: Functionality that ties `UI` to `GUIDogKit`
+        - `LLM`: Provides the interface between the Accessibility API and the Bridge, and the Bridge to the Gemini API
+        - Others: Misc managers used for preferences and the file system
+
+### Convention
+
+- "GUI Dog" (with a space) is used as the app name and to refer to the app itself
+- "GUI-Dog" (with a dash) is used in the bundle ID, or anywhere else that the app name should be used but spaces are disallowed
+- "GUIDog" (with no delimiter) is used in code as part of object or package names
+
+GUI Dog uses [SwiftLint](https://github.com/realm/SwiftLint/) to enforce Swift style and conventions
+
 ## Credits and Implementation Details
 
 - Accessibility API: Vosh (https://github.com/Xce-PT/Vosh)
