@@ -41,12 +41,12 @@ struct GoalsView: View {
 
     var content: some View {
         HStack {
-            Image(systemName: "pawprint")
+            Image(systemName: "pawprint.fill")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 30, height: 30)
-                .padding(.leading, 12)
-                .padding(.trailing, 3)
+                .frame(width: 25, height: 25)
+                .padding(.leading, 15)
+                .padding(.trailing, 4)
             TextField("What would you like to do?", text: $text)
                 .focused($textFieldFocus)
                 .font(.title)

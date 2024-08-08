@@ -17,7 +17,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "931B22BC2C3B6392003A6436"
                BuildableName = "GUIDog.app"
-               BlueprintName = "GUIDog"
+               BlueprintName = "GUI Dog"
                ReferencedContainer = "container:GUIDog.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -46,7 +46,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "931B22BC2C3B6392003A6436"
             BuildableName = "GUIDog.app"
-            BlueprintName = "GUIDog"
+            BlueprintName = "GUI Dog"
             ReferencedContainer = "container:GUIDog.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -63,7 +63,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "931B22BC2C3B6392003A6436"
             BuildableName = "GUIDog.app"
-            BlueprintName = "GUIDog"
+            BlueprintName = "GUI Dog"
             ReferencedContainer = "container:GUIDog.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
