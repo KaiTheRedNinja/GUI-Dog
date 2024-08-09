@@ -62,6 +62,7 @@ public final class Output: NSObject {
 
         guard isEnabled else { return }
         let utterance = AVSpeechUtterance(string: string)
+        utterance.rate = 0.7
         synthesizer.speak(utterance)
     }
 }
@@ -69,7 +70,9 @@ public final class Output: NSObject {
 extension Output: AVSpeechSynthesizerDelegate {
     nonisolated public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish _: AVSpeechUtterance) {
         Task { @MainActor in
+            logger.info("Speech finished!")
             if isAnnouncing {
+                logger.info("Conveying remaining info")
                 isAnnouncing = false
                 convey(queued)
             }

@@ -156,7 +156,7 @@ class OverlayManager: LLMDisplayDelegate, AccessDisplayDelegate {
             Output.shared.announce("GUI Dog encountered an error: \(lLMCommunicationError.description)")
         default:
             if let step = state.steps.last {
-                Output.shared.announce("Current action: \(step)")
+                Output.shared.announce(step.step)
             }
         }
     }
