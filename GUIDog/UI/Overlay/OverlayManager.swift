@@ -134,6 +134,9 @@ class OverlayManager: LLMDisplayDelegate, AccessDisplayDelegate {
             windowController.window?.orderFrontRegardless()
         }
 
+        // reset the frames controller
+        framesController.setupFrames(with: .zero, actionableElements: [])
+
         framesController.show()
         statusController.show()
     }

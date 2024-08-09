@@ -36,7 +36,7 @@ public final class Output: NSObject {
     /// - Parameter content: Content to output.
     public func convey(_ content: [OutputSemantic]) {
         if isAnnouncing {
-            queued = content
+            queued.append(contentsOf: content)
             return
         }
         queued = []
@@ -72,7 +72,7 @@ extension Output: AVSpeechSynthesizerDelegate {
         Task { @MainActor in
             logger.info("Speech finished!")
             if isAnnouncing {
-                logger.info("Conveying remaining info")
+                logger.info("Conveying remaining info: \(self.queued.description)")
                 isAnnouncing = false
                 convey(queued)
             }

@@ -115,24 +115,25 @@ public final class Access {
     /// Handles errors returned by the Element module.
     /// - Parameter error: Error to handle.
     internal func handleError(_ error: any Error) async {
-        guard let error = error as? ElementError else {
-            fatalError("Unexpected error \(error)")
-        }
-        switch error {
-        case .apiDisabled:
-            let content = [OutputSemantic.apiDisabled]
-            await Output.shared.convey(content)
-        case .invalidElement:
-            await refocus(processIdentifier: processIdentifier)
-        case .notImplemented:
-            let content = [OutputSemantic.notAccessible]
-            await Output.shared.convey(content)
-        case .timeout:
-            let content = [OutputSemantic.timeout]
-            await Output.shared.convey(content)
-        default:
-            logger.warning("Unexpected error \(error, privacy: .public)")
-            return
-        }
+        logger.error("Error: \(error.localizedDescription)")
+//        guard let error = error as? ElementError else {
+//            fatalError("Unexpected error \(error)")
+//        }
+//        switch error {
+//        case .apiDisabled:
+//            let content = [OutputSemantic.apiDisabled]
+//            await Output.shared.convey(content)
+//        case .invalidElement:
+//            await refocus(processIdentifier: processIdentifier)
+//        case .notImplemented:
+//            let content = [OutputSemantic.notAccessible]
+//            await Output.shared.convey(content)
+//        case .timeout:
+//            let content = [OutputSemantic.timeout]
+//            await Output.shared.convey(content)
+//        default:
+//            logger.warning("Unexpected error \(error, privacy: .public)")
+//            return
+//        }
     }
 }
