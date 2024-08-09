@@ -34,9 +34,10 @@ struct SetupWarningView: View {
             Text(
 """
 GUI Dog is intended to help the visually impaired execute actions that are tedious to do with \
-a screen reader, not to automate complex actions
+a screen reader. Instructions must provide both *what* to do, and *how/where* to do it. Each \
+instruction should be one task, which can be accomplished in one or two steps.
 
-GUI Dog will not be able to satisfy actions that are too complex, or require outside information.
+GUI Dog will not be able to satisfy vague or complex instructions.
 """
             )
             .frame(width: 600)
@@ -58,26 +59,28 @@ GUI Dog will not be able to satisfy actions that are too complex, or require out
     var instructions: some View {
         HStack {
             instructionsView(
-                title: "Good Instructions",
+                title: "Clear Instructions",
                 icon: "checkmark.circle",
                 color: .green,
                 subtitle: "Simple, clear, 1-2 step action",
                 emoji: "✅",
                 examples: [
-                    "Open my Pictures folder in Downloads",
-                    "Mark my Buy Tissue reminder as done in Reminders"
+                    "Open my Holidays folder in Downloads",
+                    "Mark my Buy Tissue reminder as done in Reminders",
+                    "Open Contacts app and call Bobby Smith"
                 ]
             )
 
             instructionsView(
-                title: "Bad Instructions",
+                title: "Vague Instructions",
                 icon: "xmark.circle",
                 color: .red,
                 subtitle: "Vague, complex, or requires outside information",
                 emoji: "❌",
                 examples: [
-                    "Buy me a coffee",
-                    "Pay using my credit card"
+                    "Open my Holidays folder",
+                    "I have bought tissues, mark it as done",
+                    "Call Bob"
                 ]
             )
         }

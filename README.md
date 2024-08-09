@@ -161,7 +161,71 @@ enum Secrets {
 
 GUI Dog uses [SwiftLint](https://github.com/realm/SwiftLint/) to enforce Swift style and conventions
 
-## Credits and Implementation Details
+## Google AI Competition
+
+GUI Dog was written for the [Google AI competition](https://ai.google.dev/competition/submission). These are my answers to the questions:
+
+**App tagline or elevator pitch: Explain your app in 1 sentence**
+
+> GUI Dog is a digital "guide dog" powered by Gemini, helping the visually impaired interact with their computers more efficiently.
+
+**App description: Describe what your app does and how you used the Gemini API in 1500 characters or less**
+
+> You want to access a specific file. For a sighted user, you simply click to enter the Documents folder and click again to open 
+the file. Done.
+
+> But what if you're visually impaired? You'd use a blind reader, such as macOS's VoiceOver. So you open a file manager window, 
+and VoiceOver describes, in detail, what it is and can do (every time you use it!). You use complex keyboard actions to navigate 
+to the sidebar. Whenever you interact with your device, VoiceOver repeats information about the focused UI element. You then go 
+down the list of folders, one by one, with VoiceOver announcing every folder's name until you finally hear the correct folder. 
+The process is repeated inside the folder until you find your desired file. Wasn't that exasperating?
+
+> A quiet two-click task turns into a yakking, tiresome dozen-action operation.
+
+> What if you could complete the same task simply by instructing, "In the Documents folder, open my vaccination document"? My app, 
+GUI Dog, does that.
+
+> The user gives GUI Dog precise instructions for a task. GUI Dog provides Gemini with the task to achieve and a list of UI 
+elements it can manipulate. Gemini then specifies what actions to take, and GUI Dog uses the macOS accessibility system to execute 
+them. Together, they work towards completing the task.
+
+> GUI Dog aims to be the "seeing eye" for the visually impaired, using Large Language Model technologies to help uplift the 
+disadvantaged, enhancing their interactions with the digital world.
+
+**What Google Developer tools/products did you use in addition to the Gemini APl?**
+
+> None
+
+**YouTube URL: Add a link to your public video**
+
+> Not Yet
+
+**Website or web app URL: If your app is live, please share the URL**
+
+> _question left blank, GUI Dog is not a live web app_
+
+**Is it a game app?**
+
+> No
+
+**Give judges access to your code! If your code is public, please add your GitHub link below. Otherwise, upload a zip file to 
+Google Drive, set the sharing to 'Anyone with the link,' and share the link below.**
+
+> This github repo, or a zip link. Haven't decided yet.
+
+**Testing instructions**
+
+> Provide instructions so judges can test it out the best way possible
+
+**Country of residence**
+
+> Singapore
+
+**Team name**
+
+> Kaisol
+
+## Credits
 
 - Accessibility API: Vosh (https://github.com/Xce-PT/Vosh)
 - UI library: Luminare (https://github.com/MrKai77/Luminare)

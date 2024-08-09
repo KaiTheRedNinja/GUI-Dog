@@ -97,7 +97,7 @@ public enum OutputSemantic {
         case let .stringValue(string):
             string
         case .timeout:
-            "Application is not responding"
+            "Currently focused application is not responding"
         case let .updatedLabel(label):
             label
         case let .urlValue(url):
