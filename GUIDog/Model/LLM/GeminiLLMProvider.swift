@@ -31,7 +31,10 @@ class GeminiLLMProvider: LLMProvider {
             name: "gemini-1.5-flash-latest",
             apiKey: Secrets.geminiKey,
             safetySettings: [
-                // The API has a habit of saying that actions are dangerous. We just ignore that.
+                // The API has a habit of saying that actions are harmful. We just ignore that.
+                .init(harmCategory: .sexuallyExplicit, threshold: .blockNone),
+                .init(harmCategory: .hateSpeech, threshold: .blockNone),
+                .init(harmCategory: .harassment, threshold: .blockNone),
                 .init(harmCategory: .dangerousContent, threshold: .blockNone)
             ],
             // Specify the function declaration.
