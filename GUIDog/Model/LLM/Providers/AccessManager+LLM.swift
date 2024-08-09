@@ -149,13 +149,17 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
         }
 
         var elementMap: [UUID: ActionableElement] = [:]
-        let description = await describe(node: actionTree, elementMap: &elementMap)
+        let description = await describe(node: actionTree, elementMap: &elementMap) ?? ""
         self.elementMap = elementMap
 
         return description
     }
 
-    func describe(node: ActionableElementNode, elementMap: inout [UUID: ActionableElement]) async -> String {
+    func describe(node: ActionableElementNode, elementMap: inout [UUID: ActionableElement]) async -> String? {
+        // exclude menu bars, menus, and menu items
+        let isMenuBar = try? await node.actionableElement?.element.roleMatches(oneOf: [.menuBar, .menu, .menuItem])
+        guard (isMenuBar ?? false) == false else { return nil }
+
         var actionDescription: String?
 
         if let actionableElement = node.actionableElement {
@@ -168,8 +172,10 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
 
         // this has a single child, we can give an abridged version of the description
         // even if it is actionable, we ignore the action because the lower child takes precedence.
-        if node.children.count == 1 {
-            let childDesc = await describe(node: node.children.first!, elementMap: &elementMap)
+        //
+        // If the child description is nil, we do not generate an abridged description and instead use the full one.
+        if node.children.count == 1,
+           let childDesc = await describe(node: node.children.first!, elementMap: &elementMap) {
             return " - " + node.elementDescription + childDesc
         }
 
@@ -186,8 +192,10 @@ extension AccessManager: StepCapabilityProvider, DiscoveryContextProvider {
                 " - Children:"
                     .tab()
                 for child in node.children {
-                    await describe(node: child, elementMap: &elementMap)
-                        .tab(count: 4)
+                    if let childDesc = await describe(node: child, elementMap: &elementMap) {
+                        childDesc
+                            .tab(count: 4)
+                    }
                 }
             }
         }

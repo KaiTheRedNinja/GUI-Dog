@@ -60,7 +60,7 @@ extension Access {
     @ElementActor
     private func treeActionableElements(
         _ element: Element,
-        maxChildren: Int = 30
+        maxChildren: Int = 50
     ) async throws -> ActionableElementNode? {
         do {
             // get self description

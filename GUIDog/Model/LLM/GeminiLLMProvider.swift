@@ -28,19 +28,14 @@ class GeminiLLMProvider: LLMProvider {
         let functions = (functions as? [FunctionDeclaration]) ?? []
 
         let model = GenerativeModel(
-            name: "gemini-1.5-flash",
+            name: "gemini-1.5-flash-latest",
             apiKey: Secrets.geminiKey,
             safetySettings: [
                 // The API has a habit of saying that actions are dangerous. We just ignore that.
                 .init(harmCategory: .dangerousContent, threshold: .blockNone)
             ],
             // Specify the function declaration.
-            tools: functions.map { Tool(functionDeclarations: [$0]) },
-            toolConfig: functions.isEmpty ? nil : .init(
-                functionCallingConfig: .init(
-                    mode: .any
-                )
-            )
+            tools: functions.map { Tool(functionDeclarations: [$0]) }
         )
 
         var rawResponse: GenerateContentResponse?
@@ -84,6 +79,7 @@ class GeminiLLMProvider: LLMProvider {
         logger.info("\(rawResponseDesc)")
 
         return .init(text: rawResponse.text, functionCalls: rawResponse.functionCalls)
+
     }
 
     static let global = GeminiLLMProvider()
