@@ -28,12 +28,7 @@ struct SetupView: View {
                 .overlay(alignment: .topLeading) {
                     if stage != .home {
                         Button("Previous Page") {
-                            stage = switch stage {
-                            case .blindOrNot: .home
-                            case .setupAccessManager: .blindOrNot
-                            case .instruction: .setupAccessManager
-                            default: fatalError()
-                            }
+                            stage = stage.previous()!
                         }
                         .frame(width: 120, height: 40)
                         .buttonStyle(LuminareCompactButtonStyle())
@@ -69,13 +64,33 @@ struct SetupView: View {
     }
 }
 
-enum SetupStage {
+enum SetupStage: Int {
     case home
     case blindOrNot
     case setupAccessManager
     case setupShortcut
     case instruction
     case warning
+
+    func next() -> SetupStage? {
+        .init(rawValue: self.rawValue + 1)
+    }
+
+    func previous() -> SetupStage? {
+        .init(rawValue: self.rawValue - 1)
+    }
+
+    mutating func changeToNext() {
+        if let next = self.next() {
+            self = next
+        }
+    }
+
+    mutating func changeToPrevious() {
+        if let previous = self.previous() {
+            self = previous
+        }
+    }
 }
 
 #Preview {

@@ -32,7 +32,7 @@ struct SetupHomeView: View {
                 .frame(height: 20)
 
             Button("Lets Go!") {
-                stage = .blindOrNot
+                stage.changeToNext()
             }
             .frame(width: 150, height: 60)
             .buttonStyle(LuminareCompactButtonStyle())

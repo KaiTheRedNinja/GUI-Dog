@@ -52,7 +52,7 @@ You can customise the trigger shortcut here, if you wish to use a different one.
     }
 
     func confirm() {
-        stage = .instruction
+        stage.changeToNext()
         PreferencesManager.global.keyboardShortcut = keyboardShortcut
         PreferencesManager.global.save()
     }

@@ -60,7 +60,7 @@ Selecting "impaired" or "blind" will activate audio cues.
     }
 
     func confirm() {
-        stage = .setupAccessManager
+        stage.changeToNext()
         PreferencesManager.global.userVisionStatus = userVisionStatus
         PreferencesManager.global.save()
     }

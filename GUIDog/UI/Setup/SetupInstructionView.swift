@@ -35,7 +35,7 @@ struct SetupInstructionView: View {
                 .frame(height: 20)
 
             Button("Next") {
-                stage = .warning
+                stage.changeToNext()
             }
             .frame(width: 150, height: 60)
             .buttonStyle(LuminareCompactButtonStyle())
