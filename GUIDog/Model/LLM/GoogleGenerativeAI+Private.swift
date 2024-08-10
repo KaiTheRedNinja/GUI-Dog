@@ -5,17 +5,8 @@
 //  Created by Kai Quan Tay on 29/7/24.
 //
 
-@testable import GoogleGenerativeAI
+import GoogleGenerativeAI
 import HandsBot
-
-typealias RPCError = GoogleGenerativeAI.RPCError
-
-extension RPCError {
-    var httpResponseCodePublic: Int { self.httpResponseCode }
-    var messagePublic: String { self.message }
-    var statusPublic: RPCStatus { self.status }
-    var detailsPublic: [ErrorDetails] { self.details }
-}
 
 extension GenerateContentError: @retroactive LLMOtherError {
     public var description: String {
@@ -30,11 +21,7 @@ extension GenerateContentError: @retroactive LLMOtherError {
                 "Could not convert an image to JPEG"
             }
         case .internalError(let underlying):
-            if let underlying = underlying as? RPCError {
-                "The LLM failed due to an internal error: \(underlying.message)"
-            } else {
-                "The LLM failed due to an internal error"
-            }
+            "The LLM failed due to an internal error: \(underlying.localizedDescription)"
         case .promptBlocked(let response):
             if let safetyRatings = response.candidates.first?.safetyRatings {
                 "The prompt was blocked by the LLM due to possible " + safetyRatings.compactMap { (rating) -> String? in
