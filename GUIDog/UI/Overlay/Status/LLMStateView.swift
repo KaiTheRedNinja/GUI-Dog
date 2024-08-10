@@ -111,7 +111,7 @@ struct LLMStateView: View {
                     mute(color: .green)
                 },
                 icon: {
-                    Image(systemName: "flag.pattern.checkered")
+                    Image(systemName: "flag.checkered")
                         .resizable()
                         .scaledToFit()
                         .foregroundStyle(Color.green)
