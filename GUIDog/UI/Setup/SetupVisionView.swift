@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Luminare
 
 struct SetupVisionView: View {
     @Binding var stage: SetupStage
@@ -33,28 +32,42 @@ Selecting "impaired" or "blind" will activate audio cues.
             Spacer()
                 .frame(height: 30)
 
-            LuminarePicker(elements: UserVisionStatus.allCases, selection: $userVisionStatus) { status in
-                VStack {
-                    Image(systemName: status.icon)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 50, height: 50)
-                        .foregroundStyle(status.color)
-                    Text(status.description)
+            HStack {
+                ForEach(UserVisionStatus.allCases, id: \.hashValue) { status in
+                    Button {
+                        userVisionStatus = status
+                    } label: {
+                        VStack {
+                            Image(systemName: status.icon)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 50, height: 50)
+                                .foregroundStyle(status.color)
+                            Text(status.description)
+                        }
+                        .frame(width: 100, height: 100)
+                        .background {
+                            if userVisionStatus == status {
+                                Color.accentColor
+                                    .opacity(0.4)
+                                    .cornerRadius(8)
+                            } else {
+                                Color.gray.opacity(0.2)
+                                    .cornerRadius(8)
+                            }
+                        }
+                    }
+                    .buttonStyle(.plain)
                 }
-                .frame(height: 100)
             }
             .padding(.horizontal, 30)
 
             Spacer()
                 .frame(height: 30)
 
-            Button("Confirm") {
+            DogButton("Confirm", color: .accentColor) {
                 confirm()
             }
-            .frame(width: 150, height: 60)
-            .buttonStyle(LuminareCompactButtonStyle())
-            .foregroundStyle(Color.accentColor)
         }
         .multilineTextAlignment(.center)
     }

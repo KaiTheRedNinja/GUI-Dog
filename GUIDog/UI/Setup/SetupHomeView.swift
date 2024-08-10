@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Luminare
 
 struct SetupHomeView: View {
     @Binding var stage: SetupStage
@@ -31,12 +30,9 @@ struct SetupHomeView: View {
             Spacer()
                 .frame(height: 20)
 
-            Button("Lets Go!") {
+            DogButton("Lets Go!", color: .accentColor) {
                 stage.changeToNext()
             }
-            .frame(width: 150, height: 60)
-            .buttonStyle(LuminareCompactButtonStyle())
-            .foregroundStyle(Color.accentColor)
         }
     }
 }

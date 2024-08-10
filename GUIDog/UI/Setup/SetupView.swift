@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Luminare
 import Element
 
 struct SetupView: View {
@@ -27,11 +26,9 @@ struct SetupView: View {
             Color.clear
                 .overlay(alignment: .topLeading) {
                     if stage != .home {
-                        Button("Previous Page") {
+                        DogButton("Previous Page") {
                             stage = stage.previous()!
                         }
-                        .frame(width: 120, height: 40)
-                        .buttonStyle(LuminareCompactButtonStyle())
                         .padding(10)
                     }
                 }

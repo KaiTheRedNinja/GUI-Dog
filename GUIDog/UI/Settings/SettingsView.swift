@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Luminare
 import Input
 
 struct SettingsView: View {
@@ -14,61 +13,69 @@ struct SettingsView: View {
     @State var keyboardShortcut: KeyBinding = PreferencesManager.global.keyboardShortcut
 
     var body: some View {
-        ScrollView {
-            LazyVStack(spacing: 24) {
-                LuminareSection("User Vision Status") {
-                    VStack(alignment: .leading) {
-                        LuminarePicker(elements: UserVisionStatus.allCases, selection: $userVisionStatus) { status in
+        List {
+            Section("User Vision Status") {
+                HStack {
+                    ForEach(UserVisionStatus.allCases, id: \.hashValue) { status in
+                        Button {
+                            userVisionStatus = status
+                        } label: {
                             VStack {
                                 Image(systemName: status.icon)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 50, height: 50)
                                     .foregroundStyle(status.color)
                                 Text(status.description)
                             }
+                            .frame(width: 100, height: 100)
+                            .background {
+                                if userVisionStatus == status {
+                                    Color.accentColor
+                                        .opacity(0.4)
+                                        .cornerRadius(8)
+                                } else {
+                                    Color.gray.opacity(0.2)
+                                        .cornerRadius(8)
+                                }
+                            }
                         }
-
-                        visionStatusText
-                            .padding(.horizontal, 8)
+                        .buttonStyle(.plain)
                     }
-
-                    HStack {
-                        if userVisionStatus.useAudioCues {
-                            Image(systemName: "speaker.wave.2")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 20, height: 20)
-                                .foregroundStyle(Color.green)
-                            Text("Audio cues are enabled for impaired and blind users.")
-                        } else {
-                            Image(systemName: "speaker.slash")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 20, height: 20)
-                                .foregroundStyle(Color.gray)
-                            Text("Audio cues are disabled for sighted and mildly impaired users.")
-                        }
-
-                        Spacer()
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.horizontal, 8)
                 }
 
-                LuminareSection("Keyboard Shortcut") {
-                    HStack {
-                        Text("Click to change the shortcut")
-
-                        Spacer()
-
-                        ShortcutCaptureView(shortcut: $keyboardShortcut)
-                            .frame(height: 30)
+                HStack {
+                    if userVisionStatus.useAudioCues {
+                        Image(systemName: "speaker.wave.2")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 20, height: 20)
+                            .foregroundStyle(Color.green)
+                        Text("Audio cues are enabled for impaired and blind users.")
+                    } else {
+                        Image(systemName: "speaker.slash")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 20, height: 20)
+                            .foregroundStyle(Color.gray)
+                        Text("Audio cues are disabled for sighted and mildly impaired users.")
                     }
-                    .padding(.leading, 8)
+
+                    Spacer()
+                }
+                .frame(maxWidth: .infinity)
+            }
+
+            Section("Keyboard Shortcut") {
+                HStack {
+                    Text("Click to change the shortcut")
+
+                    Spacer()
+
+                    ShortcutCaptureView(shortcut: $keyboardShortcut)
+                        .frame(height: 30)
                 }
             }
-            .padding(10)
         }
         .frame(width: 500, height: 300)
         .animation(.default, value: userVisionStatus)

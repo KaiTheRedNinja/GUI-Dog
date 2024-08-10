@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Luminare
 import Element
 import OSLog
 
@@ -27,6 +26,7 @@ struct SetupAccessView: View {
             Text("Please grant GUI Dog\nAccessibility permission")
                 .font(.title)
                 .bold()
+                .multilineTextAlignment(.center)
 
             Text(
 """
@@ -52,20 +52,14 @@ GUI Dog uses macOS's Accessibility API to interact with items on your screen.
                 .frame(height: 30)
 
             HStack {
-                Button("Request permission") {
+                DogButton("Request Permission", color: !permissionGranted ? Color.accentColor : .gray) {
                     permissionGranted = Element.confirmProcessTrustedStatus()
                 }
-                .frame(width: 150, height: 60)
-                .buttonStyle(LuminareCompactButtonStyle())
-                .foregroundStyle(!permissionGranted ? Color.accentColor : .gray)
                 .disabled(permissionGranted)
 
-                Button("Next") {
+                DogButton("Next", color: permissionGranted ? Color.accentColor : .gray) {
                     stage.changeToNext()
                 }
-                .frame(width: 150, height: 60)
-                .buttonStyle(LuminareCompactButtonStyle())
-                .foregroundStyle(permissionGranted ? Color.accentColor : .gray)
                 .disabled(!permissionGranted)
             }
         }

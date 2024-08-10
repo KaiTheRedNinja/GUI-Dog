@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Luminare
 
 struct SetupWarningView: View {
     @Binding var stage: SetupStage
@@ -45,12 +44,9 @@ GUI Dog will not be able to satisfy vague or complex instructions.
             Spacer()
                 .frame(height: 10)
 
-            Button("Close Setup") {
+            DogButton("Close Setup", color: .accentColor) {
                 dismissWindow.callAsFunction()
             }
-            .frame(width: 150, height: 60)
-            .buttonStyle(LuminareCompactButtonStyle())
-            .foregroundStyle(Color.accentColor)
         }
         .multilineTextAlignment(.center)
         .padding(.top, 30)

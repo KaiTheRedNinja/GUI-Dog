@@ -227,8 +227,7 @@ Google Drive, set the sharing to 'Anyone with the link,' and share the link belo
 
 ## Credits
 
-- Accessibility API: Vosh (https://github.com/Xce-PT/Vosh)
-- UI library: Luminare (https://github.com/MrKai77/Luminare)
+Accessibility API: Vosh (https://github.com/Xce-PT/Vosh)
 
 ## License
 

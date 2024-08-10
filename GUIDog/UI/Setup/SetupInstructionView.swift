@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Luminare
 
 struct SetupInstructionView: View {
     @Binding var stage: SetupStage
@@ -34,12 +33,9 @@ struct SetupInstructionView: View {
             Spacer()
                 .frame(height: 20)
 
-            Button("Next") {
+            DogButton("Next", color: .accentColor) {
                 stage.changeToNext()
             }
-            .frame(width: 150, height: 60)
-            .buttonStyle(LuminareCompactButtonStyle())
-            .foregroundStyle(Color.accentColor)
         }
         .multilineTextAlignment(.center)
         .padding(.top, 30)

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Luminare
 import Input
 
 struct SetupShortcutView: View {
@@ -41,12 +40,7 @@ You can customise the trigger shortcut here, if you wish to use a different one.
             Spacer()
                 .frame(height: 30)
 
-            Button("Finish") {
-                confirm()
-            }
-            .frame(width: 150, height: 60)
-            .buttonStyle(LuminareCompactButtonStyle())
-            .foregroundStyle(Color.accentColor)
+            DogButton("Finish", color: .accentColor, action: confirm)
         }
         .multilineTextAlignment(.center)
     }

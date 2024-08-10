@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Luminare
 import Input
 
 struct ShortcutCaptureView: View {
@@ -36,11 +35,16 @@ struct ShortcutCaptureView: View {
             Button {
                 changeShortcut()
             } label: {
-                Spacer()
+                GroupBox {
+                    if changingShortcut {
+                        Color.accentColor.opacity(0.2)
+                    } else {
+                        Color.gray.opacity(0.001)
+                    }
+                }
             }
+            .buttonStyle(.plain)
             .accessibilityLabel("Change Shortcut")
-            .buttonStyle(LuminareCompactButtonStyle())
-            .foregroundStyle(changingShortcut ? Color.accentColor : Color.gray)
             .disabled(changingShortcut)
         }
         .accessibilityRepresentation {
