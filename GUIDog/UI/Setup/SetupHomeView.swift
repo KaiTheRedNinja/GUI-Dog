@@ -22,10 +22,12 @@ struct SetupHomeView: View {
                 .font(.title)
                 .bold()
 
-            Text("The guide dog for your graphical user interface\nPronounced gooey-dog")
-                .font(.subheadline)
-                .bold()
-                .multilineTextAlignment(.center)
+            Text(
+"The guide dog for your graphical user interface\nPronounced guy-dog, like 'guide dog' without the 'd'"
+            )
+            .font(.subheadline)
+            .bold()
+            .multilineTextAlignment(.center)
 
             Spacer()
                 .frame(height: 20)

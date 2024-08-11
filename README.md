@@ -18,7 +18,7 @@ impaired.
 ## What it Does
 
 Similar to how a guide dog helps a visually impaired user locate specific objects such as doors, stairs, kerbs, or bus stops,
-GUI Dog (pronounced gooey-dog) helps a visually impaired user locate interactable elements on the screen.
+GUI Dog (pronounced guy-dog, like "guide dog" without the "d" sound) helps a visually impaired user locate interactable elements on the screen.
 
 GUI Dog uses the macOS accessibility API (the same one that powers VoiceOver) to identify interactable elements on screen.
 It takes instructions from the user, and uses the Google Gemini Large Language Model to identify how to interact with the 
