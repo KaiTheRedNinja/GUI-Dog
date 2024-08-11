@@ -28,21 +28,23 @@ user interface to complete the task.
 
 You need a macOS device with macOS 14.5 or newer to run GUI Dog.
 
-1. Launch the app
+1. Download `GUI Dog.dmg` from the [latest release](https://github.com/KaiTheRedNinja/GUI-Dog/releases)
+2. Open the DMG and drag the app into the applications folder
+3. Launch the app
     - GUI Dog is *not sandboxed*, as it makes use of the accessibility API. This means that it may show an warning when you 
     launch it the first time. If this happens, quit GUI Dog, then right-click the app, and press Open. You will only need to 
     do this the first time.
-2. Follow the instructions in the setup window
+4. Follow the instructions in the setup window
     - Inform GUI Dog about your level of visibility. Selecting "impaired" or "blind" will activate audio cues.
     - Grant accessibility permissions
     - Choose a trigger shortcut
-3. Open GUI Dog by triggering the shortcut
-4. Give GUI Dog a task. This task must be _simple_, _precise_, and can be accomplished with only clicking.
+5. Open GUI Dog by triggering the shortcut
+6. Give GUI Dog a task. This task must be _simple_, _precise_, and can be accomplished with only clicking.
     - ✅ "Open my Pictures folder in Downloads"
     - ✅ "Mark my Buy Tissue reminder as done in Reminders"
     - ❌ "Buy me a coffee" (too complex and vague)
     - ❌ "Pay using my credit card" (GUI Dog cannot type, and does not have access to information that you do not specify in the task)
-5. GUI Dog will use the user interface to navigate the UI to try and accomplish the task
+7. GUI Dog will use the user interface to navigate the UI to try and accomplish the task
     - GUI Dog will highlight elements that it identifies as clickable on your device's main display
     - GUI Dog informs the user of every action it takes, in audio cues for the visually impaired, and visually for the sighted.
     - Sometimes, GUI Dog will be unable to perform the task. This might be due to issues with the underlying Gemini LLM, the 
