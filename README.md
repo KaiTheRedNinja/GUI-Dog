@@ -167,38 +167,37 @@ GUI Dog was written for the [Google AI competition](https://ai.google.dev/compet
 
 **App tagline or elevator pitch: Explain your app in 1 sentence**
 
-> GUI Dog is a digital "guide dog" powered by Gemini, helping the visually impaired interact with their computers more efficiently.
+```
+A digital "guide dog" for the visually impaired
+```
 
 **App description: Describe what your app does and how you used the Gemini API in 1500 characters or less**
 
-> You want to access a specific file. For a sighted user, you simply click to enter the Documents folder and click again to open 
-the file. Done.
+```
+You want to access a specific file. For a sighted user, you simply click to enter the Documents folder and click again to open the file. Done.
 
-> But what if you're visually impaired? You'd use a blind reader, such as macOS's VoiceOver. So you open a file manager window, 
-and VoiceOver describes, in detail, what it is and can do (every time you use it!). You use complex keyboard actions to navigate 
-to the sidebar. Whenever you interact with your device, VoiceOver repeats information about the focused UI element. You then go 
-down the list of folders, one by one, with VoiceOver announcing every folder's name until you finally hear the correct folder. 
-The process is repeated inside the folder until you find your desired file. Wasn't that exasperating?
+But what if you're visually impaired? You'd use a blind reader, such as macOS's VoiceOver. So you open a file manager window, and VoiceOver describes, in detail, what it is and can do (every time you use it!). You use complex keyboard actions to navigate to the sidebar. Whenever you interact with your device, VoiceOver repeats information about the focused UI element. You then go down the list of folders, one by one, with VoiceOver announcing every folder's name until you finally hear the correct folder. The process is repeated inside the folder until you find your desired file. Wasn't that exasperating?
 
-> A quiet two-click task turns into a yakking, tiresome dozen-action operation.
+A quiet two-click task turns into a yakking, tiresome dozen-action operation.
 
-> What if you could complete the same task simply by instructing, "In the Documents folder, open my vaccination document"? My app, 
-GUI Dog, does that.
+What if you could complete the same task simply by instructing, "In the Documents folder, open my vaccination document"? My app, GUI Dog, does that.
 
-> The user gives GUI Dog precise instructions for a task. GUI Dog provides Gemini with the task to achieve and a list of UI 
-elements it can manipulate. Gemini then specifies what actions to take, and GUI Dog uses the macOS accessibility system to execute 
-them. Together, they work towards completing the task.
+The user gives GUI Dog precise instructions for a task. GUI Dog provides Gemini with the task to achieve and a list of UI elements it can manipulate. Gemini then specifies what actions to take, and GUI Dog uses the macOS accessibility system to execute them. Together, they work towards completing the task.
 
-> GUI Dog aims to be the "seeing eye" for the visually impaired, using Large Language Model technologies to help uplift the 
-disadvantaged, enhancing their interactions with the digital world.
+GUI Dog aims to be the "seeing eye" for the visually impaired, using Large Language Model technologies to help uplift the disadvantaged, enhancing their interactions with the digital world.
+```
 
 **What Google Developer tools/products did you use in addition to the Gemini APl?**
 
-> None
+```
+None
+```
 
 **YouTube URL: Add a link to your public video**
 
-> Not Yet
+```
+https://youtu.be/8ihCqszq0as
+```
 
 **Website or web app URL: If your app is live, please share the URL**
 
@@ -206,16 +205,34 @@ disadvantaged, enhancing their interactions with the digital world.
 
 **Is it a game app?**
 
-> No
+```
+No
+```
 
 **Give judges access to your code! If your code is public, please add your GitHub link below. Otherwise, upload a zip file to 
 Google Drive, set the sharing to 'Anyone with the link,' and share the link below.**
 
-> This github repo, or a zip link. Haven't decided yet.
+```
+https://github.com/KaiTheRedNinja/GUI-Dog
+```
 
-**Testing instructions**
+**Testing instructions: Provide instructions so judges can test it out the best way possible**
 
-> Provide instructions so judges can test it out the best way possible
+```
+1. Use a Mac with macOS 14.5 or newer
+2. Download GUI.Dog.dmg from https://github.com/KaiTheRedNinja/GUI-Dog/releases/tag/v0.1.0
+3. Open the DMG, then drag GUI Dog.app into the applications folder
+4. Right-click -> Open the GUI Dog app
+5. Click "Ok" when a warning shows up (I do not have a developer account, so I couldn't get the app notarised)
+6. Go through the setup process as shown in the app. Selecting "impaired" or "blind" will activate audio cues. You will also need to grant GUI Dog accessibility permissions.
+7. Use cmd-ctrl-option L to trigger GUI Dog
+
+GUI Dog isn't meant to automate complex actions, rather to help the visually impaired accomplish tasks that are otherwise trivial for sighted people. When prompting GUI Dog, make sure to be precise and simple.
+✅ "Open my Pictures folder in Downloads"
+✅ "Mark my Buy Tissue reminder as done in Reminders"
+❌ "Buy me a coffee" (too complex and vague)
+❌ "Pay using my credit card" (GUI Dog cannot type, and does not have access to information that you do not specify in the task)
+```
 
 **Country of residence**
 
