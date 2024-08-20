@@ -24,6 +24,18 @@ GUI Dog uses the macOS accessibility API (the same one that powers VoiceOver) to
 It takes instructions from the user, and uses the Google Gemini Large Language Model to identify how to interact with the 
 user interface to complete the task.
 
+## Simple Explanation
+
+Simplified version of Motivation and What it Does:
+- Certain common actions on computers are difficult for the visually impaired to do
+- My app uses generative AI and the accessibility system to help _make_ those actions simple
+
+## Demo
+
+[![Click for Demo Video](https://img.youtube.com/vi/8ihCqszq0as/0.jpg)](https://youtu.be/8ihCqszq0as)
+
+Click above to view the demo video
+
 ## Using GUI Dog
 
 You need a macOS device with macOS 14.5 or newer to run GUI Dog.
